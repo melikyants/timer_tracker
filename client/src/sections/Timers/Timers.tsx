@@ -29,10 +29,11 @@ export const Timers = ({ }) => {
   const timer = timersList?.length ? timersList.filter((timer) => timer.isRunning)[0] : null
 
   return (
-    <div>
-      Timers
+    <div className="timers">
       <TimerLog timer={timer} refetch={refetch} />
-      <TimersList timers={timersList} />
+      <div className="timersList__wrapper">
+        <TimersList timers={timersList} />
+      </div>
     </div>
   )
 };

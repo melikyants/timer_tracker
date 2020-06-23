@@ -17,3 +17,10 @@ function pad(numberString: any, size: any) {
   while (padded.length < size) padded = `0${padded}`;
   return padded;
 }
+
+export const isToday = (someDate: any) => {
+  const today = new Date()
+  return someDate.getDate() == today.getDate() &&
+    someDate.getMonth() == today.getMonth() &&
+    someDate.getFullYear() == today.getFullYear()
+}
