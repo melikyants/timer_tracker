@@ -12,15 +12,15 @@ export const milliSecToString = (ms: number) => {
   return humanized;
 }
 
-function pad(numberString: any, size: any) {
+function pad(numberString: string, size: number) {
   let padded = numberString;
   while (padded.length < size) padded = `0${padded}`;
   return padded;
 }
 
-export const isToday = (someDate: any) => {
+export const isToday = (someDate: Date) => {
   const today = new Date()
-  return someDate.getDate() == today.getDate() &&
-    someDate.getMonth() == today.getMonth() &&
-    someDate.getFullYear() == today.getFullYear()
+  return someDate.getDate() === today.getDate() &&
+    someDate.getMonth() === today.getMonth() &&
+    someDate.getFullYear() === today.getFullYear()
 }
