@@ -5,7 +5,7 @@ import { gql } from "apollo-boost";
 import { useInterval, milliSecToString } from '../../../../lib'
 
 import { Timers_timers as ITimer } from '../../__generated__/Timers'
-import { startTimer, startTimerVariables } from './__generated__/startTimer'
+import { startTimer as startTimerData, startTimerVariables } from './__generated__/startTimer'
 
 import PlayIcon from '../../icons/play.svg'
 import StopIcon from '../../icons/stop.svg'
@@ -52,9 +52,10 @@ export const TimerLog = ({ timer, refetch }: { timer: ITimer | null, refetch: an
   })
 
   const [STitle, setSTitle] = useState('')
-  const [startTimer] = useMutation<startTimer, startTimerVariables>(START_TIMER)
+  const [startTimer] = useMutation<startTimerData, startTimerVariables>(START_TIMER)
   const [stopTimer] = useMutation(STOP_TIMER)
   const [updateTimer] = useMutation(UPDATE_TIMER)
+  
 
   useInterval(() => {
     const runningSince = Date.now() - STimer.start
@@ -105,7 +106,7 @@ export const TimerLog = ({ timer, refetch }: { timer: ITimer | null, refetch: an
 
   const onUpdateTitle = (e: React.KeyboardEvent<HTMLInputElement>) => {
     console.log("onUpdateTitle -> e", e)
-    if (e.key == 'Enter') {
+    if (e.key === 'Enter') {
       console.log('Adding....');
       onUpdateTimer()
       refetch()
@@ -117,14 +118,14 @@ export const TimerLog = ({ timer, refetch }: { timer: ITimer | null, refetch: an
       <input className="input" type="text" onChange={onTitleChange} onKeyPress={onUpdateTitle} defaultValue={STitle} />
       <div className="timer_log__tick">{STimer.time}</div>
       <button className="btn btn__stop" onClick={onStopTimer}>
-        <img src={StopIcon} width="10px" height="10px" />
+        <img src={StopIcon} width="10px" height="10px" alt="start_timer"/>
       </button>
     </div>)
   } else {
     return (<div className="timer_log">
       <input className="input" type="text" onChange={onTitleChange} placeholder="What are you working on?" />
       <button className="btn btn__start" onClick={onStartTimer}>
-        <img src={PlayIcon} width="14px" height="12px" />
+        <img src={PlayIcon} width="14px" height="12px" alt="stop_timer"/>
       </button>
     </div>)
   }

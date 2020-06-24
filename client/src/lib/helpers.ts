@@ -24,3 +24,12 @@ export const isToday = (someDate: Date) => {
     someDate.getMonth() === today.getMonth() &&
     someDate.getFullYear() === today.getFullYear()
 }
+
+export const sortByDates = (a: string, b: string) => {
+  let dateA = new Date(a)
+  let dateB = new Date(b)
+  if (dateA > dateB) return -1;
+  if (dateA === dateB) return 0;
+  if (dateA < dateB) return 1;
+  return 0
+}

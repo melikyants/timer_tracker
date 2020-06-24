@@ -11,19 +11,6 @@ export const timerResolvers: IResolvers = {
     }
   },
   Mutation: {
-    // deleteTimer: async (_root: undefined, { id }: { id: string }, { db }: { db: IDatabase }): Promise<ITimer> => {
-
-    //   const deleteTimer = await db.timers.findOneAndDelete({ _id: new Object(id) })
-
-    //   if (!deleteTimer.value) {
-    //     throw new Error('failed to delete timer')
-    //   }
-
-    //   return deleteTimer.value
-    // },
-    /*
-    so i need to update collection/document with elsapsed and running since
-    */
     startTimer: async (_root: undefined, { start, title, isRunning }: { start: number, title: string, isRunning: boolean }, { db }: { db: IDatabase }): Promise<ITimer> => {
       const insertRes = await db.timers.insertOne({
         _id: new ObjectId(),
@@ -47,13 +34,6 @@ export const timerResolvers: IResolvers = {
       }
 
       return insertTimer
-      // const startTimer = await db.timers.updateOne({ _id: new Object(id) }, { title: 'new title' }, { upsert: true })
-
-      // if (!startTimer.result.ok) {
-      //   throw new Error('failed to start timer')
-      // }
-
-      // return { result: startTimer.result.ok }
     },
     stopTimer: async (_root: undefined, { id, end }: { id: string, end: number }, { db }: { db: IDatabase }): Promise<any> => {
       console.log("id", id)
@@ -61,8 +41,6 @@ export const timerResolvers: IResolvers = {
       console.log("updatedId", updatedId)
       const stopTimer = await db.timers.findOneAndUpdate({ _id: updatedId }, { $set: { end, isRunning: false } }, { returnOriginal: false })
 
-
-      // if (timer.ops)
       console.log("stopTimer", stopTimer)
 
       if (!stopTimer.ok) {
@@ -86,6 +64,17 @@ export const timerResolvers: IResolvers = {
       }
 
       return updateTimer.value
+    },
+    deleteTimer: async (_root: undefined, { id }: { id: string }, { db }: { db: IDatabase }): Promise<ITimer> => {
+      console.log("id", id)
+
+      const deleteTimer = await db.timers.findOneAndDelete({ _id: new ObjectId(id) })
+
+      if (!deleteTimer.value) {
+        throw new Error('failed to delete timer')
+      }
+
+      return deleteTimer.value
     },
   },
 

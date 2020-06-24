@@ -1,6 +1,6 @@
 import React from 'react'
-import { useQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import { useQuery } from '@apollo/react-hooks'
+import { gql } from 'apollo-boost'
 
 import { TimersList, TimerLog } from './components'
 
@@ -32,8 +32,8 @@ export const Timers = ({ }) => {
     <div className="timers">
       <TimerLog timer={timer} refetch={refetch} />
       <div className="timersList__wrapper">
-        <TimersList timers={timersList} />
+        <TimersList timers={timersList} refetch={refetch}/>
       </div>
     </div>
   )
-};
+}

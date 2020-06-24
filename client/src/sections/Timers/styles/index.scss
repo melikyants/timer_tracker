@@ -6,6 +6,10 @@
     box-sizing: border-box
 }
 
+button {
+    outline: none;
+}
+
 .timers {
     width: 400px;
     background: #f4f4f4;
@@ -69,12 +73,18 @@
     font-size: 1.1rem;
 }
 
-.timer__block_body {
-    // font-size: .8rem;
-}
-
 .timer_log__tick {
     margin-right: 12px;
+}
+
+.timer__title_project {
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+}
+
+.timer__block_body {
+    position: relative;
 }
 
 .timer {
@@ -82,6 +92,13 @@
     align-items: center;
     justify-content: space-between;
     margin: 12px 0;
+
+
+    &>div:not(:first-child) {
+        display: flex;
+        align-items: center;
+        text-align: left;
+    }
 }
 
 .input {
@@ -112,4 +129,28 @@
     &__stop {
         background-color: #C30606;
     }
+
+    &__delete {
+        background-color: #C30606;
+    }
+}
+
+.btn-link {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    color: #C9C7C7;
+}
+
+
+.TimerDetails_wrapper {
+    background: white;
+    padding: 12px;
+    border-radius: 6px;
+    // box-shadow: 0 0 4px 0px rgba(0, 0, 0, .25);
+}
+
+.TimerDetails__body {
+    display: flex;
+    flex-flow: column;
 }
