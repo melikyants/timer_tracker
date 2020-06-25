@@ -12,6 +12,7 @@ export const connectDatabase = async (): Promise<IDatabase> => {
   const db = client.db('database_name')
 
   return {
-    timers: db.collection('timers')
+    timers: db.collection('timers'),
+    projects: db.collection('timers_projects')
   }
 }

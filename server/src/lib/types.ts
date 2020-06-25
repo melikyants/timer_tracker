@@ -12,7 +12,7 @@ export interface ITimer {
   isRunning: boolean
 }
 
-export interface ITimer_Projects {
+export interface IProject {
   _id: ObjectId,
   title: string,
   info: string
@@ -20,4 +20,5 @@ export interface ITimer_Projects {
 
 export interface IDatabase {
   timers: Collection<ITimer>;
+  projects: Collection<IProject>
 }

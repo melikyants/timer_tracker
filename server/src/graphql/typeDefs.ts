@@ -1,11 +1,6 @@
 import { gql } from 'apollo-server-express'
 
 export const typeDefs = gql`
-  type Session {
-    start: Float!,
-    end: Float!
-  }
-
   type Timer {
     id: ID!,
     title: String!,
@@ -18,14 +13,15 @@ export const typeDefs = gql`
     isRunning: Boolean!
   }
 
-  type Timer_Projects {
+  type Project {
     id: ID!,
     title: String!,
     info: String
   }
 
   type Query {
-    timers: [Timer!]!
+    timers: [Timer!]!,
+    projects: [Project!]!
   }
 
   type Mutation {
@@ -33,5 +29,10 @@ export const typeDefs = gql`
     stopTimer(id:ID!, end: Float!):Timer!
     updateTimer(id:ID!, title: String!):Timer!
     deleteTimer(id:ID!): Timer!
+
+    createProject(timer_id: String!, title:String!, info:String): Project!
+    deleteProject(id: ID!): Project!
+    updateProject(id: ID!, title:String, info:String ): Project!
+    assignProject(id: ID!, timer_id: ID!):Project
   }
 `

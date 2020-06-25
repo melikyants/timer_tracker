@@ -1,6 +1,6 @@
 // import { timers } from '../../../timers'
 import { IResolvers } from 'apollo-server-express'
-import { IDatabase, ITimer } from '../../../lib/types'
+import { IDatabase, ITimer, IProject } from '../../../lib/types'
 import { ObjectId } from "mongodb";
 
 export const timerResolvers: IResolvers = {
@@ -82,6 +82,6 @@ export const timerResolvers: IResolvers = {
     id: (timer: ITimer): string => {
       return timer._id.toHexString()
     }
-  }
+  },
 
 }
