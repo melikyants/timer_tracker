@@ -1,11 +1,11 @@
 import React from 'react'
-import {Popper} from '../../Popper'
-import {TimerDetails} from '../TimerDetails'
+import { Popper } from '../../Popper'
+import { TimerDetails } from '../TimerDetails'
 
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 
-import {ITimerTime} from '../TimerList'
+import { ITimerTime } from '../TimerList'
 
 const DELETE_TIMER = gql`
   mutation deleteTimer($id: ID!){
@@ -14,7 +14,9 @@ const DELETE_TIMER = gql`
     }
   }
 `
-export const Timer = ({timer, refetch}: {timer: ITimerTime, refetch:any})=> {
+
+export const Timer = ({ timer, refetch }: { timer: ITimerTime, refetch: any }) => {
+  console.log("Timer -> timer", timer)
 
   const elRefs = React.useRef<any>(null);
   const popperRef = React.useRef<any>(null);
@@ -23,45 +25,47 @@ export const Timer = ({timer, refetch}: {timer: ITimerTime, refetch:any})=> {
 
   React.useEffect(() => {
     // listen for clicks and close dropdown on body
-    const handleDocumentClick = (event:any) => {
-       if (elRefs.current.contains(event.target) || popperRef.current.contains(event.target)) {
+    const handleDocumentClick = (event: any) => {
+      if (elRefs.current.contains(event.target) || popperRef.current.contains(event.target)) {
         return;
       }
       setVisibility(false);
-  }
+    }
     document.addEventListener("mousedown", handleDocumentClick);
     return () => {
       document.removeEventListener("mousedown", handleDocumentClick);
     };
   }, [setVisibility]);
 
- const handlePopper = () => {
-  setVisibility(!visible)
-  console.log(visible)
-}
-const onDelete = async(id:string)=>{
-  await deleteTimer({variables:{id}})
-  refetch()
-}
+  const handlePopper = () => {
+    setVisibility(!visible)
+    console.log(visible)
+  }
+  const onDelete = async (id: string) => {
+    await deleteTimer({ variables: { id } })
+    refetch()
+  }
 
-const showPopper = (id:string)=>{
-  // setisPopover(true)
-}
-  return(
+  const showPopper = (id: string) => {
+    // setisPopover(true)
+  }
+  return (
     <div key={timer.id}>
-    <div className="timer" ref={elRefs} onClick={handlePopper}>
-      <div className="timer__title_project" onClick={()=>showPopper(timer.id)}>
-        <div>{timer.title}</div>
-        <div><button className="btn-link" > + add project</button></div>
+      <div className="timer" ref={elRefs} onClick={handlePopper}>
+        <div className="timer_desc" onClick={() => showPopper(timer.id)}>
+          <div>{timer.title}</div>
+          {timer.project_id ? <div className="timer_desc__title">
+            {timer.project_title}
+          </div> : <div><button className="btn-link" > + add project</button></div>}
+        </div>
+        <div>
+          <div>{timer.time}</div>
+          <div><button onClick={() => onDelete(timer.id)} className="btn btn__delete"> -</button></div>
+        </div>
       </div>
-      <div>
-        <div>{timer.time}</div>
-        <div><button onClick={()=>onDelete(timer.id)} className="btn btn__delete"> -</button></div>
-      </div>
-    </div>
-    <Popper refEl={elRefs} popperRef={popperRef} visible={visible}>
-      <TimerDetails />
-    </Popper>
+      <Popper refEl={elRefs} popperRef={popperRef} visible={visible}>
+        <TimerDetails timerId={timer.id} />
+      </Popper>
     </div>
   )
 }

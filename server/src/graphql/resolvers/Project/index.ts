@@ -55,13 +55,15 @@ export const projectResolver: IResolvers = {
 
       return deleteProject.value
     },
-    assignProject: async (_root: undefined, { id, project_id }: { id: string, project_id: string }, { db }: { db: IDatabase }): Promise<any> => {
-      const assignProjectToTimer = await db.timers.findOneAndUpdate({ _id: new ObjectId(id) }, { $set: { project_id } }, { returnOriginal: false })
+    assignProject: async (_root: undefined, { timer_id, id }: { timer_id: string, id: string }, { db }: { db: IDatabase }): Promise<any> => {
+      const timerId = new ObjectId(timer_id)
+      const assignProjectToTimer = await db.timers.findOneAndUpdate({ _id: timerId }, { $set: { project_id: id } }, { returnOriginal: false })
 
       if (!assignProjectToTimer.ok) {
         throw new Error('couldnt assign project to timer')
       }
 
+      console.log("assignProjectToTimer.value", assignProjectToTimer.value)
       return assignProjectToTimer.value
     }
   },

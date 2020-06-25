@@ -77,10 +77,15 @@ button {
     margin-right: 12px;
 }
 
-.timer__title_project {
+.timer_desc {
     display: flex;
     flex-flow: column;
     align-items: flex-start;
+}
+
+.timer_desc__title {
+    font-size: .9rem;
+    color: #C9C7C7;
 }
 
 .timer__block_body {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import _ from 'lodash';
+
 import { milliSecToString, isToday, sortByDates } from '../../../../lib';
 import { Timers_timers as ITimer } from '../../__generated__/Timers';
 
@@ -8,14 +8,15 @@ import { Timer } from './Timer';
 
 export interface ITimerTime extends ITimer {
   time: string,
-  date: string
+  date: string,
+  project_title?: string,
 }
 
-export const TimersList = ({ timers, refetch }: { timers: ITimer[] | null, refetch: any }) => {
+export const TimersList = ({ timers, refetch }: { timers: ITimer[] | [], refetch: any }) => {
   // clone fetched timers
-  const clonedTimers = timers ? _.cloneDeep(timers) : [];
 
-  const parsedTimerinTimers = clonedTimers.map<ITimerTime>((timer) => {
+  const timersList = timers.length ? timers : []
+  const parsedTimerinTimers = timersList.map<ITimerTime>((timer) => {
     const totalTime = timer.end - timer.start;
     const time = milliSecToString(totalTime);
     const date = new Date(timer.end).toString();

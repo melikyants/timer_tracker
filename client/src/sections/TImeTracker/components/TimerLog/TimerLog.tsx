@@ -55,7 +55,7 @@ export const TimerLog = ({ timer, refetch }: { timer: ITimer | null, refetch: an
   const [startTimer] = useMutation<startTimerData, startTimerVariables>(START_TIMER)
   const [stopTimer] = useMutation(STOP_TIMER)
   const [updateTimer] = useMutation(UPDATE_TIMER)
-  
+
 
   useInterval(() => {
     const runningSince = Date.now() - STimer.start
@@ -118,14 +118,14 @@ export const TimerLog = ({ timer, refetch }: { timer: ITimer | null, refetch: an
       <input className="input" type="text" onChange={onTitleChange} onKeyPress={onUpdateTitle} defaultValue={STitle} />
       <div className="timer_log__tick">{STimer.time}</div>
       <button className="btn btn__stop" onClick={onStopTimer}>
-        <img src={StopIcon} width="10px" height="10px" alt="start_timer"/>
+        <img src={StopIcon} width="10px" height="10px" alt="start_timer" />
       </button>
     </div>)
   } else {
     return (<div className="timer_log">
       <input className="input" type="text" onChange={onTitleChange} placeholder="What are you working on?" />
       <button className="btn btn__start" onClick={onStartTimer}>
-        <img src={PlayIcon} width="14px" height="12px" alt="stop_timer"/>
+        <img src={PlayIcon} width="14px" height="12px" alt="stop_timer" />
       </button>
     </div>)
   }

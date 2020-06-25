@@ -30,9 +30,9 @@ export const typeDefs = gql`
     updateTimer(id:ID!, title: String!):Timer!
     deleteTimer(id:ID!): Timer!
 
-    createProject(timer_id: String!, title:String!, info:String): Project!
+    createProject(title:String!, info:String): Project!
     deleteProject(id: ID!): Project!
     updateProject(id: ID!, title:String, info:String ): Project!
-    assignProject(id: ID!, timer_id: ID!):Project
+    assignProject(timer_id: String!, id: String!):Project
   }
 `
