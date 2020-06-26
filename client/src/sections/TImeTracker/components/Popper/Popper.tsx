@@ -18,6 +18,7 @@ export const Popper = ({ children, refEl, popperRef, visible }: { children: any,
       // { name: 'preventOverflow', enabled: true }
     ],
   });
+  // console.log("Popper -> arrowElRef", arrowElRef)
 
 
   return (<>

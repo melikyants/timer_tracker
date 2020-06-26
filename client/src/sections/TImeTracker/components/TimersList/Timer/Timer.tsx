@@ -1,11 +1,11 @@
 import React from 'react'
 import { Popper } from '../../Popper'
-import { TimerDetails } from '../TimerDetails'
+import { TimerDetails } from '../../TimerDetails'
 
-import { useMutation, useQuery } from "@apollo/react-hooks";
+import { useMutation, useLazyQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 
-import { ITimerTime } from '../TimerList'
+// import { ITimerTime } from '../TimerList'
 
 const DELETE_TIMER = gql`
   mutation deleteTimer($id: ID!){
@@ -15,24 +15,28 @@ const DELETE_TIMER = gql`
   }
 `
 
-export const Timer = ({ timer, refetch }: { timer: ITimerTime, refetch: any }) => {
-  console.log("Timer -> timer", timer)
+export const Timer = ({ timer, timersRefetch }: { timer: any, timersRefetch: () => void }) => {
 
   const elRefs = React.useRef<any>(null);
   const popperRef = React.useRef<any>(null);
   const [visible, setVisibility] = React.useState(false)
+
+
   const [deleteTimer] = useMutation(DELETE_TIMER)
 
   React.useEffect(() => {
+    let mounted = true;
     // listen for clicks and close dropdown on body
+    // console.log("handleDocumentClick -> elRefs", elRefs)
     const handleDocumentClick = (event: any) => {
       if (elRefs.current.contains(event.target) || popperRef.current.contains(event.target)) {
         return;
       }
-      setVisibility(false);
+      if (mounted) setVisibility(false);
     }
     document.addEventListener("mousedown", handleDocumentClick);
     return () => {
+      mounted = false
       document.removeEventListener("mousedown", handleDocumentClick);
     };
   }, [setVisibility]);
@@ -43,7 +47,7 @@ export const Timer = ({ timer, refetch }: { timer: ITimerTime, refetch: any }) =
   }
   const onDelete = async (id: string) => {
     await deleteTimer({ variables: { id } })
-    refetch()
+    timersRefetch()
   }
 
   const showPopper = (id: string) => {
@@ -64,7 +68,7 @@ export const Timer = ({ timer, refetch }: { timer: ITimerTime, refetch: any }) =
         </div>
       </div>
       <Popper refEl={elRefs} popperRef={popperRef} visible={visible}>
-        <TimerDetails timerId={timer.id} />
+        <TimerDetails timer={timer} />
       </Popper>
     </div>
   )

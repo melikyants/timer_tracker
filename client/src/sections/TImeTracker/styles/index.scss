@@ -32,10 +32,22 @@ button {
     justify-content: space-between;
     flex: 1 auto;
     padding: 0 12px;
+    position: relative;
 
     & .input {
         margin-right: 12px;
     }
+}
+
+.timer_log__desc {
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+}
+
+.timer_log__project {
+    font-size: .9rem;
+    color: #C9C7C7;
 }
 
 .timersList__wrapper {
@@ -112,7 +124,7 @@ button {
     height: 28px;
     background: #f9f9f9;
     width: 100%;
-    flex: 1 1;
+    // flex: 1 1;
     padding: 0 12px;
 }
 
@@ -150,7 +162,7 @@ button {
 
 .TimerDetails_wrapper {
     background: white;
-    padding: 12px;
+    // padding: 12px;
     border-radius: 6px;
     // box-shadow: 0 0 4px 0px rgba(0, 0, 0, .25);
 }
@@ -158,4 +170,19 @@ button {
 .TimerDetails__body {
     display: flex;
     flex-flow: column;
+    min-width: 250px;
+
+    &>div {
+        margin-bottom: 8px;
+    }
+}
+
+.TimerDetails__body_types {
+    display: flex;
+    justify-content: space-between;
+}
+
+.project_list li {
+    height: 20px;
+    margin-bottom: 5px;
 }

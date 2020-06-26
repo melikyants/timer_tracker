@@ -1,21 +1,24 @@
 {
   "name": "time_tracker",
   "version": "1.0.0",
-  "description": "time tracker for person usage to track time spent on diffrent projects",
+  "description": "time tracker for personal usage to track time spent on diffrent projects",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/index.ts",
     "build": "tsc -p ./",
     "seed": "ts-node temp/seed.ts",
-    "clean": "ts-node temp/clean_db.ts"
+    "clean": "ts-node temp/clean_db.ts",
+    "update": "ts-node temp/udpate.ts"
   },
   "author": "Natalia Melikyants",
   "license": "ISC",
   "dependencies": {
+    "@types/lodash": "^4.14.157",
     "apollo-server-express": "^2.14.5",
     "express": "^4.17.1",
     "graphql": "^15.1.0",
+    "lodash": "^4.17.15",
     "lodash.merge": "^4.6.2",
     "mongodb": "^3.5.9"
   },

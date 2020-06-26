@@ -9,6 +9,8 @@ import './styles/index.scss';
 
 import _ from 'lodash';
 
+// import { TimerContextProvider } from "../../lib/context/TimerContext";
+
 const TIMERS = gql`
   query Timers {
     timers {
@@ -20,16 +22,8 @@ const TIMERS = gql`
       description
       start
       end
+      project_title
       isRunning
-    }
-  }
-`;
-const PROJECTS = gql`
-  query Projects {
-    projects {
-      id
-      title
-      info
     }
   }
 `;
@@ -40,34 +34,26 @@ interface ITimerext extends Timers_timers {
 export const Timers = ({ }) => {
   const {
     data: timersData, loading, error, refetch,
-  } = useQuery<ITimers>(TIMERS);
-
-  const {
-    data: projectsData
-  } = useQuery(PROJECTS);
+  } = useQuery<any>(TIMERS);
+  console.log("Timers -> error", error)
+  console.log("Timers -> timersData", timersData)
 
   const timersList = timersData ? timersData.timers : [];
 
-  const clonedTimers: ITimerext[] = timersList ? _.cloneDeep(timersList) : [];
+  const timer = timersList?.length ? timersList.filter((timer: any) => timer.isRunning)[0] : null;
 
-  const projectsList = projectsData ? projectsData.projects : []
-
-  const timersWithProject = clonedTimers.map((timer) => {
-    const projectIndex = projectsList.findIndex((project: any) => project.id == timer.project_id)
-    if (projectIndex > -1) {
-      timer['project_title'] = projectsList[projectIndex].title
-    }
-    return timer
-  })
-  const timer = timersWithProject?.length ? timersWithProject.filter((timer) => timer.isRunning)[0] : null;
-
+  const handleTimersRefetch = async (): Promise<void> => {
+    await refetch()
+  }
 
   return (
+    // <TimerContextProvider>
     <div className="timers">
-      <TimerLog timer={timer} refetch={refetch} />
+      <TimerLog timer={timer} refetchTimers={refetch} />
       <div className="timersList__wrapper">
-        <TimersList timers={timersWithProject} refetch={refetch} />
+        <TimersList timers={timersList} timersRefetch={handleTimersRefetch} />
       </div>
     </div>
+    // </TimerContextProvider>
   );
 };

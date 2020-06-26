@@ -1,6 +1,6 @@
 // import { timers } from '../../../timers'
 import { IResolvers } from 'apollo-server-express'
-import { IDatabase, ITimer, IProject } from '../../../lib/types'
+import { IDatabase, IProject } from '../../../lib/types'
 import { ObjectId } from "mongodb";
 
 export const projectResolver: IResolvers = {
@@ -54,18 +54,8 @@ export const projectResolver: IResolvers = {
       }
 
       return deleteProject.value
-    },
-    assignProject: async (_root: undefined, { timer_id, id }: { timer_id: string, id: string }, { db }: { db: IDatabase }): Promise<any> => {
-      const timerId = new ObjectId(timer_id)
-      const assignProjectToTimer = await db.timers.findOneAndUpdate({ _id: timerId }, { $set: { project_id: id } }, { returnOriginal: false })
-
-      if (!assignProjectToTimer.ok) {
-        throw new Error('couldnt assign project to timer')
-      }
-
-      console.log("assignProjectToTimer.value", assignProjectToTimer.value)
-      return assignProjectToTimer.value
     }
+
   },
 
   Project: {

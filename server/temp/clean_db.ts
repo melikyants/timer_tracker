@@ -4,10 +4,10 @@ import env = require('dotenv')
 env.config()
 import { connectDatabase } from '../src/database'
 
-const seed = async () => {
+const cleandb = async () => {
   try {
 
-    console.log('[seed started]')
+    console.log('[cleandb started]')
     const db = await connectDatabase()
 
     // for (let i = 0; i < timers.length; i++) {
@@ -15,11 +15,11 @@ const seed = async () => {
     // }
     await db.timers.deleteMany({})
 
-    console.log('[seed success]')
+    console.log('[cleandb success]')
   } catch (err) {
-    throw new Error('couldnt seed timers to mongodb')
+    throw new Error('couldnt cleandb timers to mongodb')
   }
 
 }
 
-seed()
+cleandb()

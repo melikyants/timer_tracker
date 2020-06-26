@@ -2,21 +2,15 @@ import React from 'react';
 
 
 import { milliSecToString, isToday, sortByDates } from '../../../../lib';
-import { Timers_timers as ITimer } from '../../__generated__/Timers';
+// import { Timers_timers as ITimer } from '../../../../context/__generated__/Timers';
 
 import { Timer } from './Timer';
 
-export interface ITimerTime extends ITimer {
-  time: string,
-  date: string,
-  project_title?: string,
-}
 
-export const TimersList = ({ timers, refetch }: { timers: ITimer[] | [], refetch: any }) => {
-  // clone fetched timers
+export const TimersList = ({ timers, timersRefetch }: { timers: any[] | [], timersRefetch: () => void }) => {
 
   const timersList = timers.length ? timers : []
-  const parsedTimerinTimers = timersList.map<ITimerTime>((timer) => {
+  const parsedTimerinTimers = timersList.map<any>((timer) => {
     const totalTime = timer.end - timer.start;
     const time = milliSecToString(totalTime);
     const date = new Date(timer.end).toString();
@@ -42,6 +36,7 @@ export const TimersList = ({ timers, refetch }: { timers: ITimer[] | [], refetch
     result[nextDateString].items.push(next);
     return result;
   }, {}));
+
 
   // add total time to timers that grouped by date
   const timersWithTotalTime = groupTimersByDate.map((item: any) => {
@@ -72,7 +67,7 @@ export const TimersList = ({ timers, refetch }: { timers: ITimer[] | [], refetch
             </div>
           </div>
           <div className="timer__block_body">
-            {timersByDays.items && <Timers timers={timersByDays.items} refetch={refetch} />}
+            {timersByDays.items && <Timers timers={timersByDays.items} timersRefetch={timersRefetch} />}
           </div>
 
         </div>
@@ -84,8 +79,8 @@ export const TimersList = ({ timers, refetch }: { timers: ITimer[] | [], refetch
   return <div className="timers_list">There is no time log yet!</div>;
 };
 
-export const Timers = ({ timers, refetch }: { timers: ITimer[], refetch: any }) => (
+export const Timers = ({ timers, timersRefetch }: { timers: any[], timersRefetch: () => void }) => (
   <div>
-    {timers.map((timer: any, i: number) => <Timer timer={timer} refetch={refetch} key={timer.id} />)}
+    {timers.map((timer: any, i: number) => <Timer timer={timer} key={timer.id} timersRefetch={timersRefetch} />)}
   </div>
 );

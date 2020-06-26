@@ -4,11 +4,16 @@ import { gql } from "apollo-boost";
 // import { TimersData, IStartTimer, IStartTimerVariables } from './types'
 import { useInterval, milliSecToString } from '../../../../lib'
 
-import { Timers_timers as ITimer } from '../../__generated__/Timers'
+// import { Timers_timers as ITimer } from '..TimersList/Timers'
 import { startTimer as startTimerData, startTimerVariables } from './__generated__/startTimer'
 
 import PlayIcon from '../../icons/play.svg'
 import StopIcon from '../../icons/stop.svg'
+
+import { Popper } from '../Popper'
+import { TimerDetails } from '../TimerDetails'
+
+// import { TimerContext } from "../../lib/context/TimerContext";
 
 const START_TIMER = gql`
   mutation startTimer($start: Float!, $title:String!){
@@ -42,7 +47,7 @@ interface ISTimerNew {
   isRunningId: string,
 }
 
-export const TimerLog = ({ timer, refetch }: { timer: ITimer | null, refetch: any }) => {
+export const TimerLog = ({ timer, refetchTimers }: { timer: any | null, refetchTimers: any }) => {
   const [STimer, setSTimer] = useState<ISTimerNew>({
     start: 0,
     runningSince: 0,
@@ -55,6 +60,28 @@ export const TimerLog = ({ timer, refetch }: { timer: ITimer | null, refetch: an
   const [startTimer] = useMutation<startTimerData, startTimerVariables>(START_TIMER)
   const [stopTimer] = useMutation(STOP_TIMER)
   const [updateTimer] = useMutation(UPDATE_TIMER)
+
+  const elRefsLog = React.useRef<any>(null);
+  const popperRef = React.useRef<any>(null);
+  const [visible, setVisibility] = React.useState(false)
+
+  React.useEffect(() => {
+    let mounted = true;
+    // listen for clicks and close dropdown on body
+    const handleDocumentClick = (event: any) => {
+
+      if (elRefsLog.current.contains(event.target) || popperRef.current.contains(event.target)) {
+        return;
+      }
+      if (mounted) setVisibility(false);
+
+    }
+    document.addEventListener("mousedown", handleDocumentClick);
+    return () => {
+      mounted = false
+      document.removeEventListener("mousedown", handleDocumentClick);
+    };
+  }, [setVisibility]);
 
 
   useInterval(() => {
@@ -82,7 +109,7 @@ export const TimerLog = ({ timer, refetch }: { timer: ITimer | null, refetch: an
       .then((result) => {
         setSTimer(STimer => ({ ...STimer, isRunningId: result.data ? result.data.startTimer.id : '' }))
       })
-    refetch()
+    refetchTimers()
   }
 
   const onStopTimer = async () => {
@@ -93,7 +120,7 @@ export const TimerLog = ({ timer, refetch }: { timer: ITimer | null, refetch: an
     if (STimer.isRunningId !== null) {
       await stopTimer({ variables: { id: STimer.isRunningId, end: now } })
     }
-    refetch()
+    refetchTimers()
   }
 
   const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,24 +136,40 @@ export const TimerLog = ({ timer, refetch }: { timer: ITimer | null, refetch: an
     if (e.key === 'Enter') {
       console.log('Adding....');
       onUpdateTimer()
-      refetch()
+      refetchTimers()
     }
+  }
+
+  const onTimerDetails = () => {
+    setVisibility(!visible)
   }
 
   if (timer) {
     return (<div className="timer_log">
-      <input className="input" type="text" onChange={onTitleChange} onKeyPress={onUpdateTitle} defaultValue={STitle} />
+      {/* <input className="input" type="text" onChange={onTitleChange} onKeyPress={onUpdateTitle} defaultValue={STitle} /> */}
+      <div className="timer_log__desc" onClick={onTimerDetails} ref={elRefsLog}>
+        <div>{STitle}</div>
+        <div className="timer_log__project">{timer.project_title}</div>
+      </div>
       <div className="timer_log__tick">{STimer.time}</div>
       <button className="btn btn__stop" onClick={onStopTimer}>
         <img src={StopIcon} width="10px" height="10px" alt="start_timer" />
       </button>
+      <Popper refEl={elRefsLog} popperRef={popperRef} visible={visible}>
+        <TimerDetails timer={timer} />
+      </Popper>
     </div>)
   } else {
-    return (<div className="timer_log">
+    return (<div className="timer_log" >
+
       <input className="input" type="text" onChange={onTitleChange} placeholder="What are you working on?" />
+      <div ref={elRefsLog} onClick={onTimerDetails}>add project</div>
       <button className="btn btn__start" onClick={onStartTimer}>
         <img src={PlayIcon} width="14px" height="12px" alt="stop_timer" />
       </button>
+      <Popper refEl={elRefsLog} popperRef={popperRef} visible={visible}>
+        <TimerDetails timer={timer} />
+      </Popper>
     </div>)
   }
 }
