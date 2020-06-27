@@ -19,6 +19,15 @@ const START_TIMER = gql`
   mutation startTimer($start: Float!, $title:String!){
     startTimer(start: $start, title: $title){
       id
+      title
+      project_id
+      type
+      notes
+      description
+      start
+      end
+      project_title
+      isRunning
     }
   }
 `
@@ -27,6 +36,15 @@ const STOP_TIMER = gql`
   mutation stopTimer($id: ID!, $end: Float!){
     stopTimer(id: $id, end: $end){
       id
+      title
+      project_id
+      type
+      notes
+      description
+      start
+      end
+      project_title
+      isRunning
     }
   }
 `
@@ -35,9 +53,35 @@ const UPDATE_TIMER = gql`
   mutation updateTimer($id: ID!, $title: String!){
     updateTimer(id: $id, title: $title){
       id
+      title
+      project_id
+      type
+      notes
+      description
+      start
+      end
+      project_title
+      isRunning
     }
   }
 `
+
+const TIMERS = gql`
+  query Timers {
+    timers {
+      id
+      title
+      project_id
+      type
+      notes
+      description
+      start
+      end
+      project_title
+      isRunning
+    }
+  }
+`;
 
 interface ISTimerNew {
   start: number,
@@ -47,7 +91,7 @@ interface ISTimerNew {
   isRunningId: string,
 }
 
-export const TimerLog = ({ timer, refetchTimers }: { timer: any | null, refetchTimers: any }) => {
+export const TimerLog = ({ timer }: { timer: any | null }) => {
   const [STimer, setSTimer] = useState<ISTimerNew>({
     start: 0,
     runningSince: 0,
@@ -57,8 +101,28 @@ export const TimerLog = ({ timer, refetchTimers }: { timer: any | null, refetchT
   })
 
   const [STitle, setSTitle] = useState('')
-  const [startTimer] = useMutation<startTimerData, startTimerVariables>(START_TIMER)
-  const [stopTimer] = useMutation(STOP_TIMER)
+  const [startTimer] = useMutation<any>(START_TIMER, {
+    update(cache, { data: { startTimer } }) {
+      const { timers } = cache.readQuery<any>({ query: TIMERS })
+      console.log("update -> timers", timers)
+      console.log("update -> startTimer", startTimer)
+      cache.writeQuery({
+        query: TIMERS,
+        data: { timers: timers.concat([startTimer]) }
+      })
+    }
+  })
+
+  const [stopTimer] = useMutation(STOP_TIMER, {
+    update(cache, { data: { startTimer } }) {
+      const { timers } = cache.readQuery<any>({ query: TIMERS })
+      console.log("update -> timers", timers)
+      cache.writeQuery({
+        query: TIMERS,
+        data: { timers: timers.concat([stopTimer]) }
+      })
+    }
+  })
   const [updateTimer] = useMutation(UPDATE_TIMER)
 
   const elRefsLog = React.useRef<any>(null);
@@ -109,7 +173,7 @@ export const TimerLog = ({ timer, refetchTimers }: { timer: any | null, refetchT
       .then((result) => {
         setSTimer(STimer => ({ ...STimer, isRunningId: result.data ? result.data.startTimer.id : '' }))
       })
-    refetchTimers()
+    // refetchTimers()
   }
 
   const onStopTimer = async () => {
@@ -120,7 +184,7 @@ export const TimerLog = ({ timer, refetchTimers }: { timer: any | null, refetchT
     if (STimer.isRunningId !== null) {
       await stopTimer({ variables: { id: STimer.isRunningId, end: now } })
     }
-    refetchTimers()
+    // refetchTimers()
   }
 
   const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,7 +200,7 @@ export const TimerLog = ({ timer, refetchTimers }: { timer: any | null, refetchT
     if (e.key === 'Enter') {
       console.log('Adding....');
       onUpdateTimer()
-      refetchTimers()
+      // refetchTimers()
     }
   }
 

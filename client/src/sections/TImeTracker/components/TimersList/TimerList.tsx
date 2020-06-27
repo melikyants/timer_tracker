@@ -1,11 +1,8 @@
 import React from 'react';
 
-
 import { milliSecToString, isToday, sortByDates } from '../../../../lib';
 // import { Timers_timers as ITimer } from '../../../../context/__generated__/Timers';
-
-import { Timer } from './Timer';
-
+import { Timer } from './Timer'
 
 export const TimersList = ({ timers, timersRefetch }: { timers: any[] | [], timersRefetch: () => void }) => {
 
@@ -67,7 +64,9 @@ export const TimersList = ({ timers, timersRefetch }: { timers: any[] | [], time
             </div>
           </div>
           <div className="timer__block_body">
-            {timersByDays.items && <Timers timers={timersByDays.items} timersRefetch={timersRefetch} />}
+            {timersByDays.items && timersByDays.items.map((timer: any, i: number) =>
+              <Timer timer={timer} key={timer.id} timersRefetch={timersRefetch} />)
+            }
           </div>
 
         </div>
@@ -78,9 +77,3 @@ export const TimersList = ({ timers, timersRefetch }: { timers: any[] | [], time
   }
   return <div className="timers_list">There is no time log yet!</div>;
 };
-
-export const Timers = ({ timers, timersRefetch }: { timers: any[], timersRefetch: () => void }) => (
-  <div>
-    {timers.map((timer: any, i: number) => <Timer timer={timer} key={timer.id} timersRefetch={timersRefetch} />)}
-  </div>
-);

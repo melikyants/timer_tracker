@@ -49,7 +49,7 @@ export const Timers = ({ }) => {
   return (
     // <TimerContextProvider>
     <div className="timers">
-      <TimerLog timer={timer} refetchTimers={refetch} />
+      <TimerLog timer={timer} />
       <div className="timersList__wrapper">
         <TimersList timers={timersList} timersRefetch={handleTimersRefetch} />
       </div>

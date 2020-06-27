@@ -10,6 +10,8 @@ const CREATE_PROJECT = gql`
   mutation createProject($title: String!, $info:String){
     createProject(title: $title, info: $info){
       id
+      title
+      info
     }
   }
 `
@@ -30,8 +32,17 @@ export const CreateProjectPopper = () => {
   const { value: title, setValue: setTitle, reset: resetTitle, bind: bindTitle } = useInput('')
   const { value: info, setValue: setInfo, reset: resetInfo, bind: bindInfo } = useInput('')
 
-  const [createProject] = useMutation(CREATE_PROJECT)
-  const { refetch } = useQuery(PROJECTS);
+  const [createProject] = useMutation(CREATE_PROJECT, {
+    update(cache, { data: { createProject } }) {
+      const { projects } = cache.readQuery<any>({ query: PROJECTS });
+      console.log("update -> projects", projects)
+      console.log("update -> createProject", createProject)
+      cache.writeQuery({
+        query: PROJECTS,
+        data: { projects: projects.concat([createProject]) },
+      });
+    }
+  })
 
   const handleShowPopperForCreateProject = () => {
     setVisibilityProject(!visibleProject);
@@ -41,15 +52,15 @@ export const CreateProjectPopper = () => {
     setVisibilityProject(!visibleProject);
   };
 
-  const onCreateProject = async () => {
-    await createProject({
+  const onCreateProject = (e: any) => {
+    e.preventDefault()
+    createProject({
       variables: {
         title,
         info
       }
     })
     setVisibilityProject(!visibleProject);
-    refetch()
   }
 
   return (

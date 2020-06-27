@@ -24,6 +24,7 @@ export const projectResolver: IResolvers = {
         throw new Error('failed create new project')
       }
 
+      console.log("insertedProject", insertedProject)
       return insertedProject
     },
     updateProject: async (_root: undefined, { id, title, info }: { id: string, title: string, info: string }, { db }: { db: IDatabase }): Promise<any> => {

@@ -68,7 +68,7 @@ export const timerResolvers: IResolvers = {
     }
   },
   Mutation: {
-    startTimer: async (_root: undefined, { start, title, isRunning }: { start: number, title: string, isRunning: boolean }, { db }: { db: IDatabase }): Promise<TimersData> => {
+    startTimer: async (_root: undefined, { start, title }: { start: number, title: string }, { db }: { db: IDatabase }): Promise<TimersData> => {
       const insertRes = await db.timers.insertOne({
         _id: new ObjectId(),
         start: start,
@@ -92,7 +92,6 @@ export const timerResolvers: IResolvers = {
         throw new Error()
       }
 
-
       return insertTimer
     },
 
@@ -103,6 +102,7 @@ export const timerResolvers: IResolvers = {
       if (!stopTimer.value) {
         throw new Error('failed to stop timer')
       }
+      console.log("stopTimer.value", stopTimer.value)
 
       return stopTimer.value
     },
