@@ -13,7 +13,7 @@ import StopIcon from '../../icons/stop.svg'
 import { Popper } from '../Popper'
 import { TimerDetails } from '../TimerDetails'
 
-// import { TimerContext } from "../../lib/context/TimerContext";
+import { TimerContext } from "../../../../lib/context/TimerContext";
 
 const START_TIMER = gql`
   mutation startTimer($start: Float!, $title:String!){
@@ -101,6 +101,7 @@ export const TimerLog = ({ timer }: { timer: any | null }) => {
   })
 
   const [STitle, setSTitle] = useState('')
+  const [timerDetailsId, setTimerDetailsId] = React.useContext(TimerContext)
   const [startTimer] = useMutation<any>(START_TIMER, {
     update(cache, { data: { startTimer } }) {
       const { timers } = cache.readQuery<any>({ query: TIMERS })
@@ -205,7 +206,8 @@ export const TimerLog = ({ timer }: { timer: any | null }) => {
   }
 
   const onTimerDetails = () => {
-    setVisibility(!visible)
+    // setVisibility(!visible)
+    setTimerDetailsId(timer.id)
   }
 
   if (timer) {
@@ -220,7 +222,7 @@ export const TimerLog = ({ timer }: { timer: any | null }) => {
         <img src={StopIcon} width="10px" height="10px" alt="start_timer" />
       </button>
       <Popper refEl={elRefsLog} popperRef={popperRef} visible={visible}>
-        <TimerDetails timer={timer} />
+        {/* <TimerDetails timer={timer} /> */}
       </Popper>
     </div>)
   } else {
@@ -232,7 +234,7 @@ export const TimerLog = ({ timer }: { timer: any | null }) => {
         <img src={PlayIcon} width="14px" height="12px" alt="stop_timer" />
       </button>
       <Popper refEl={elRefsLog} popperRef={popperRef} visible={visible}>
-        <TimerDetails timer={timer} />
+        {/* <TimerDetails timer={timer} /> */}
       </Popper>
     </div>)
   }

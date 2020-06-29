@@ -6,6 +6,8 @@ import { useInput } from '../../../../lib'
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 
+import { TimerContext } from "../../../../lib/context/TimerContext";
+
 const TIMER = gql`
   query Timer($id: ID!) {
     timer(id: $id) {
@@ -23,22 +25,41 @@ const TIMER = gql`
   }
 `;
 
-export const TimerDetails = ({ timer }: { timer: any }) => {
-  console.log("TimerDetails -> timer", timer)
+export const TimerDetails = ({ timerId }: { timerId: any }) => {
+  // console.log("TimerDetails -> timer", timer)
   const types = ['Study', 'Work', 'Hobbie'];
-  const { value: timerTitle, setValue: setTimerValue, bind: bindTitle } = useInput(timer.title)
-  const { data, refetch } = useQuery(TIMER, {
+  const { data, loading, error, refetch } = useQuery(TIMER, {
     variables: {
-      id: timer.id,
+      id: timerId,
     }
   })
+  React.useEffect(() => {
+    console.log("data", data)
+    if (data) {
+      setTimerValue(data.timer.title)
+    }
+
+  }, [data])
+
+  const { value: timerTitle, setValue: setTimerValue, bind: bindTitle } = useInput('')
+  const [timerDetailsId, setTimerDetailsId] = React.useContext(TimerContext)
+
+  if (loading) return (<div>Loading...</div>)
 
   const timerFetched = data ? data.timer : null;
 
 
+  const onCancleDetails = () => {
+    setTimerDetailsId(null)
+  }
+
   return (
     <div className="TimerDetails_wrapper">
       <h3>Details</h3>
+      <div>
+        <button onClick={onCancleDetails}>Cancel</button>
+        <button>Save</button>
+      </div>
       <div className="TimerDetails__body">
         <div><input placeholder="Title" className="input" {...bindTitle} /></div>
 

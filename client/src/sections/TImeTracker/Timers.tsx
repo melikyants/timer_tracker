@@ -2,14 +2,14 @@ import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 
-import { TimersList, TimerLog } from './components';
+import { TimersList, TimerLog, TimerDetails } from './components';
 
 import { Timers as ITimers, Timers_timers } from './__generated__/Timers';
 import './styles/index.scss';
 
 import _ from 'lodash';
 
-// import { TimerContextProvider } from "../../lib/context/TimerContext";
+import { TimerContext } from "../../lib/context/TimerContext";
 
 const TIMERS = gql`
   query Timers {
@@ -35,8 +35,9 @@ export const Timers = ({ }) => {
   const {
     data: timersData, loading, error, refetch,
   } = useQuery<any>(TIMERS);
-  console.log("Timers -> error", error)
-  console.log("Timers -> timersData", timersData)
+  const [timerDetailsId] = React.useContext(TimerContext)
+  console.log("Timers -> timerDetailsId", timerDetailsId)
+
 
   const timersList = timersData ? timersData.timers : [];
 
@@ -47,13 +48,11 @@ export const Timers = ({ }) => {
   }
 
   return (
-    // <TimerContextProvider>
     <div className="timers">
       <TimerLog timer={timer} />
       <div className="timersList__wrapper">
-        <TimersList timers={timersList} timersRefetch={handleTimersRefetch} />
+        {timerDetailsId ? <TimerDetails timerId={timerDetailsId} /> : <TimersList timers={timersList} timersRefetch={handleTimersRefetch} />}
       </div>
     </div>
-    // </TimerContextProvider>
   );
 };

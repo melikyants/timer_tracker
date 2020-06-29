@@ -1,9 +1,18 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:wght@300;400;700');
+@import url("https://fonts.googleapis.com/css?family=Roboto+Condensed:wght@300;400;700");
+
+$mainBg: hsl(206, 78%, 95%);
+$highlight: hsl(0, 0%, 100%);
+$shaddow: hsl(206, 40%, 80%);
+$fontColorMain: hsl(206, 42%, 43%);
 
 *,
 *:before,
 *:after {
-    box-sizing: border-box
+    box-sizing: border-box;
+}
+
+body {
+    background-color: $mainBg;
 }
 
 button {
@@ -12,11 +21,13 @@ button {
 
 .timers {
     width: 400px;
-    background: #f4f4f4;
+    background: $mainBg;
     margin: auto;
     font-size: 100%;
     font-family: 'Roboto Condensed', sans-serif;
     font-weight: 400;
+    color: $fontColorMain;
+    height: 600px;
 
     .input {
         font-family: 'Roboto Condensed', sans-serif;
@@ -25,7 +36,7 @@ button {
 
 .timer_log {
     height: 84px;
-    background: #fff;
+    background: $mainBg;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -47,14 +58,19 @@ button {
 
 .timer_log__project {
     font-size: .9rem;
-    color: #C9C7C7;
+    color: $fontColorMain;
 }
 
 .timersList__wrapper {
     padding: 12px;
     overflow: scroll;
-    max-height: 400px;
+    height: calc(100% - 100px);
+
+    // max-height: 600px;
     position: relative;
+    box-shadow: inset 8px 8px 16px $shaddow, inset -8px -8px 16px $highlight;
+    border-radius: 12px;
+    padding: 12px;
 
     // &:after {
     //     content: '';
@@ -68,11 +84,10 @@ button {
 }
 
 .timers_list {
-    height: 400px;
+    // height: 500px;
 }
 
 .timer__block {
-    background: white;
     border-radius: 8px;
     padding: 12px;
     margin-bottom: 12px;
@@ -110,8 +125,7 @@ button {
     justify-content: space-between;
     margin: 12px 0;
 
-
-    &>div:not(:first-child) {
+    & > div:not(:first-child) {
         display: flex;
         align-items: center;
         text-align: left;
@@ -122,8 +136,11 @@ button {
     border-radius: 28px;
     border: 0;
     height: 28px;
-    background: #f9f9f9;
+    background: $mainBg;
     width: 100%;
+    color: $fontColorMain;
+    box-shadow: inset 4px 4px 8px 0px $shaddow, inset -4px -4px 8px 0px $highlight;
+
     // flex: 1 1;
     padding: 0 12px;
 }
@@ -159,11 +176,12 @@ button {
     color: #C9C7C7;
 }
 
-
 .TimerDetails_wrapper {
-    background: white;
+    // background: white;
+
     // padding: 12px;
     border-radius: 6px;
+
     // box-shadow: 0 0 4px 0px rgba(0, 0, 0, .25);
 }
 
@@ -172,7 +190,7 @@ button {
     flex-flow: column;
     min-width: 250px;
 
-    &>div {
+    & > div {
         margin-bottom: 8px;
     }
 }
