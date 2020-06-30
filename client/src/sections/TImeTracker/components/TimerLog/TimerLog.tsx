@@ -7,81 +7,17 @@ import { useInterval, milliSecToString } from '../../../../lib'
 // import { Timers_timers as ITimer } from '..TimersList/Timers'
 import { startTimer as startTimerData, startTimerVariables } from './__generated__/startTimer'
 
-import PlayIcon from '../../icons/play.svg'
-import StopIcon from '../../icons/stop.svg'
+import { ReactComponent as PlayIcon } from '../../icons/arrow.svg'
+import { ReactComponent as StopIcon } from '../../icons/stop.svg'
 
 import { Popper } from '../Popper'
 import { TimerDetails } from '../TimerDetails'
 
 import { TimerContext } from "../../../../lib/context/TimerContext";
 
-const START_TIMER = gql`
-  mutation startTimer($start: Float!, $title:String!){
-    startTimer(start: $start, title: $title){
-      id
-      title
-      project_id
-      type
-      notes
-      description
-      start
-      end
-      project_title
-      isRunning
-    }
-  }
-`
+import { START_TIMER, STOP_TIMER, UPDATE_TIMER } from '../../../../lib/graphql/mutation'
+import { TIMERS, TIMER } from '../../../../lib/graphql/query'
 
-const STOP_TIMER = gql`
-  mutation stopTimer($id: ID!, $end: Float!){
-    stopTimer(id: $id, end: $end){
-      id
-      title
-      project_id
-      type
-      notes
-      description
-      start
-      end
-      project_title
-      isRunning
-    }
-  }
-`
-
-const UPDATE_TIMER = gql`
-  mutation updateTimer($id: ID!, $title: String!){
-    updateTimer(id: $id, title: $title){
-      id
-      title
-      project_id
-      type
-      notes
-      description
-      start
-      end
-      project_title
-      isRunning
-    }
-  }
-`
-
-const TIMERS = gql`
-  query Timers {
-    timers {
-      id
-      title
-      project_id
-      type
-      notes
-      description
-      start
-      end
-      project_title
-      isRunning
-    }
-  }
-`;
 
 interface ISTimerNew {
   start: number,
@@ -105,8 +41,7 @@ export const TimerLog = ({ timer }: { timer: any | null }) => {
   const [startTimer] = useMutation<any>(START_TIMER, {
     update(cache, { data: { startTimer } }) {
       const { timers } = cache.readQuery<any>({ query: TIMERS })
-      console.log("update -> timers", timers)
-      console.log("update -> startTimer", startTimer)
+
       cache.writeQuery({
         query: TIMERS,
         data: { timers: timers.concat([startTimer]) }
@@ -115,12 +50,17 @@ export const TimerLog = ({ timer }: { timer: any | null }) => {
   })
 
   const [stopTimer] = useMutation(STOP_TIMER, {
-    update(cache, { data: { startTimer } }) {
+    update(cache, { data: { stopTimer } }) {
+
       const { timers } = cache.readQuery<any>({ query: TIMERS })
-      console.log("update -> timers", timers)
+      const index = timers.findIndex((timer: any) => timer.id === stopTimer.id)
+      if (index > -1) {
+        timers[index] = stopTimer
+      }
+
       cache.writeQuery({
         query: TIMERS,
-        data: { timers: timers.concat([stopTimer]) }
+        data: { timers: timers }
       })
     }
   })
@@ -128,26 +68,6 @@ export const TimerLog = ({ timer }: { timer: any | null }) => {
 
   const elRefsLog = React.useRef<any>(null);
   const popperRef = React.useRef<any>(null);
-  const [visible, setVisibility] = React.useState(false)
-
-  React.useEffect(() => {
-    let mounted = true;
-    // listen for clicks and close dropdown on body
-    const handleDocumentClick = (event: any) => {
-
-      if (elRefsLog.current.contains(event.target) || popperRef.current.contains(event.target)) {
-        return;
-      }
-      if (mounted) setVisibility(false);
-
-    }
-    document.addEventListener("mousedown", handleDocumentClick);
-    return () => {
-      mounted = false
-      document.removeEventListener("mousedown", handleDocumentClick);
-    };
-  }, [setVisibility]);
-
 
   useInterval(() => {
     const runningSince = Date.now() - STimer.start
@@ -213,29 +133,23 @@ export const TimerLog = ({ timer }: { timer: any | null }) => {
   if (timer) {
     return (<div className="timer_log">
       {/* <input className="input" type="text" onChange={onTitleChange} onKeyPress={onUpdateTitle} defaultValue={STitle} /> */}
-      <div className="timer_log__desc" onClick={onTimerDetails} ref={elRefsLog}>
+      <div className="timer_log__desc" onClick={onTimerDetails}>
         <div>{STitle}</div>
         <div className="timer_log__project">{timer.project_title}</div>
       </div>
       <div className="timer_log__tick">{STimer.time}</div>
-      <button className="btn btn__stop" onClick={onStopTimer}>
-        <img src={StopIcon} width="10px" height="10px" alt="start_timer" />
+      <button className="btn btn__circle btn__stop" onClick={onStopTimer}>
+        <StopIcon />
       </button>
-      <Popper refEl={elRefsLog} popperRef={popperRef} visible={visible}>
-        {/* <TimerDetails timer={timer} /> */}
-      </Popper>
     </div>)
   } else {
     return (<div className="timer_log" >
 
       <input className="input" type="text" onChange={onTitleChange} placeholder="What are you working on?" />
-      <div ref={elRefsLog} onClick={onTimerDetails}>add project</div>
-      <button className="btn btn__start" onClick={onStartTimer}>
-        <img src={PlayIcon} width="14px" height="12px" alt="stop_timer" />
+      <div onClick={onTimerDetails}>add project</div>
+      <button className="btn btn__circle btn__play" onClick={onStartTimer}>
+        <PlayIcon />
       </button>
-      <Popper refEl={elRefsLog} popperRef={popperRef} visible={visible}>
-        {/* <TimerDetails timer={timer} /> */}
-      </Popper>
     </div>)
   }
 }

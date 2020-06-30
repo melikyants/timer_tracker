@@ -14,18 +14,18 @@ export const typeDefs = gql`
     start: Float!,
     end: Float,
     title: String!,
-    project_id: ID,
     type: TimerType,
-    description: String!,
-    notes: String!,
+    notes: String,
+    project_id: ID,
     project_title: String!,
+    project_description: String,
     isRunning: Boolean!
   }
 
   type Project {
     id: ID!,
     title: String!,
-    info: String
+    description: String
   }
 
   type Query {
@@ -37,13 +37,12 @@ export const typeDefs = gql`
   type Mutation {
     startTimer(start:Float!, title: String!): Timer!
     stopTimer(id:ID!, end: Float!):Timer!
-    updateTimer(id:ID!, title: String!):Timer!
+    updateTimer(id:ID!, title: String, project_id:String, project_description:String, notes: String, type: TimerType):Timer!
     deleteTimer(id:ID!): Timer!
-    assignProject(timer_id: String!, id: String!):Timer
 
-    createProject(title:String!, info:String): Project!
+    createProject(title:String!, description:String): Project!
     deleteProject(id: ID!): Project!
-    updateProject(id: ID!, title:String, info:String ): Project!
+    updateProject(id: ID!, title:String, description:String ): Project!
     
   }
 `

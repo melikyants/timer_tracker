@@ -11,11 +11,11 @@ export const projectResolver: IResolvers = {
     }
   },
   Mutation: {
-    createProject: async (_root: undefined, { timer_id, title, info }: { timer_id: string, title: string, info: string }, { db }: { db: IDatabase }): Promise<IProject> => {
+    createProject: async (_root: undefined, { title, description }: { timer_id: string, title: string, description: string }, { db }: { db: IDatabase }): Promise<IProject> => {
       const project = await db.projects.insertOne({
         _id: new ObjectId(),
         title: title,
-        info: info
+        description
       })
 
       const insertedProject: IProject = project.ops[0]
@@ -27,8 +27,8 @@ export const projectResolver: IResolvers = {
       console.log("insertedProject", insertedProject)
       return insertedProject
     },
-    updateProject: async (_root: undefined, { id, title, info }: { id: string, title: string, info: string }, { db }: { db: IDatabase }): Promise<any> => {
-      const updateProject = await db.projects.findOneAndUpdate({ _id: new ObjectId(id) }, { $set: { title, info } }, { returnOriginal: false })
+    updateProject: async (_root: undefined, { id, title, description }: { id: string, title: string, description: string }, { db }: { db: IDatabase }): Promise<any> => {
+      const updateProject = await db.projects.findOneAndUpdate({ _id: new ObjectId(id) }, { $set: { title, description } }, { returnOriginal: false })
 
       if (!updateProject.ok) {
         throw new Error('Coudnt update the project')
@@ -54,6 +54,7 @@ export const projectResolver: IResolvers = {
         throw new Error('failed to delete project')
       }
 
+      console.log("deleteProject", deleteProject)
       return deleteProject.value
     }
 

@@ -15,7 +15,6 @@ export interface ITimer {
   title: string,
   project_id: ObjectId | null,
   type: ListingType | string,
-  description: string,
   notes: string,
   isRunning: boolean,
 }
@@ -23,7 +22,7 @@ export interface ITimer {
 export interface IProject {
   _id: ObjectId,
   title: string,
-  info: string
+  description: string
 }
 
 export interface IDatabase {

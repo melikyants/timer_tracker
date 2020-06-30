@@ -1,9 +1,13 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto+Condensed:wght@300;400;700");
 
-$mainBg: hsl(206, 78%, 95%);
+$mainBg: hsl(206, 78%, 98%);
 $highlight: hsl(0, 0%, 100%);
-$shaddow: hsl(206, 40%, 80%);
-$fontColorMain: hsl(206, 42%, 43%);
+$shaddow: hsl(206, 50%, 80%);
+$fontColorMain: hsl(219, 38%, 38%);
+$fontColorSecondary: hsl(219, 38%, 65%);
+$greenColor: hsl(146, 79, 43);
+$redColor: hsl(0, 78, 43);
+$fontFamily: "Roboto Condensed", sans-serif;
 
 *,
 *:before,
@@ -15,7 +19,7 @@ body {
     background-color: $mainBg;
 }
 
-button {
+button, input, textarea {
     outline: none;
 }
 
@@ -24,13 +28,13 @@ button {
     background: $mainBg;
     margin: auto;
     font-size: 100%;
-    font-family: 'Roboto Condensed', sans-serif;
+    font-family: $fontFamily;
     font-weight: 400;
     color: $fontColorMain;
     height: 600px;
 
     .input {
-        font-family: 'Roboto Condensed', sans-serif;
+        font-family: $fontFamily;
     }
 }
 
@@ -68,7 +72,7 @@ button {
 
     // max-height: 600px;
     position: relative;
-    box-shadow: inset 8px 8px 16px $shaddow, inset -8px -8px 16px $highlight;
+    box-shadow: inset 4px 4px 12px $shaddow, inset -4px -4px 12px $highlight;
     border-radius: 12px;
     padding: 12px;
 
@@ -85,11 +89,13 @@ button {
 
 .timers_list {
     // height: 500px;
+    position: relative;
 }
 
 .timer__block {
     border-radius: 8px;
     padding: 12px;
+    margin-right: 40px;
     margin-bottom: 12px;
 }
 
@@ -108,15 +114,35 @@ button {
     display: flex;
     flex-flow: column;
     align-items: flex-start;
+    text-align: left;
+    width: 220px;
+}
+
+.timer_desc_row {
+    display: flex;
+
+    & > div {
+        margin-right: 8px;
+    }
 }
 
 .timer_desc__title {
     font-size: .9rem;
-    color: #C9C7C7;
+    color: $fontColorSecondary;
+}
+
+.timer__times_fromTo {
+    color: $fontColorSecondary;
+}
+
+.timer__times {
+    display: flex;
+    flex-flow: column;
+    align-items: flex-end;
 }
 
 .timer__block_body {
-    position: relative;
+    // position: relative;
 }
 
 .timer {
@@ -130,12 +156,26 @@ button {
         align-items: center;
         text-align: left;
     }
+
+    &:hover {
+        .startIcon {
+            opacity: 1;
+        }
+    }
+}
+
+.startIcon {
+    position: absolute;
+    right: 0;
+    width: 32px;
+    text-align: center;
+    opacity: 0;
 }
 
 .input {
-    border-radius: 28px;
+    border-radius: 32px;
     border: 0;
-    height: 28px;
+    height: 32px;
     background: $mainBg;
     width: 100%;
     color: $fontColorMain;
@@ -143,29 +183,100 @@ button {
 
     // flex: 1 1;
     padding: 0 12px;
+
+    &::placeholder {
+        color: $fontColorSecondary;
+    }
 }
 
+//3 types of btns:
+//.btn, .btn-circle, .btn-link
 .btn {
-    width: 28px;
-    height: 28px;
-    border-radius: 28px;
+    height: 32px;
+    width: 120px;
+    border-radius: 12px;
     border: 0;
-    color: white;
+    color: $fontColorMain;
+    font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0;
+    background-color: $mainBg;
+    box-shadow: 4px 4px 8px 0px $shaddow, -4px -4px 8px 0px $highlight;
+    cursor: pointer;
+    transition: box-shadow .3s linear;
 
-    &__start {
-        background-color: #20C306;
+    &:active, &:hover {
+        box-shadow: inset 4px 4px 8px 0px $shaddow, inset -4px -4px 8px 0px $highlight;
+        transition: box-shadow .3s linear;
     }
 
-    &__stop {
-        background-color: #C30606;
+    &__icon {
+        background: transparent;
+        box-shadow: none;
+        width: 16px;
+        height: 16px;
+
+        & svg {
+            width: 16px;
+            height: 16px;
+
+            // stroke: $fontColorMain;
+       
+        }
     }
 
     &__delete {
-        background-color: #C30606;
+        &:hover {
+            fill: $redColor;
+        }
+    }
+
+    &__red {
+        color: red;
+    }
+
+    &__circle {
+        border-radius: 32px;
+        width: 32px;
+
+        & svg {
+            width: 16px;
+            height: 16px;
+        }
+    }
+
+    &__stop {
+        & svg {
+            fill: $redColor;
+        }
+    }
+
+    &__play {
+        & svg {
+            fill: $greenColor;
+        }
+    }
+
+    &__link {
+        // background-color: #C30606;
+   
+    }
+
+    &__delete {
+        // background-color: #C30606;
+   
+    }
+}
+
+.btn-block {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    & > button:not(:first-child) {
+        margin-left: 16px;
     }
 }
 
@@ -173,16 +284,16 @@ button {
     border: 0;
     background: transparent;
     padding: 0;
-    color: #C9C7C7;
+    color: $fontColorSecondary;
 }
 
 .TimerDetails_wrapper {
-    // background: white;
-
-    // padding: 12px;
     border-radius: 6px;
 
-    // box-shadow: 0 0 4px 0px rgba(0, 0, 0, .25);
+    & h3 {
+        margin: 0 0 16px;
+        text-align: left;
+    }
 }
 
 .TimerDetails__body {
@@ -191,7 +302,7 @@ button {
     min-width: 250px;
 
     & > div {
-        margin-bottom: 8px;
+        margin-bottom: 16px;
     }
 }
 
@@ -200,7 +311,55 @@ button {
     justify-content: space-between;
 }
 
-.project_list li {
-    height: 20px;
-    margin-bottom: 5px;
+.TimerDetails__body__row {
+    display: flex;
+}
+
+.project_list {
+    list-style: none;
+    margin: 0;
+    padding: 12px;
+
+    li {
+        height: 20px;
+        margin-bottom: 5px;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+
+        & .btn {
+            margin-left: 10px;
+        }
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+
+.select {
+    background: $mainBg;
+    border: 0;
+    color: $fontColorMain;
+    box-shadow: 4px 4px 8px 0px $shaddow, -4px -4px 8px 0px $highlight;
+    height: 32px;
+    width: 120px;
+    padding: 0 12px;
+    border-radius: 12px;
+}
+
+.textarea {
+    width: 100%;
+    resize: none;
+    border-radius: 12px;
+    background: $mainBg;
+    border: 0;
+    box-shadow: inset 4px 4px 8px 0px $shaddow, inset -4px -4px 8px 0px $highlight;
+    padding: 12px;
+    color: $fontColorMain;
+    font-family: $fontFamily;
+
+    &::placeholder {
+        color: $fontColorSecondary;
+    }
 }

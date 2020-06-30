@@ -4,39 +4,20 @@ import { Popper } from '../../Popper';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 
-import { useInput } from '../../../../../lib'
-
-const CREATE_PROJECT = gql`
-  mutation createProject($title: String!, $info:String){
-    createProject(title: $title, info: $info){
-      id
-      title
-      info
-    }
-  }
-`
-const PROJECTS = gql`
-  query Projects {
-    projects {
-      id
-      title
-      info
-    }
-  }
-`;
+import { useInput, useTextarea } from '../../../../../lib'
+import { PROJECTS } from '../../../../../lib/graphql/query'
+import { CREATE_PROJECT } from '../../../../../lib/graphql/mutation'
 
 export const CreateProjectPopper = () => {
   const buttonProjectCreateRef = React.useRef(null);
   const buttonProjectCreatePopperRef = React.useRef(null);
   const [visibleProject, setVisibilityProject] = React.useState(false);
   const { value: title, setValue: setTitle, reset: resetTitle, bind: bindTitle } = useInput('')
-  const { value: info, setValue: setInfo, reset: resetInfo, bind: bindInfo } = useInput('')
+  const { value: description, setValue: setDescription, reset: resetDescription, bind: bindDescription } = useTextarea('')
 
   const [createProject] = useMutation(CREATE_PROJECT, {
     update(cache, { data: { createProject } }) {
       const { projects } = cache.readQuery<any>({ query: PROJECTS });
-      console.log("update -> projects", projects)
-      console.log("update -> createProject", createProject)
       cache.writeQuery({
         query: PROJECTS,
         data: { projects: projects.concat([createProject]) },
@@ -57,7 +38,7 @@ export const CreateProjectPopper = () => {
     createProject({
       variables: {
         title,
-        info
+        description
       }
     })
     setVisibilityProject(!visibleProject);
@@ -65,19 +46,19 @@ export const CreateProjectPopper = () => {
 
   return (
     <div>
-      <button ref={buttonProjectCreateRef} onClick={handleShowPopperForCreateProject} type="button">Create a project</button>
+      <button ref={buttonProjectCreateRef} onClick={handleShowPopperForCreateProject} type="button" className="btn ">Create a project</button>
       <Popper
         refEl={buttonProjectCreateRef}
         popperRef={buttonProjectCreatePopperRef}
         visible={visibleProject}>
         <div className="createProject">
           <div className="createProject__header">
-            <button onClick={closeProjectCreation} type="button">Cancel</button>
-            <button onClick={onCreateProject} type="button">Save</button>
+            <button onClick={closeProjectCreation} type="button" className="btn ">Cancel</button>
+            <button onClick={onCreateProject} type="button" className="btn ">Save</button>
           </div>
           <div className="createProject__body" >
-            <input type="text" {...bindTitle} name="title" placeholder="Name your project" />
-            <input type="text" {...bindInfo} name="info" placeholder="Additional info" />
+            <input type="text" {...bindTitle} name="title" placeholder="Name your project" className="input" />
+            <textarea {...bindDescription} name="description" placeholder="Description" className="textarea" />
           </div>
         </div>
       </Popper>

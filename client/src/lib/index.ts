@@ -1,3 +1,2 @@
-export * from './useInterval'
+export * from './Hooks'
 export * from './helpers'
-export * from './useInput'

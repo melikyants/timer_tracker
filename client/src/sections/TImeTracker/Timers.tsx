@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
+
 
 import { TimersList, TimerLog, TimerDetails } from './components';
 
@@ -10,27 +10,13 @@ import './styles/index.scss';
 import _ from 'lodash';
 
 import { TimerContext } from "../../lib/context/TimerContext";
+import { TIMERS } from '../../lib/graphql/query'
 
-const TIMERS = gql`
-  query Timers {
-    timers {
-      id
-      title
-      project_id
-      type
-      notes
-      description
-      start
-      end
-      project_title
-      isRunning
-    }
-  }
-`;
 
 interface ITimerext extends Timers_timers {
   project_title?: string
 }
+
 export const Timers = ({ }) => {
   const {
     data: timersData, loading, error, refetch,

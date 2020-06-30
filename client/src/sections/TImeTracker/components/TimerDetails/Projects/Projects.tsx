@@ -8,32 +8,28 @@ import { gql } from 'apollo-boost';
 import { Projects as IProjects } from './__generated__/Projects'
 import { useInput } from '../../../../../lib'
 
-const PROJECTS = gql`
-  query Projects {
-    projects {
-      id
-      title
-      info
-    }
-  }
-`;
+import { PROJECTS } from '../../../../../lib/graphql/query'
+import { DELETE_PROJECT } from '../../../../../lib/graphql/mutation'
+import { ReactComponent as DeleteIcon } from '../../../icons/delete.svg'
 
-const ASSIGN_PROJECT = gql`
-  mutation AssignProject($timer_id: String!, $id: String!){
-    assignProject(timer_id: $timer_id, id: $id){
-      id
-      project_title
-    }
-  }
-`
-
-export const Projects = ({ timer }: { timer: any }) => {
+export const Projects = ({ timer, onChangeProjectId }: { timer: any, onChangeProjectId: any }) => {
   // console.log("Projects -> timerId", timer)
   const {
     data: projectsData, loading, error, refetch: refetchProjects,
   } = useQuery<IProjects>(PROJECTS);
-
-  const [assignProject] = useMutation(ASSIGN_PROJECT)
+  const [deleteProject] = useMutation(DELETE_PROJECT, {
+    update(cache, { data: { deleteProject } }) {
+      const { projects } = cache.readQuery<any>({ query: PROJECTS })
+      const index = projects.findIndex((project: any) => project.id === deleteProject.id)
+      if (index > -1) {
+        projects.splice(index, 1)
+      }
+      cache.writeQuery({
+        query: PROJECTS,
+        data: { projects: projects }
+      })
+    }
+  })
 
   const inputProjectRef = React.useRef(null);
   const inputProjectPopperRef = React.useRef(null);
@@ -48,19 +44,13 @@ export const Projects = ({ timer }: { timer: any }) => {
     setVisibility(!visible);
   };
 
-  const updateState = (id: string) => {
-    console.log("updateState -> id", id)
-    const projectTitle = projectsList.filter(project => id === id)[0]
-    setprojectName(id)
-    setVisibility(false);
+  const onDeleteProject = async (id: string) => {
+    await deleteProject({ variables: { id } })
   }
-  const onSelectProject = async (id: string) => {
-    const timer_title: any = await assignProject({ variables: { timer_id: timer.id, id } })
-    if (!timer_title) {
-      throw new Error()
-    }
-    const timer_projectT = timer_title.data.assignProject.project_title
-    await updateState(timer_projectT)
+  const onSelectProject = (id: string, title: string, description: string) => {
+    onChangeProjectId(id, description)
+    setprojectName(title)
+    setVisibility(false);
   }
 
   return (
@@ -69,7 +59,15 @@ export const Projects = ({ timer }: { timer: any }) => {
       <Popper refEl={inputProjectRef} popperRef={inputProjectPopperRef} visible={visible}>
         <div>
           <ul className="project_list">
-            {projectsList.map((project) => (<li key={project.id} data-id={project.id} onClick={(e) => onSelectProject(project.id)}>{project.title}</li>))}
+            {projectsList.map((project) => (
+              <li
+                key={project.id}
+                data-id={project.id}
+              >
+                <div onClick={(e) => onSelectProject(project.id, project.title, project.description)}>{project.title}</div>
+                <div>
+                  <button className="btn btn__icon" onClick={() => onDeleteProject(project.id)}><DeleteIcon /></button></div>
+              </li>))}
           </ul>
           <CreateProjectPopper />
         </div>
