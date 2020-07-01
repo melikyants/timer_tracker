@@ -55,6 +55,8 @@ export const TimersList = ({ timers }: { timers: Timers_timers[] }) => {
 
         const totalTime = milliSecToString(total);
 
+        item.items.sort((a: any, b: any) => sortByDates(a.date, b.date));
+
         return {
           ...item,
           total: totalTime,

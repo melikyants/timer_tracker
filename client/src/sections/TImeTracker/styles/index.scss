@@ -95,8 +95,24 @@ button, input, textarea {
 .timer__block {
     border-radius: 8px;
     padding: 12px;
-    margin-right: 40px;
     margin-bottom: 12px;
+    position: relative;
+
+    &:after {
+        content: '';
+        position: absolute;
+        background: $mainBg;
+        box-shadow: inset 1px 1px 1px $shaddow, inset -1px -1px 1px $highlight;
+        border-radius: 100%;
+        width: 80%;
+        height: 2px;
+        left: 5%;
+        bottom: 0;
+    }
+}
+
+.timer__block_body {
+    padding-right: 40px;
 }
 
 .timer__block_header {
@@ -104,6 +120,7 @@ button, input, textarea {
     align-items: center;
     justify-content: space-between;
     font-size: 1.1rem;
+    padding-right: 40px;
 }
 
 .timer_log__tick {
