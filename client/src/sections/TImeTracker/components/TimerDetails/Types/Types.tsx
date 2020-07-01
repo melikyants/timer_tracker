@@ -1,33 +1,52 @@
-import React from 'react'
-import { Popper } from '../../Popper';
+import React from "react";
+import { Popper } from "../../Popper";
 
 import { TimerType as ITimerTYpe } from "../../../../../lib/graphql/globalTypes";
 
-import { useInput } from '../../../../../lib'
+import { useInput } from "../../../../../lib";
+import { Timer_timer } from "../../../../../lib/graphql/query/Timer/__generated__/Timer";
 
-export const Types = ({ timer, onChangeType }: { timer: any, onChangeType: (type: ITimerTYpe) => void }) => {
-
+export const Types = ({
+  timer,
+  onChangeType,
+}: {
+  timer: Timer_timer;
+  onChangeType: (type: ITimerTYpe) => void;
+}) => {
   const inputProjectRef = React.useRef(null);
   const inputProjectPopperRef = React.useRef(null);
 
   const [visible, setVisibility] = React.useState(false);
-  const defaultValueType = timer.type ? timer.type : 'Select Type'
-  const { setValue: setTimerType, bind: bindTimerType } = useInput(defaultValueType)
+  const defaultValueType = timer.type ? timer.type : "Select Type";
+  const { setValue: setTimerType, bind: bindTimerType } = useInput(
+    defaultValueType
+  );
 
   const onClickInputType = () => {
     setVisibility(!visible);
   };
 
   const onSelectType = (type: ITimerTYpe) => {
-    onChangeType(type)
-    setTimerType(type)
+    onChangeType(type);
+    setTimerType(type);
     setVisibility(false);
-  }
+  };
 
   return (
     <div>
-      <input className="input" name="type" placeholder="select a type" ref={inputProjectRef} onClick={onClickInputType} {...bindTimerType} />
-      <Popper refEl={inputProjectRef} popperRef={inputProjectPopperRef} visible={visible}>
+      <input
+        className="input"
+        name="type"
+        placeholder="select a type"
+        ref={inputProjectRef}
+        onClick={onClickInputType}
+        {...bindTimerType}
+      />
+      <Popper
+        refEl={inputProjectRef}
+        popperRef={inputProjectPopperRef}
+        visible={visible}
+      >
         <div>
           <ul className="project_list">
             <li onClick={(e) => onSelectType(ITimerTYpe.ANY)}>Any</li>
@@ -38,6 +57,5 @@ export const Types = ({ timer, onChangeType }: { timer: any, onChangeType: (type
         </div>
       </Popper>
     </div>
-
-  )
-}
+  );
+};

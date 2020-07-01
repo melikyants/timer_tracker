@@ -1,145 +1,190 @@
-import React from 'react'
+import React from "react";
 import { useMutation } from "@apollo/react-hooks";
-import { useInterval, milliSecToString } from '../../../../lib'
+import { useInterval, milliSecToString } from "../../../../lib";
 
-import { ReactComponent as PlayIcon } from '../../icons/arrow.svg'
-import { ReactComponent as StopIcon } from '../../icons/stop.svg'
-
+import { ReactComponent as PlayIcon } from "../../icons/arrow.svg";
+import { ReactComponent as StopIcon } from "../../icons/stop.svg";
 
 import { TimerContext } from "../../../../lib/context/TimerContext";
 
-import { STOP_TIMER, CREATE_TIMER } from '../../../../lib/graphql/mutation'
-import { TIMERS } from '../../../../lib/graphql/query'
+import { STOP_TIMER, CREATE_TIMER } from "../../../../lib/graphql/mutation";
+import { TIMERS } from "../../../../lib/graphql/query";
+import { Timer_timer as ITimer_timer } from "../../../../lib/graphql/query/Timer/__generated__/Timer";
+import { Timers as ITimers } from "../../../../lib/graphql/query/Timers/__generated__/Timers";
+import {
+  createTimer as IcreateTimer,
+  createTimerVariables,
+} from "../../../../lib/graphql/mutation/CreateTimer/__generated__/createTimer";
+import {
+  stopTimer as IstopTimer,
+  stopTimerVariables,
+} from "../../../../lib/graphql/mutation/StopTimer/__generated__/stopTimer";
 
 interface ISTimerNew {
-  start: number,
-  runningSince: number,
-  time: string, //human readable time
+  start: number;
+  runningSince: number;
+  time: string; //human readable time
 }
 
-export const TimerLog = ({ timer }: { timer: any | null }) => {
-
-  const [STitle, setSTitle] = React.useState('')
+export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
+  const [STitle, setSTitle] = React.useState("");
   const [STimer, setSTimer] = React.useState<ISTimerNew>({
     start: 0,
     runningSince: 0,
-    time: '',
-  })
+    time: "",
+  });
 
-  const [timerR, dispatchTimerR] = React.useContext(TimerContext)
-  const [createTimer] = useMutation<any>(CREATE_TIMER, {
-    update(cache, { data: { createTimer } }) {
-      const { timers } = cache.readQuery<any>({ query: TIMERS })
+  const { timerR, dispatchTimerR } = React.useContext(TimerContext);
+  const [createTimer] = useMutation<IcreateTimer, createTimerVariables>(
+    CREATE_TIMER,
+    {
+      update(cache, { data }) {
+        const dataTimers = cache.readQuery<ITimers>({ query: TIMERS });
 
-      cache.writeQuery({
-        query: TIMERS,
-        data: { timers: timers.concat([createTimer]) }
-      })
+        if (dataTimers) {
+          cache.writeQuery({
+            query: TIMERS,
+            data: { timers: dataTimers.timers.concat([data!.createTimer]) },
+          });
+        }
+      },
     }
-  })
+  );
 
-  const [stopTimer] = useMutation(STOP_TIMER, {
-    update(cache, { data: { stopTimer } }) {
+  const [stopTimer] = useMutation<IstopTimer, stopTimerVariables>(STOP_TIMER, {
+    update(cache, { data }) {
+      const dataTimers = cache.readQuery<ITimers>({ query: TIMERS });
 
-      const { timers } = cache.readQuery<any>({ query: TIMERS })
-      const index = timers.findIndex((timer: any) => timer.id === stopTimer.id)
-      if (index > -1) {
-        timers[index] = stopTimer
+      if (dataTimers && data) {
+        const index = dataTimers.timers.findIndex(
+          (timer) => timer.id === data.stopTimer.id
+        );
+        if (index > -1) {
+          dataTimers.timers[index] = data.stopTimer;
+        }
+
+        cache.writeQuery({
+          query: TIMERS,
+          data: { timers: dataTimers.timers },
+        });
       }
+    },
+  });
 
-      cache.writeQuery({
-        query: TIMERS,
-        data: { timers: timers }
-      })
-    }
-  })
+  useInterval(
+    () => {
+      const runningSince = Date.now() - STimer.start;
+      const timeRunning = milliSecToString(runningSince);
 
-  useInterval(() => {
-    const runningSince = Date.now() - STimer.start
-    const timeRunning = milliSecToString(runningSince)
-
-    setSTimer(STimer => ({ ...STimer, runningSince: STimer.runningSince + 1, time: timeRunning }));
-
-  }, timerR.isRunning ? 1000 : null);
+      setSTimer((STimer) => ({
+        ...STimer,
+        runningSince: STimer.runningSince + 1,
+        time: timeRunning,
+      }));
+    },
+    timerR.isRunning ? 1000 : null
+  );
 
   React.useEffect(() => {
     if (timer) {
-      const runningSince = Date.now() - timer.start
-      const timeRunning = milliSecToString(runningSince)
+      const runningSince = Date.now() - timer.start;
+      const timeRunning = milliSecToString(runningSince);
       dispatchTimerR({
-        type: 'TIMER_RUNNING',
+        type: "TIMER_RUNNING",
         payload: {
           id: timer.id,
-        }
-      })
-      setSTimer(STimer => ({ ...STimer, start: timer.start, time: timeRunning, runningSince: Date.now() }));
-      setSTitle(timer.title)
+        },
+      });
+      setSTimer((STimer) => ({
+        ...STimer,
+        start: timer.start,
+        time: timeRunning,
+        runningSince: Date.now(),
+      }));
+      setSTitle(timer.title);
     }
-  }, [timer, dispatchTimerR])
+  }, [timer, dispatchTimerR]);
 
   const onStartTimer = async () => {
     const now = Date.now(); //timestamp in milliseconds
-    const timeRunning = milliSecToString(0)
+    const timeRunning = milliSecToString(0);
 
     dispatchTimerR({
-      type: 'START_TIMER'
-    })
-    setSTimer(STimer => ({ ...STimer, start: now, time: timeRunning }));
+      type: "START_TIMER",
+    });
+    setSTimer((STimer) => ({ ...STimer, start: now, time: timeRunning }));
 
-    await createTimer({ variables: { start: now, title: STitle } })
-      .then((result) => {
+    await createTimer({ variables: { start: now, title: STitle } }).then(
+      (result) => {
         dispatchTimerR({
-          type: 'UPDATE_TIMER_ID',
+          type: "UPDATE_TIMER_ID",
           payload: {
-            runningId: result.data ? result.data.createTimer.id : '',
-          }
-        })
-      })
-  }
+            runningId: result.data ? result.data.createTimer.id : "",
+          },
+        });
+      }
+    );
+  };
 
   const onStopTimer = async () => {
     const now = Date.now(); //timestamp in milliseconds
-    const timeRunning = milliSecToString(0)
+    const timeRunning = milliSecToString(0);
     dispatchTimerR({
-      type: 'STOP_TIMER'
-    })
-    setSTimer(STimer => ({ ...STimer, isRunning: false, start: 0, runningSince: 0, time: timeRunning }))
+      type: "STOP_TIMER",
+    });
+    setSTimer((STimer) => ({
+      ...STimer,
+      isRunning: false,
+      start: 0,
+      runningSince: 0,
+      time: timeRunning,
+    }));
 
     if (timerR.isRunningId !== null) {
-      await stopTimer({ variables: { id: timerR.isRunningId, end: now } })
+      await stopTimer({ variables: { id: timerR.isRunningId, end: now } });
     }
-  }
+  };
 
   const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSTitle(e.currentTarget.value)
-  }
+    setSTitle(e.currentTarget.value);
+  };
 
-  const onTimerDetails = () => {
+  const onTimerDetails = (id: string) => {
     dispatchTimerR({
       type: "OPEN_TIMER_DETAILS",
-      payload: timer.id
-    })
-  }
+      payload: id,
+    });
+  };
 
   if (timer) {
-    return (<div className="timer_log">
-      <div className="timer_log__desc" onClick={onTimerDetails}>
-        <div>{STitle}</div>
-        <div className="timer_log__project">{timer.project_title}</div>
+    return (
+      <div className="timer_log">
+        <div
+          className="timer_log__desc"
+          onClick={() => onTimerDetails(timer.id)}
+        >
+          <div>{STitle}</div>
+          <div className="timer_log__project">{timer.project_title}</div>
+        </div>
+        <div className="timer_log__tick">{STimer.time}</div>
+        <button className="btn btn__circle btn__stop" onClick={onStopTimer}>
+          <StopIcon />
+        </button>
       </div>
-      <div className="timer_log__tick">{STimer.time}</div>
-      <button className="btn btn__circle btn__stop" onClick={onStopTimer}>
-        <StopIcon />
-      </button>
-    </div>)
+    );
   } else {
-    return (<div className="timer_log" >
-
-      <input className="input" type="text" onChange={onTitleChange} placeholder="What are you working on?" />
-      <div onClick={onTimerDetails}>add project</div>
-      <button className="btn btn__circle btn__play" onClick={onStartTimer}>
-        <PlayIcon />
-      </button>
-    </div>)
+    return (
+      <div className="timer_log">
+        <input
+          className="input"
+          type="text"
+          onChange={onTitleChange}
+          placeholder="What are you working on?"
+        />
+        <button className="btn btn__circle btn__play" onClick={onStartTimer}>
+          <PlayIcon />
+        </button>
+      </div>
+    );
   }
-}
+};
