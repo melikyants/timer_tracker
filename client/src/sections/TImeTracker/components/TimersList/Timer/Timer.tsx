@@ -19,7 +19,7 @@ interface ITimerWith extends Timer_timer {
   date: string;
 }
 export const Timer = ({ timer }: { timer: ITimerWith }) => {
-  const { dispatchTimerR } = React.useContext(TimerContext);
+  const { timerR, dispatchTimerR } = React.useContext(TimerContext);
   const timeStart = new Date(timer.start).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -48,19 +48,21 @@ export const Timer = ({ timer }: { timer: ITimerWith }) => {
   const onStartTimer = async (id: string) => {
     const now = Date.now(); //timestamp in milliseconds
 
-    dispatchTimerR({
-      type: "START_TIMER",
-    });
-
-    await startTimer({ variables: { start: now, id: id } }).then((result) => {
-      console.log("onStartTimer -> result", result);
+    if (!timerR.isRunning) {
       dispatchTimerR({
-        type: "UPDATE_TIMER_ID",
-        payload: {
-          runningId: result.data ? result.data.startTimer.id : "",
-        },
+        type: "START_TIMER",
       });
-    });
+
+      await startTimer({ variables: { start: now, id: id } }).then((result) => {
+        console.log("onStartTimer -> result", result);
+        dispatchTimerR({
+          type: "UPDATE_TIMER_ID",
+          payload: {
+            runningId: result.data ? result.data.startTimer.id : "",
+          },
+        });
+      });
+    }
   };
 
   const showDetails = (id: string) => {

@@ -1,10 +1,10 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto+Condensed:wght@300;400;700");
 
-$mainBg: hsl(206, 78%, 98%);
+$mainBg: hsl(206, 78%, 100%);
 $highlight: hsl(0, 0%, 100%);
-$shaddow: hsl(206, 50%, 80%);
-$fontColorMain: hsl(219, 38%, 38%);
-$fontColorSecondary: hsl(219, 38%, 65%);
+$shaddow: hsl(0, 0%, 95%);
+$fontColorMain: hsl(0, 0%, 12%);
+$fontColorSecondary: hsl(0, 0%, 42%);
 $greenColor: hsl(146, 79, 43);
 $redColor: hsl(0, 78, 43);
 $fontFamily: "Roboto Condensed", sans-serif;
@@ -32,6 +32,7 @@ button, input, textarea {
     font-weight: 400;
     color: $fontColorMain;
     height: 600px;
+    line-height: 22px;
 
     .input {
         font-family: $fontFamily;
@@ -58,6 +59,7 @@ button, input, textarea {
     display: flex;
     flex-flow: column;
     align-items: flex-start;
+    text-align: left;
 }
 
 .timer_log__project {
@@ -121,6 +123,7 @@ button, input, textarea {
     justify-content: space-between;
     font-size: 1.1rem;
     padding-right: 40px;
+    font-weight: 600;
 }
 
 .timer_log__tick {
