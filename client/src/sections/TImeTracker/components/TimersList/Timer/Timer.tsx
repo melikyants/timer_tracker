@@ -1,36 +1,54 @@
 import React from 'react'
-import { Popper } from '../../Popper'
-import { TimerDetails } from '../../TimerDetails'
 
-import { useMutation, useLazyQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
-
-// import { ITimerTime } from '../TimerList'
+import { useMutation } from "@apollo/react-hooks";
 
 import { ReactComponent as StartIcon } from '../../../icons/arrow.svg'
 
 import { TimerContext } from "../../../../../lib/context/TimerContext";
+import { START_TIMER } from '../../../../../lib/graphql/mutation'
+import { TIMERS } from '../../../../../lib/graphql/query'
 
-export const Timer = ({ timer, timersRefetch }: { timer: any, timersRefetch: () => void }) => {
+export const Timer = ({ timer }: { timer: any }) => {
 
-  const elRefs = React.useRef<any>(null);
-  const popperRef = React.useRef<any>(null);
-  const [visible, setVisibility] = React.useState(false)
-  const [timerDetailsId, setTimerDetailsId] = React.useContext(TimerContext)
+  const [, dispatchTimerR] = React.useContext(TimerContext)
   const timeStart = new Date(timer.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   const timeEnd = new Date(timer.end).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 
-  const handlePopper = () => {
-    setVisibility(!visible)
-    console.log(visible)
-  }
-  const onRunTimer = async (id: string) => {
-    timersRefetch()
+  const [startTimer] = useMutation<any>(START_TIMER, {
+    update(cache, { data: { startTimer } }) {
+      const { timers } = cache.readQuery<any>({ query: TIMERS })
+
+      cache.writeQuery({
+        query: TIMERS,
+        data: { timers: timers.concat([startTimer]) }
+      })
+    }
+  })
+
+  const onStartTimer = async (id: string) => {
+    const now = Date.now(); //timestamp in milliseconds
+
+    dispatchTimerR({
+      type: 'START_TIMER'
+    })
+
+    await startTimer({ variables: { start: now, id: id } })
+      .then((result) => {
+        console.log("onStartTimer -> result", result)
+        dispatchTimerR({
+          type: 'UPDATE_TIMER_ID',
+          payload: {
+            runningId: result.data ? result.data.startTimer.id : '',
+          }
+        })
+      })
   }
 
   const showDetails = (id: string) => {
-    // setisPopover(true)
-    setTimerDetailsId(id)
+    dispatchTimerR({
+      type: "OPEN_TIMER_DETAILS",
+      payload: id
+    })
   }
 
   return (
@@ -53,7 +71,7 @@ export const Timer = ({ timer, timersRefetch }: { timer: any, timersRefetch: () 
         </div>
 
         <div className="startIcon">
-          <button onClick={() => onRunTimer(timer.id)} className="btn btn__icon btn__play"><StartIcon /></button>
+          <button onClick={() => onStartTimer(timer.id)} className="btn btn__icon btn__play"><StartIcon /></button>
         </div>
       </div>
     </div>

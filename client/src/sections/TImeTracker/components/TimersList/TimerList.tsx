@@ -4,7 +4,7 @@ import { milliSecToString, isToday, sortByDates } from '../../../../lib';
 // import { Timers_timers as ITimer } from '../../../../context/__generated__/Timers';
 import { Timer } from './Timer'
 
-export const TimersList = ({ timers, timersRefetch }: { timers: any[] | [], timersRefetch: () => void }) => {
+export const TimersList = ({ timers }: { timers: any[] | [] }) => {
 
   const timersList = timers.length ? timers : []
   const parsedTimerinTimers = timersList.map<any>((timer) => {
@@ -65,7 +65,7 @@ export const TimersList = ({ timers, timersRefetch }: { timers: any[] | [], time
           </div>
           <div className="timer__block_body">
             {timersByDays.items && timersByDays.items.map((timer: any, i: number) =>
-              <Timer timer={timer} key={timer.id} timersRefetch={timersRefetch} />)
+              <Timer timer={timer} key={timer.id} />)
             }
           </div>
 

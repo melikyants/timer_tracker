@@ -35,7 +35,8 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    startTimer(start:Float!, title: String!): Timer!
+    startTimer(start:Float!,  id: ID!): Timer!
+    createTimer(start:Float!, title: String!): Timer!
     stopTimer(id:ID!, end: Float!):Timer!
     updateTimer(id:ID!, title: String, project_id:String, project_description:String, notes: String, type: TimerType):Timer!
     deleteTimer(id:ID!): Timer!

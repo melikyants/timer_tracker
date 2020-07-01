@@ -1,39 +1,41 @@
 import React from 'react'
 import { Popper } from '../../Popper';
 
-import { useQuery, useMutation } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
-
+import { useMutation } from '@apollo/react-hooks';
 import { useInput, useTextarea } from '../../../../../lib'
 import { PROJECTS } from '../../../../../lib/graphql/query'
 import { CREATE_PROJECT } from '../../../../../lib/graphql/mutation'
+import { Projects } from '../../../../../lib/graphql/query/Projects/__generated__/Projects'
+import { createProject as IcreateProject, createProjectVariables } from '../../../../../lib/graphql/mutation/CreateProject/__generated__/createProject'
 
 export const CreateProjectPopper = () => {
   const buttonProjectCreateRef = React.useRef(null);
   const buttonProjectCreatePopperRef = React.useRef(null);
   const [visibleProject, setVisibilityProject] = React.useState(false);
-  const { value: title, setValue: setTitle, reset: resetTitle, bind: bindTitle } = useInput('')
-  const { value: description, setValue: setDescription, reset: resetDescription, bind: bindDescription } = useTextarea('')
+  const { value: title, bind: bindTitle } = useInput('')
+  const { value: description, bind: bindDescription } = useTextarea('')
 
-  const [createProject] = useMutation(CREATE_PROJECT, {
-    update(cache, { data: { createProject } }) {
-      const { projects } = cache.readQuery<any>({ query: PROJECTS });
-      cache.writeQuery({
-        query: PROJECTS,
-        data: { projects: projects.concat([createProject]) },
-      });
+  const [createProject] = useMutation<IcreateProject, createProjectVariables>(CREATE_PROJECT, {
+    update(cache, { data }) {
+      const dataProjects = cache.readQuery<Projects>({ query: PROJECTS });
+      if (dataProjects) {
+        cache.writeQuery({
+          query: PROJECTS,
+          data: { projects: dataProjects.projects.concat([data!.createProject]) },
+        });
+      }
     }
   })
 
   const handleShowPopperForCreateProject = () => {
     setVisibilityProject(!visibleProject);
-    console.log('cloick');
   };
+
   const closeProjectCreation = () => {
     setVisibilityProject(!visibleProject);
   };
 
-  const onCreateProject = (e: any) => {
+  const onCreateProject = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     createProject({
       variables: {

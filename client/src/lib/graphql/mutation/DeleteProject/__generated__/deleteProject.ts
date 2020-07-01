@@ -4,19 +4,18 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: createProject
+// GraphQL mutation operation: deleteProject
 // ====================================================
 
-export interface createProject_createProject {
+export interface deleteProject_deleteProject {
   __typename: "Project";
   id: string;
 }
 
-export interface createProject {
-  createProject: createProject_createProject;
+export interface deleteProject {
+  deleteProject: deleteProject_deleteProject;
 }
 
-export interface createProjectVariables {
-  title: string;
-  info?: string | null;
+export interface deleteProjectVariables {
+  id: string;
 }

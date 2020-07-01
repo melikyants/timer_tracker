@@ -11,7 +11,7 @@ export interface Projects_projects {
   __typename: "Project";
   id: string;
   title: string;
-  description: string;
+  description: string | null;
 }
 
 export interface Projects {

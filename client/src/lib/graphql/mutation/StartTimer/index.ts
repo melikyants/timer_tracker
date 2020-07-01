@@ -1,8 +1,8 @@
 import { gql } from 'apollo-boost';
 
 export const START_TIMER = gql`
-  mutation startTimer($start: Float!, $title:String!){
-    startTimer(start: $start, title: $title){
+  mutation startTimer($start: Float!, $id: ID!){
+    startTimer(start: $start, id: $id){
       id
       title
       project_id

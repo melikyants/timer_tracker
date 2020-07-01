@@ -1,9 +1,9 @@
 
 import { gql } from 'apollo-boost';
 
-export const TIMERS = gql`
-  query Timers {
-    timers {
+export const TIMER = gql`
+  query Timer($id: ID!) {
+    timer(id: $id) {
       id
       title
       type

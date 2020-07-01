@@ -1,26 +1,24 @@
 import React from 'react'
 import { Popper } from '../../Popper';
 
-import { useQuery, useMutation } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
+import { TimerType as ITimerTYpe } from "../../../../../lib/graphql/globalTypes";
 
 import { useInput } from '../../../../../lib'
 
-export const Types = ({ timer, types, onChangeType }: { timer: any, types: string[], onChangeType: (type: string) => void }) => {
-  console.log("Projects -> timerId", timer)
+export const Types = ({ timer, onChangeType }: { timer: any, onChangeType: (type: ITimerTYpe) => void }) => {
 
   const inputProjectRef = React.useRef(null);
   const inputProjectPopperRef = React.useRef(null);
 
   const [visible, setVisibility] = React.useState(false);
   const defaultValueType = timer.type ? timer.type : 'Select Type'
-  const { value: timerType, setValue: setTimerType, bind: bindTimerType } = useInput(defaultValueType)
+  const { setValue: setTimerType, bind: bindTimerType } = useInput(defaultValueType)
 
   const onClickInputType = () => {
     setVisibility(!visible);
   };
 
-  const onSelectType = (type: string) => {
+  const onSelectType = (type: ITimerTYpe) => {
     onChangeType(type)
     setTimerType(type)
     setVisibility(false);
@@ -32,7 +30,10 @@ export const Types = ({ timer, types, onChangeType }: { timer: any, types: strin
       <Popper refEl={inputProjectRef} popperRef={inputProjectPopperRef} visible={visible}>
         <div>
           <ul className="project_list">
-            {types.map((type, index) => (<li key={index} onClick={(e) => onSelectType(type)}>{type}</li>))}
+            <li onClick={(e) => onSelectType(ITimerTYpe.ANY)}>Any</li>
+            <li onClick={(e) => onSelectType(ITimerTYpe.STUDY)}>Study</li>
+            <li onClick={(e) => onSelectType(ITimerTYpe.WORK)}>Work</li>
+            <li onClick={(e) => onSelectType(ITimerTYpe.HOBBIE)}>Hobbie</li>
           </ul>
         </div>
       </Popper>

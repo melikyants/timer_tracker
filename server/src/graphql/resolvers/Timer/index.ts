@@ -69,7 +69,7 @@ export const timerResolvers: IResolvers = {
     }
   },
   Mutation: {
-    startTimer: async (_root: undefined, { start, title }: { start: number, title: string }, { db }: { db: IDatabase }): Promise<TimersData> => {
+    createTimer: async (_root: undefined, { start, title }: { start: number, title: string }, { db }: { db: IDatabase }): Promise<TimersData> => {
       const insertRes = await db.timers.insertOne({
         _id: new ObjectId(),
         start: start,
@@ -87,12 +87,51 @@ export const timerResolvers: IResolvers = {
 
       const insertTimer: TimersData = Object.assign({}, insertRes.ops[0], { project_title: '', project_description: '' })
 
-
       if (!insertTimer) {
         throw new Error()
       }
 
       return insertTimer
+    },
+    startTimer: async (_root: undefined, { start, id }: { start: number, id: string }, { db }: { db: IDatabase }): Promise<TimersData> => {
+      console.log("id", id)
+
+      const getTimer = await db.timers.findOne({ _id: new ObjectId(id) })
+
+      if (!getTimer) {
+        throw new Error()
+      }
+
+      console.log("getTimer", getTimer)
+
+      const insertRes = await db.timers.insertOne({
+        _id: new ObjectId(),
+        start: start,
+        title: getTimer.title,
+        project_id: getTimer.project_id,
+        end: null,
+        type: getTimer.type,
+        notes: '',
+        isRunning: true
+      });
+
+      if (!insertRes) {
+        throw new Error()
+      }
+
+
+      const insertTimer: TimersData = Object.assign({}, insertRes.ops[0], { project_title: '', project_description: '' })
+
+      if (getTimer.project_id) {
+        const project = await db.projects.findOne({ _id: getTimer.project_id })
+        if (project) {
+          insertTimer['project_title'] = project.title
+          insertTimer['project_description'] = project.description
+        }
+      }
+
+      return insertTimer
+
     },
 
     stopTimer: async (_root: undefined, { id, end }: { id: string, end: number }, { db }: { db: IDatabase }): Promise<TimersData> => {

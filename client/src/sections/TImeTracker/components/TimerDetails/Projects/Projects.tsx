@@ -3,31 +3,38 @@ import { Popper } from '../../Popper';
 import { CreateProjectPopper } from './CreateProject'
 
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
 
-import { Projects as IProjects } from './__generated__/Projects'
+import { Projects as IProjects } from '../../../../../lib/graphql/query/Projects/__generated__/Projects'
+import { deleteProject as IdeleteProject, deleteProjectVariables } from '../../../../../lib/graphql/mutation/DeleteProject/__generated__/deleteProject'
+import { Timer_timer } from '../../../../../lib/graphql/query/Timer/__generated__/Timer'
+
 import { useInput } from '../../../../../lib'
 
 import { PROJECTS } from '../../../../../lib/graphql/query'
 import { DELETE_PROJECT } from '../../../../../lib/graphql/mutation'
 import { ReactComponent as DeleteIcon } from '../../../icons/delete.svg'
 
-export const Projects = ({ timer, onChangeProjectId }: { timer: any, onChangeProjectId: any }) => {
-  // console.log("Projects -> timerId", timer)
+export const Projects = (
+  { timer, onChangeProjectId }:
+    { timer: Timer_timer, onChangeProjectId: (id: string, description: string | null) => void }) => {
+
   const {
-    data: projectsData, loading, error, refetch: refetchProjects,
-  } = useQuery<IProjects>(PROJECTS);
-  const [deleteProject] = useMutation(DELETE_PROJECT, {
-    update(cache, { data: { deleteProject } }) {
-      const { projects } = cache.readQuery<any>({ query: PROJECTS })
-      const index = projects.findIndex((project: any) => project.id === deleteProject.id)
-      if (index > -1) {
-        projects.splice(index, 1)
+    data: projectsData } = useQuery<IProjects>(PROJECTS);
+
+  const [deleteProject] = useMutation<IdeleteProject, deleteProjectVariables>(DELETE_PROJECT, {
+    update(store, { data }) {
+      const projectsData = store.readQuery<IProjects>({ query: PROJECTS })
+
+      if (projectsData) {
+        const index = projectsData.projects.findIndex((project) => project.id === data!.deleteProject.id)
+        if (index > -1) {
+          projectsData.projects.splice(index, 1)
+        }
+        store.writeQuery({
+          query: PROJECTS,
+          data: { projects: projectsData.projects }
+        })
       }
-      cache.writeQuery({
-        query: PROJECTS,
-        data: { projects: projects }
-      })
     }
   })
 
@@ -36,7 +43,7 @@ export const Projects = ({ timer, onChangeProjectId }: { timer: any, onChangePro
 
   const [visible, setVisibility] = React.useState(false);
   const defaultValueProject = timer.project_id ? timer.project_title : 'Project name'
-  const { value: projectName, setValue: setprojectName, bind: bindProject } = useInput(defaultValueProject)
+  const { setValue: setprojectName, bind: bindProject } = useInput(defaultValueProject)
 
   const projectsList = projectsData ? projectsData.projects : []
 
@@ -47,7 +54,7 @@ export const Projects = ({ timer, onChangeProjectId }: { timer: any, onChangePro
   const onDeleteProject = async (id: string) => {
     await deleteProject({ variables: { id } })
   }
-  const onSelectProject = (id: string, title: string, description: string) => {
+  const onSelectProject = (id: string, title: string, description: string | null) => {
     onChangeProjectId(id, description)
     setprojectName(title)
     setVisibility(false);

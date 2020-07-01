@@ -4,86 +4,103 @@ import { Projects } from './Projects'
 import { useInput, useTextarea } from '../../../../lib'
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
 
 import { TimerContext } from "../../../../lib/context/TimerContext";
 import { ReactComponent as DeleteIcon } from '../../icons/delete.svg'
 
-import { TIMERS, TIMER, PROJECTS } from '../../../../lib/graphql/query'
+import { Timer, TimerVariables, Timer_timer } from '../../../../lib/graphql/query/Timer/__generated__/Timer'
+import { deleteTimer as IdeleteTimer, deleteTimerVariables } from '../../../../lib/graphql/mutation/DeleteTimer/__generated__/deleteTimer'
+import { updateTimer as IupdateTimer, updateTimerVariables } from '../../../../lib/graphql/mutation/UpdateTimer/__generated__/updateTimer'
+import { Timers } from '../../../../lib/graphql/query/Timers/__generated__/Timers'
+import { TIMERS, TIMER } from '../../../../lib/graphql/query'
 import { DELETE_TIMER, UPDATE_TIMER } from '../../../../lib/graphql/mutation'
-
 import { Types } from './Types'
+import { TimerType as ITimerType } from "../../../../lib/graphql/globalTypes"
 
-export const TimerDetails = ({ timerId }: { timerId: any }) => {
-  const types = ['STUDY', 'WORK', 'HOBBIE', 'ANY'];
-  const { data, loading, error, refetch } = useQuery(TIMER, {
-    variables: {
-      id: timerId,
-    }
-  })
-  const [deleteTimer] = useMutation(DELETE_TIMER, {
-    update(cache, { data: { deleteTimer } }) {
-      const { timers } = cache.readQuery<any>({ query: TIMERS })
-      const index = timers.findIndex((timer: any) => timer.id === deleteTimer.id)
-      if (index > -1) {
-        timers.splice(index, 1)
-      }
-      cache.writeQuery({
-        query: TIMERS,
-        data: { timers: timers }
-      })
-    }
-  })
-  const [updateTimer] = useMutation(UPDATE_TIMER, {
-    update(cache, { data: { updateTimer } }) {
-      const { timer } = cache.readQuery<any>({ query: TIMER, variables: { id: timerId } })
-      console.log("update -> updateTimer", updateTimer)
-      console.log("update -> timer", timer)
-      cache.writeQuery({
-        query: TIMER,
-        data: { timer: Object.assign(timer, updateTimer) }
-      })
-    }
-  })
+export const TimerDetails = ({ timerId }: { timerId: string }) => {
 
-
-  React.useEffect(() => {
-    console.log("data", data)
-    if (data) {
-      const timer = data.timer
-
-      setTimerValue(timer.title)
-      setProjectId(timer.project_id)
-      setprojectDescription(timer.project_description ? timer.project_description : '')
-      settimerNotes(timer.notes ? timer.notes : '')
-    }
-  }, [data])
 
   const { value: timerTitle, setValue: setTimerValue, bind: bindTitle } = useInput('')
   const { value: projectDescription, setValue: setprojectDescription, bind: bindProjectDescription } = useTextarea('')
   const { value: timerNotes, setValue: settimerNotes, bind: bindtimerNotes } = useTextarea('')
-  const [timerDetailsId, setTimerDetailsId] = React.useContext(TimerContext)
+
+  const [, dispatchTimerR] = React.useContext(TimerContext)
   const [projectId, setProjectId] = React.useState('')
-  const [timerType, setTimerType] = React.useState('ANY')
+  const [timerType, setTimerType] = React.useState(ITimerType.ANY)
+
+  const { data, loading } = useQuery<Timer, TimerVariables>(TIMER, {
+    variables: {
+      id: timerId,
+    }
+  })
+
+  const updateState = React.useCallback((timer) => {
+    setTimerValue(timer.title)
+    setProjectId(timer.project_id ? timer.project_id : '')
+    setprojectDescription(timer.project_description ? timer.project_description : '')
+    settimerNotes(timer.notes ? timer.notes : '')
+  }, [setTimerValue, setProjectId, setprojectDescription, settimerNotes])
+
+  React.useEffect(() => {
+    if (data) {
+      const timer: Timer_timer = data.timer
+      updateState(timer)
+    }
+  }, [data, updateState])
+
+  const [deleteTimer] = useMutation<IdeleteTimer, deleteTimerVariables>(DELETE_TIMER, {
+    update(cache, { data }) {
+      const timersData = cache.readQuery<Timers>({ query: TIMERS })
+      if (timersData) {
+        const index = timersData.timers.findIndex((timer) => timer.id === data!.deleteTimer.id)
+        if (index > -1) {
+          timersData.timers.splice(index, 1)
+        }
+        cache.writeQuery({
+          query: TIMERS,
+          data: { timers: timersData.timers }
+        })
+
+      }
+    }
+  })
+
+  const [updateTimer] = useMutation<IupdateTimer, updateTimerVariables>(UPDATE_TIMER, {
+    update(cache, { data }) {
+      const dataTimer = cache.readQuery<Timer>({ query: TIMER, variables: { id: timerId } })
+      if (dataTimer) {
+        cache.writeQuery({
+          query: TIMER,
+          data: { timer: Object.assign(dataTimer.timer, data!.updateTimer) }
+        })
+
+      }
+    }
+  })
 
   if (loading) return (<div>Loading...</div>)
 
   const timerFetched = data ? data.timer : null;
 
   const onCancleDetails = () => {
-    setTimerDetailsId(null)
-    localStorage.clear()
+    dispatchTimerR({
+      type: "CLOSE_TIMER_DETAILS",
+    })
   }
+
   const onDeleteTimer = async () => {
     await deleteTimer({ variables: { id: timerId } })
-    setTimerDetailsId(null)
-    localStorage.clear()
+    dispatchTimerR({
+      type: "CLOSE_TIMER_DETAILS",
+    })
   }
-  const onChangeProjectId = (id: string, description: string) => {
+
+  const onChangeProjectId = (id: string, description: string | null) => {
     setProjectId(id)
     setprojectDescription(description ? description : '')
   }
-  const onChangeType = (type: string) => {
+
+  const onChangeType = (type: ITimerType) => {
     setTimerType(type)
   }
 
@@ -99,7 +116,6 @@ export const TimerDetails = ({ timerId }: { timerId: any }) => {
         type: timerType
       }
     })
-
   }
 
   return (
@@ -107,10 +123,9 @@ export const TimerDetails = ({ timerId }: { timerId: any }) => {
       <h3>Details</h3>
       <div className="TimerDetails__body">
         <div><input placeholder="Title" className="input" {...bindTitle} /></div>
-
         <div className="TimerDetails__body__row">
           {timerFetched && <Projects timer={timerFetched} onChangeProjectId={onChangeProjectId} />}
-          {timerFetched && <Types timer={timerFetched} types={types} onChangeType={onChangeType} />}
+          {timerFetched && <Types timer={timerFetched} onChangeType={onChangeType} />}
           <div>Times goes here</div>
         </div>
         <div>
