@@ -15,7 +15,7 @@ export const Timers = () => {
     data: timersData,
   } = useQuery<ITimers>(TIMERS);
 
-  const [timerContext,] = React.useContext(TimerContext)
+  const [timerContext] = React.useContext(TimerContext)
 
   const timersList = timersData ? timersData.timers : [];
 

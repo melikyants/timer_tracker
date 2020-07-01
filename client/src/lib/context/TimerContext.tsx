@@ -43,7 +43,6 @@ const reducer = (state: contextState, action: Action): contextState => {
   }
 }
 
-
 // Create a provider for components to consume and subscribe to changes
 export const TimerContextProvider = ({ children }: { children: any }) => {
   const [timerR, dispatchTimerR] = React.useReducer(reducer, {
