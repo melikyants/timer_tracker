@@ -9,17 +9,22 @@ import { TimerType } from "./../../../globalTypes";
 // GraphQL mutation operation: stopTimer
 // ====================================================
 
+export interface stopTimer_stopTimer_project {
+  __typename: "Project";
+  id: string;
+  title: string;
+  description: string | null;
+}
+
 export interface stopTimer_stopTimer {
   __typename: "Timer";
   id: string;
   title: string;
-  project_id: string | null;
   type: TimerType | null;
   notes: string | null;
   start: number;
   end: number | null;
-  project_title: string;
-  project_description: string | null;
+  project: stopTimer_stopTimer_project | null;
   isRunning: boolean;
 }
 

@@ -1,85 +1,127 @@
-import React from 'react'
-import { Popper } from '../../Popper';
-import { CreateProjectPopper } from './CreateProject'
+import React from "react";
+import { Popper } from "../../Popper";
+import { CreateProjectPopper } from "./CreateProject";
 
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useQuery, useMutation } from "@apollo/react-hooks";
 
-import { Projects as IProjects } from '../../../../../lib/graphql/query/Projects/__generated__/Projects'
-import { deleteProject as IdeleteProject, deleteProjectVariables } from '../../../../../lib/graphql/mutation/DeleteProject/__generated__/deleteProject'
-import { Timer_timer } from '../../../../../lib/graphql/query/Timer/__generated__/Timer'
+import { Projects as IProjects } from "../../../../../lib/graphql/query/Projects/__generated__/Projects";
+import {
+  deleteProject as IdeleteProject,
+  deleteProjectVariables,
+} from "../../../../../lib/graphql/mutation/DeleteProject/__generated__/deleteProject";
+import { Timer_timer } from "../../../../../lib/graphql/query/Timer/__generated__/Timer";
 
-import { useInput } from '../../../../../lib'
+import { useInput } from "../../../../../lib";
 
-import { PROJECTS } from '../../../../../lib/graphql/query'
-import { DELETE_PROJECT } from '../../../../../lib/graphql/mutation'
-import { ReactComponent as DeleteIcon } from '../../../icons/delete.svg'
+import { PROJECTS } from "../../../../../lib/graphql/query";
+import { DELETE_PROJECT } from "../../../../../lib/graphql/mutation";
+import { ReactComponent as DeleteIcon } from "../../../icons/delete.svg";
 
-export const Projects = (
-  { timer, onChangeProjectId }:
-    { timer: Timer_timer, onChangeProjectId: (id: string, description: string | null) => void }) => {
+export const Projects = ({
+  timer,
+  onChangeProjectId,
+}: {
+  timer: Timer_timer;
+  onChangeProjectId: (id: string, description: string | null) => void;
+}) => {
+  const { data: projectsData } = useQuery<IProjects>(PROJECTS);
 
-  const {
-    data: projectsData } = useQuery<IProjects>(PROJECTS);
+  const [deleteProject] = useMutation<IdeleteProject, deleteProjectVariables>(
+    DELETE_PROJECT,
+    {
+      update(store, { data }) {
+        const projectsData = store.readQuery<IProjects>({ query: PROJECTS });
 
-  const [deleteProject] = useMutation<IdeleteProject, deleteProjectVariables>(DELETE_PROJECT, {
-    update(store, { data }) {
-      const projectsData = store.readQuery<IProjects>({ query: PROJECTS })
-
-      if (projectsData) {
-        const index = projectsData.projects.findIndex((project) => project.id === data!.deleteProject.id)
-        if (index > -1) {
-          projectsData.projects.splice(index, 1)
+        if (projectsData) {
+          const index = projectsData.projects.findIndex(
+            (project) => project.id === data!.deleteProject.id
+          );
+          if (index > -1) {
+            projectsData.projects.splice(index, 1);
+          }
+          store.writeQuery({
+            query: PROJECTS,
+            data: { projects: projectsData.projects },
+          });
         }
-        store.writeQuery({
-          query: PROJECTS,
-          data: { projects: projectsData.projects }
-        })
-      }
+      },
     }
-  })
+  );
 
   const inputProjectRef = React.useRef(null);
   const inputProjectPopperRef = React.useRef(null);
 
   const [visible, setVisibility] = React.useState(false);
-  const defaultValueProject = timer.project_id ? timer.project_title : 'Project name'
-  const { setValue: setprojectName, bind: bindProject } = useInput(defaultValueProject)
+  const defaultValueProject = timer.project?.id
+    ? timer.project.title
+    : "Project name";
+  const { setValue: setprojectName, bind: bindProject } = useInput(
+    defaultValueProject
+  );
 
-  const projectsList = projectsData ? projectsData.projects : []
+  const projectsList = projectsData ? projectsData.projects : [];
 
   const onClickInputProject = () => {
     setVisibility(!visible);
   };
 
   const onDeleteProject = async (id: string) => {
-    await deleteProject({ variables: { id } })
-  }
-  const onSelectProject = (id: string, title: string, description: string | null) => {
-    onChangeProjectId(id, description)
-    setprojectName(title)
+    await deleteProject({ variables: { id } });
+  };
+  const onSelectProject = (
+    id: string,
+    title: string,
+    description: string | null
+  ) => {
+    onChangeProjectId(id, description);
+    setprojectName(title);
     setVisibility(false);
-  }
+  };
 
   return (
     <div>
-      <input className="input" name="project" placeholder="select a project" ref={inputProjectRef} onClick={onClickInputProject} {...bindProject} />
-      <Popper refEl={inputProjectRef} popperRef={inputProjectPopperRef} visible={visible}>
+      <input
+        className="input"
+        name="project"
+        placeholder="select a project"
+        ref={inputProjectRef}
+        onClick={onClickInputProject}
+        {...bindProject}
+      />
+      <Popper
+        refEl={inputProjectRef}
+        popperRef={inputProjectPopperRef}
+        visible={visible}
+      >
         <div>
           <ul className="project_list">
             {projectsList.map((project) => (
-              <li
-                key={project.id}
-                data-id={project.id}
-              >
-                <div onClick={(e) => onSelectProject(project.id, project.title, project.description)}>{project.title}</div>
+              <li key={project.id} data-id={project.id}>
+                <div
+                  onClick={(e) =>
+                    onSelectProject(
+                      project.id,
+                      project.title,
+                      project.description
+                    )
+                  }
+                >
+                  {project.title}
+                </div>
                 <div>
-                  <button className="btn btn__icon" onClick={() => onDeleteProject(project.id)}><DeleteIcon /></button></div>
-              </li>))}
+                  <button
+                    className="btn btn__icon"
+                    onClick={() => onDeleteProject(project.id)}
+                  >
+                    <DeleteIcon />
+                  </button>
+                </div>
+              </li>
+            ))}
           </ul>
           <CreateProjectPopper />
         </div>
       </Popper>
     </div>
-
-  )
-}
+  );
+};

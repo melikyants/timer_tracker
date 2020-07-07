@@ -9,6 +9,13 @@ import { TimerType } from "./../../../globalTypes";
 // GraphQL query operation: Timer
 // ====================================================
 
+export interface Timer_timer_project {
+  __typename: "Project";
+  id: string;
+  title: string;
+  description: string | null;
+}
+
 export interface Timer_timer {
   __typename: "Timer";
   id: string;
@@ -17,9 +24,7 @@ export interface Timer_timer {
   notes: string | null;
   start: number;
   end: number | null;
-  project_id: string | null;
-  project_title: string;
-  project_description: string | null;
+  project: Timer_timer_project | null;
   isRunning: boolean;
 }
 

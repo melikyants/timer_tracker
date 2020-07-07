@@ -56,11 +56,14 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
 
   const updateState = React.useCallback(
     (timer) => {
+      console.log("timer", timer);
       setTimerValue(timer.title);
-      setProjectId(timer.project_id ? timer.project_id : "");
-      setprojectDescription(
-        timer.project_description ? timer.project_description : ""
-      );
+      if (timer.project) {
+        setProjectId(timer.project.id ? timer.project.id : "");
+        setprojectDescription(
+          timer.project.description ? timer.project.description : ""
+        );
+      }
       settimerNotes(timer.notes ? timer.notes : "");
     },
     [setTimerValue, setProjectId, setprojectDescription, settimerNotes]

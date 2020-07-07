@@ -18,6 +18,7 @@ interface ITimerWith extends Timer_timer {
   time: string;
   date: string;
 }
+
 export const Timer = ({ timer }: { timer: ITimerWith }) => {
   const { timerR, dispatchTimerR } = React.useContext(TimerContext);
   const timeStart = new Date(timer.start).toLocaleTimeString([], {
@@ -77,8 +78,8 @@ export const Timer = ({ timer }: { timer: ITimerWith }) => {
       <div className="timer_desc" onClick={() => showDetails(timer.id)}>
         <div>{timer.title}</div>
         <div className="timer_desc_row">
-          {timer.project_id ? (
-            <div className="timer_desc__title">{timer.project_title}</div>
+          {timer.project ? (
+            <div className="timer_desc__title">{timer.project.title}</div>
           ) : (
             <div>
               <button className="btn-link"> + add project</button>

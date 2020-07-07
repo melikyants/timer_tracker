@@ -164,7 +164,7 @@ export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
           onClick={() => onTimerDetails(timer.id)}
         >
           <div>{STitle}</div>
-          <div className="timer_log__project">{timer.project_title}</div>
+          <div className="timer_log__project">{timer.project?.title}</div>
         </div>
         <div className="timer_log__tick">{STimer.time}</div>
         <button className="btn btn__circle btn__stop" onClick={onStopTimer}>

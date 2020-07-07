@@ -9,6 +9,13 @@ import { TimerType } from "./../../../globalTypes";
 // GraphQL mutation operation: updateTimer
 // ====================================================
 
+export interface updateTimer_updateTimer_project {
+  __typename: "Project";
+  id: string;
+  title: string;
+  description: string | null;
+}
+
 export interface updateTimer_updateTimer {
   __typename: "Timer";
   id: string;
@@ -17,9 +24,7 @@ export interface updateTimer_updateTimer {
   notes: string | null;
   start: number;
   end: number | null;
-  project_id: string | null;
-  project_title: string;
-  project_description: string | null;
+  project: updateTimer_updateTimer_project | null;
   isRunning: boolean;
 }
 

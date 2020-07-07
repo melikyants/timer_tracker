@@ -87,6 +87,5 @@ export const TimersList = ({ timers }: { timers: Timers_timers[] }) => {
 
     return <div className="timers_list">{timersRenderList}</div>;
   }
-
   return <div className="timers_list">There is no time log yet!</div>;
 };

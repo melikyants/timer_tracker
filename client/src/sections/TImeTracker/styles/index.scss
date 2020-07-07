@@ -68,15 +68,14 @@ button, input, textarea {
 }
 
 .timersList__wrapper {
-    padding: 12px;
     overflow: scroll;
     height: calc(100% - 100px);
 
     // max-height: 600px;
     position: relative;
-    box-shadow: inset 4px 4px 12px $shaddow, inset -4px -4px 12px $highlight;
+
+    // box-shadow: inset 4px 4px 12px $shaddow, inset -4px -4px 12px $highlight;
     border-radius: 12px;
-    padding: 12px;
 
     // &:after {
     //     content: '';
@@ -309,6 +308,7 @@ button, input, textarea {
 
 .TimerDetails_wrapper {
     border-radius: 6px;
+    padding: 12px;
 
     & h3 {
         margin: 0 0 16px;
@@ -382,4 +382,25 @@ button, input, textarea {
     &::placeholder {
         color: $fontColorSecondary;
     }
+}
+
+.item-enter {
+    opacity: 0;
+    transform: scale(0.9);
+}
+
+.item-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 500ms, transform 500ms;
+}
+
+.item-exit {
+    opacity: 1;
+}
+
+.item-exit-active {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 500ms, transform 500ms;
 }

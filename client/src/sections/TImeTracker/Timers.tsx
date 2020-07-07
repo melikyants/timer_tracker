@@ -1,4 +1,6 @@
 import React from "react";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+
 import { useQuery } from "@apollo/react-hooks";
 
 import { TimersList, TimerLog, TimerDetails } from "./components";
@@ -27,11 +29,17 @@ export const Timers = () => {
     <div className="timers">
       <TimerLog timer={timer} />
       <div className="timersList__wrapper">
-        {timerR.timerDetailsId ? (
-          <TimerDetails timerId={timerR.timerDetailsId} />
-        ) : (
-          <TimersList timers={timersList} />
-        )}
+        <TransitionGroup component={null}>
+          {timerR.timerDetailsId ? (
+            <CSSTransition key="001" timeout={300} classNames="item">
+              <TimerDetails timerId={timerR.timerDetailsId} />
+            </CSSTransition>
+          ) : (
+            <CSSTransition key="002" timeout={400} classNames="item">
+              <TimersList timers={timersList} />
+            </CSSTransition>
+          )}
+        </TransitionGroup>
       </div>
     </div>
   );

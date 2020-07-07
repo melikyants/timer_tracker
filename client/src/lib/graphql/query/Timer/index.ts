@@ -1,5 +1,4 @@
-
-import { gql } from 'apollo-boost';
+import { gql } from "apollo-boost";
 
 export const TIMER = gql`
   query Timer($id: ID!) {
@@ -10,9 +9,11 @@ export const TIMER = gql`
       notes
       start
       end
-      project_id
-      project_title
-      project_description
+      project {
+        id
+        title
+        description
+      }
       isRunning
     }
   }
