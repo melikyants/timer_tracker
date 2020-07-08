@@ -12,25 +12,36 @@ import {
   Timer,
   TimerVariables,
   Timer_timer,
-} from "../../../../lib/graphql/query/Timer/__generated__/Timer";
+} from "../../../../lib/graphql/queries/Timer/__generated__/Timer";
 import {
   deleteTimer as IdeleteTimer,
   deleteTimerVariables,
-} from "../../../../lib/graphql/mutation/DeleteTimer/__generated__/deleteTimer";
+} from "../../../../lib/graphql/mutations/DeleteTimer/__generated__/deleteTimer";
 import {
   updateTimer as IupdateTimer,
   updateTimerVariables,
-} from "../../../../lib/graphql/mutation/UpdateTimer/__generated__/updateTimer";
-import { Timers } from "../../../../lib/graphql/query/Timers/__generated__/Timers";
-import { TIMERS, TIMER } from "../../../../lib/graphql/query";
-import { DELETE_TIMER, UPDATE_TIMER } from "../../../../lib/graphql/mutation";
+} from "../../../../lib/graphql/mutations/UpdateTimer/__generated__/updateTimer";
+import { Timers } from "../../../../lib/graphql/queries/Timers/__generated__/Timers";
+import { TIMERS, TIMER } from "../../../../lib/graphql/queries";
+import { DELETE_TIMER, UPDATE_TIMER } from "../../../../lib/graphql/mutations";
 import { Types } from "./Types";
 import { TimerType as ITimerType } from "../../../../lib/graphql/globalTypes";
+
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
+import TimePicker from "react-time-picker";
+
+function addZero(i: number | string) {
+  if (i < 10) {
+    i = "0" + i;
+  }
+  return i;
+}
 
 export const TimerDetails = ({ timerId }: { timerId: string }) => {
   const {
     value: timerTitle,
-    setValue: setTimerValue,
+    setValue: setTimerTitle,
     bind: bindTitle,
   } = useInput("");
   const {
@@ -40,12 +51,17 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
   } = useTextarea("");
   const {
     value: timerNotes,
-    setValue: settimerNotes,
+    setValue: setTimerNotes,
     bind: bindtimerNotes,
   } = useTextarea("");
 
-  const { dispatchTimerR } = React.useContext(TimerContext);
-  const [projectId, setProjectId] = React.useState("");
+  const [date, setDate] = React.useState(new Date());
+  const [startTime, setStartTime] = React.useState("");
+  const [endTime, setEndTime] = React.useState("");
+  const [duration, setDuration] = React.useState("");
+
+  const { timerR, dispatchTimerR } = React.useContext(TimerContext);
+  const [projectId, setProjectId] = React.useState<string | null>(null);
   const [timerType, setTimerType] = React.useState(ITimerType.ANY);
 
   const { data, loading } = useQuery<Timer, TimerVariables>(TIMER, {
@@ -57,16 +73,48 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
   const updateState = React.useCallback(
     (timer) => {
       console.log("timer", timer);
-      setTimerValue(timer.title);
+      setTimerTitle(timer.title);
       if (timer.project) {
         setProjectId(timer.project.id ? timer.project.id : "");
         setprojectDescription(
           timer.project.description ? timer.project.description : ""
         );
       }
-      settimerNotes(timer.notes ? timer.notes : "");
+      setDate(timer.start);
+      console.log("timer.type", timer.type);
+      setTimerType(timer.type);
+      const startHours =
+        timer.start && addZero(new Date(timer.start).getHours());
+      const startMinutes =
+        timer.start && addZero(new Date(timer.start).getMinutes());
+      const totalStartTime = `${startHours}:${startMinutes}`;
+      setStartTime(totalStartTime);
+
+      if (timer.end) {
+        const endHours = addZero(new Date(timer.end).getHours());
+        const endMinutes = addZero(new Date(timer.end).getMinutes());
+        const totalEndTime = `${endHours}:${endMinutes}`;
+
+        setEndTime(totalEndTime);
+      } else {
+        setEndTime("");
+      }
+
+      const duration = timer.end
+        ? timer.end - timer.start
+        : Date.now() - timer.start;
+      const hours = Math.floor(duration / 1000 / 60 / 60);
+      const minutes = Math.floor((duration / 1000 / 60) % 60);
+
+      const durationTimeFormated = hours
+        ? `${hours} h ${minutes} min`
+        : `${minutes} min`;
+
+      setDuration(durationTimeFormated);
+
+      setTimerNotes(timer.notes ? timer.notes : "");
     },
-    [setTimerValue, setProjectId, setprojectDescription, settimerNotes]
+    [setTimerTitle, setProjectId, setprojectDescription, setTimerNotes]
   );
 
   React.useEffect(() => {
@@ -132,7 +180,7 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
     });
   };
 
-  const onChangeProjectId = (id: string, description: string | null) => {
+  const onChangeProjectId = (id: string | null, description: string | null) => {
     setProjectId(id);
     setprojectDescription(description ? description : "");
   };
@@ -141,11 +189,25 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
     setTimerType(type);
   };
 
-  const onSubmitTimerDetails = async () => {
+  const handleDateChange = (date: Date) => {
+    setDate(date);
+  };
+
+  const onSaveTimerDetails = async () => {
+    const dateT = new Date(date).toDateString();
+    const startTimerMilliseconds = new Date(`${dateT} ${startTime}`).getTime();
+    console.log("onSaveTimerDetails -> endTime", endTime);
+    const endTimerMilliseconds = endTime
+      ? new Date(`${dateT} ${endTime}`).getTime()
+      : null;
     console.log(
-      "onSubmitTimerDetails -> projectDescription",
-      projectDescription
+      "onSaveTimerDetails -> endTimerMilliseconds",
+      endTimerMilliseconds
     );
+
+    //If the timer is running, do not update the time for, only the content
+    console.log("onSaveTimerDetails -> timerId", timerId);
+    console.log("onSaveTimerDetails -> timerR.isRunningId", timerR.isRunningId);
     await updateTimer({
       variables: {
         id: timerId,
@@ -154,9 +216,17 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
         project_description: projectDescription,
         notes: timerNotes,
         type: timerType,
+        start: startTimerMilliseconds,
+        end: endTimerMilliseconds,
       },
     });
   };
+
+  const TimeInput = ({ value, onClick }: { value: any; onClick: any }) => (
+    <button className="btn-time" onClick={onClick}>
+      {value}
+    </button>
+  );
 
   return (
     <div className="TimerDetails_wrapper">
@@ -175,8 +245,39 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
           {timerFetched && (
             <Types timer={timerFetched} onChangeType={onChangeType} />
           )}
-          <div>Times goes here</div>
         </div>
+        <div className="TimerDetails-wrapper">
+          <div className="TimerDetails-date">
+            <div className="TimerDetails-date__duration">
+              Duration: {duration}
+            </div>
+            <TimePicker onChange={setStartTime} value={startTime} />
+
+            <span>-></span>
+            {endTime && <TimePicker onChange={setEndTime} value={endTime} />}
+          </div>
+          <DatePicker
+            selected={date}
+            onChange={handleDateChange}
+            dateFormat="EE, d MMMM yyyy"
+            popperClassName="some-custom-class"
+            popperPlacement="bottom-start"
+            popperModifiers={{
+              offset: {
+                enabled: true,
+                offset: "5px, 10px",
+              },
+              preventOverflow: {
+                enabled: true,
+                escapeWithReference: false,
+                boundariesElement: "viewport",
+              },
+            }}
+            customInput={<TimeInput value onClick />}
+            // inline={true}
+          />
+        </div>
+
         <div>
           <textarea
             name="project_description"
@@ -203,7 +304,7 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
           <button className="btn" onClick={onCancleDetails}>
             Cancel
           </button>
-          <button className="btn" onClick={onSubmitTimerDetails}>
+          <button className="btn" onClick={onSaveTimerDetails}>
             Save
           </button>
         </div>

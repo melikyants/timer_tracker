@@ -1,34 +1,42 @@
 import React from "react";
 import { Popper } from "../../Popper";
 
-import { TimerType as ITimerTYpe } from "../../../../../lib/graphql/globalTypes";
-
-import { useInput } from "../../../../../lib";
-import { Timer_timer } from "../../../../../lib/graphql/query/Timer/__generated__/Timer";
+import { useInput, typeToHuman } from "../../../../../lib";
+import { Timer_timer } from "../../../../../lib/graphql/queries/Timer/__generated__/Timer";
+import { TimerType } from "../../../../../lib/graphql/globalTypes";
 
 export const Types = ({
   timer,
   onChangeType,
 }: {
   timer: Timer_timer;
-  onChangeType: (type: ITimerTYpe) => void;
+  onChangeType: (type: TimerType) => void;
 }) => {
   const inputProjectRef = React.useRef(null);
   const inputProjectPopperRef = React.useRef(null);
 
   const [visible, setVisibility] = React.useState(false);
-  const defaultValueType = timer.type ? timer.type : "Select Type";
+  // const typeNormal = typeToHuman(type);
+  const defaultValueType = timer.type ? typeToHuman(timer.type) : "Select Type";
   const { setValue: setTimerType, bind: bindTimerType } = useInput(
     defaultValueType
   );
+
+  React.useEffect(() => {
+    if (timer) {
+      const typeNormal = timer.type ? typeToHuman(timer.type) : "Select Type";
+      setTimerType(typeNormal);
+    }
+  }, [timer, setTimerType]);
 
   const onClickInputType = () => {
     setVisibility(!visible);
   };
 
-  const onSelectType = (type: ITimerTYpe) => {
+  const onSelectType = (type: TimerType) => {
+    const typeNormal = typeToHuman(type);
     onChangeType(type);
-    setTimerType(type);
+    setTimerType(typeNormal);
     setVisibility(false);
   };
 
@@ -49,10 +57,13 @@ export const Types = ({
       >
         <div>
           <ul className="project_list">
-            <li onClick={(e) => onSelectType(ITimerTYpe.ANY)}>Any</li>
-            <li onClick={(e) => onSelectType(ITimerTYpe.STUDY)}>Study</li>
-            <li onClick={(e) => onSelectType(ITimerTYpe.WORK)}>Work</li>
-            <li onClick={(e) => onSelectType(ITimerTYpe.HOBBIE)}>Hobbie</li>
+            <li onClick={(e) => onSelectType(TimerType.ANY)}>Any</li>
+            <li onClick={(e) => onSelectType(TimerType.STUDY)}>Study</li>
+            <li onClick={(e) => onSelectType(TimerType.WORK)}>Work</li>
+            <li onClick={(e) => onSelectType(TimerType.PERSONAL_PROJECT)}>
+              Personal Project
+            </li>
+            <li onClick={(e) => onSelectType(TimerType.HOBBIE)}>Hobbie</li>
           </ul>
         </div>
       </Popper>

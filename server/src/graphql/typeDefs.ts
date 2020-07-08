@@ -7,6 +7,7 @@ export const typeDefs = gql`
     STUDY
     WORK
     HOBBIE
+    PERSONAL_PROJECT
     ANY
   }
 
@@ -27,13 +28,29 @@ export const typeDefs = gql`
     description: String
   }
 
+  type Viewer {
+    id: ID
+    token: String
+    avatar: String
+    hasWallet: Boolean
+    didRequest: Boolean!
+  }
+
+  input LogInInput {
+    code: String!
+  }
+
   type Query {
+    authUrl: String!
     timers: [Timer!]!
     timer(id: ID!): Timer!
     projects: [Project!]!
   }
 
   type Mutation {
+    logIn(input: LogInInput): Viewer!
+    logOut: Viewer!
+
     startTimer(start: Float!, id: ID!): Timer!
     createTimer(start: Float!, title: String!): Timer!
     stopTimer(id: ID!, end: Float!): Timer!
@@ -41,6 +58,8 @@ export const typeDefs = gql`
       id: ID!
       title: String
       project_id: String
+      start: Float
+      end: Float
       project_description: String
       notes: String
       type: TimerType

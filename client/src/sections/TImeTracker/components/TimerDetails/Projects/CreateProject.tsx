@@ -3,13 +3,13 @@ import { Popper } from "../../Popper";
 
 import { useMutation } from "@apollo/react-hooks";
 import { useInput, useTextarea } from "../../../../../lib";
-import { PROJECTS } from "../../../../../lib/graphql/query";
-import { CREATE_PROJECT } from "../../../../../lib/graphql/mutation";
-import { Projects } from "../../../../../lib/graphql/query/Projects/__generated__/Projects";
+import { PROJECTS } from "../../../../../lib/graphql/queries";
+import { CREATE_PROJECT } from "../../../../../lib/graphql/mutations";
+import { Projects } from "../../../../../lib/graphql/queries/Projects/__generated__/Projects";
 import {
   createProject as IcreateProject,
   createProjectVariables,
-} from "../../../../../lib/graphql/mutation/CreateProject/__generated__/createProject";
+} from "../../../../../lib/graphql/mutations/CreateProject/__generated__/createProject";
 
 export const CreateProjectPopper = () => {
   const buttonProjectCreateRef = React.useRef(null);

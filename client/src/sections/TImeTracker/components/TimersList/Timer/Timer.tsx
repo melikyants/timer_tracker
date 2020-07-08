@@ -5,14 +5,15 @@ import { useMutation } from "@apollo/react-hooks";
 import { ReactComponent as StartIcon } from "../../../icons/arrow.svg";
 
 import { TimerContext } from "../../../../../lib/context/TimerContext";
-import { START_TIMER } from "../../../../../lib/graphql/mutation";
-import { TIMERS } from "../../../../../lib/graphql/query";
-import { Timer_timer } from "../../../../../lib/graphql/query/Timer/__generated__/Timer";
-import { Timers } from "../../../../../lib/graphql/query/Timers/__generated__/Timers";
+import { START_TIMER } from "../../../../../lib/graphql/mutations";
+import { TIMERS } from "../../../../../lib/graphql/queries";
+import { Timer_timer } from "../../../../../lib/graphql/queries/Timer/__generated__/Timer";
+import { Timers } from "../../../../../lib/graphql/queries/Timers/__generated__/Timers";
 import {
   startTimer as IstartTimer,
   startTimerVariables,
-} from "../../../../../lib/graphql/mutation/StartTimer/__generated__/startTimer";
+} from "../../../../../lib/graphql/mutations/StartTimer/__generated__/startTimer";
+import { typeToHuman } from "../../../../../lib";
 
 interface ITimerWith extends Timer_timer {
   time: string;
@@ -85,7 +86,9 @@ export const Timer = ({ timer }: { timer: ITimerWith }) => {
               <button className="btn-link"> + add project</button>
             </div>
           )}
-          {timer.type && <div className="timer_desc__title">{timer.type}</div>}
+          {timer.type && (
+            <div className="timer_desc__title">{typeToHuman(timer.type)}</div>
+          )}
         </div>
       </div>
       <div>

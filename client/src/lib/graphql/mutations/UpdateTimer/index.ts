@@ -4,6 +4,8 @@ export const UPDATE_TIMER = gql`
   mutation updateTimer(
     $id: ID!
     $title: String
+    $start: Float
+    $end: Float
     $project_id: String
     $project_description: String
     $notes: String
@@ -12,6 +14,8 @@ export const UPDATE_TIMER = gql`
     updateTimer(
       id: $id
       title: $title
+      start: $start
+      end: $end
       project_id: $project_id
       project_description: $project_description
       notes: $notes

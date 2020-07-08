@@ -10,6 +10,7 @@
 export enum TimerType {
   ANY = "ANY",
   HOBBIE = "HOBBIE",
+  PERSONAL_PROJECT = "PERSONAL_PROJECT",
   STUDY = "STUDY",
   WORK = "WORK",
 }

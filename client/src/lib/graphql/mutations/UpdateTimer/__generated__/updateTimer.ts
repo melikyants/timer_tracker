@@ -35,6 +35,8 @@ export interface updateTimer {
 export interface updateTimerVariables {
   id: string;
   title?: string | null;
+  start?: number | null;
+  end?: number | null;
   project_id?: string | null;
   project_description?: string | null;
   notes?: string | null;

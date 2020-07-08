@@ -7,18 +7,18 @@ import { ReactComponent as StopIcon } from "../../icons/stop.svg";
 
 import { TimerContext } from "../../../../lib/context/TimerContext";
 
-import { STOP_TIMER, CREATE_TIMER } from "../../../../lib/graphql/mutation";
-import { TIMERS } from "../../../../lib/graphql/query";
-import { Timer_timer as ITimer_timer } from "../../../../lib/graphql/query/Timer/__generated__/Timer";
-import { Timers as ITimers } from "../../../../lib/graphql/query/Timers/__generated__/Timers";
+import { STOP_TIMER, CREATE_TIMER } from "../../../../lib/graphql/mutations";
+import { TIMERS } from "../../../../lib/graphql/queries";
+import { Timer_timer as ITimer_timer } from "../../../../lib/graphql/queries/Timer/__generated__/Timer";
+import { Timers as ITimers } from "../../../../lib/graphql/queries/Timers/__generated__/Timers";
 import {
   createTimer as IcreateTimer,
   createTimerVariables,
-} from "../../../../lib/graphql/mutation/CreateTimer/__generated__/createTimer";
+} from "../../../../lib/graphql/mutations/CreateTimer/__generated__/createTimer";
 import {
   stopTimer as IstopTimer,
   stopTimerVariables,
-} from "../../../../lib/graphql/mutation/StopTimer/__generated__/stopTimer";
+} from "../../../../lib/graphql/mutations/StopTimer/__generated__/stopTimer";
 
 interface ISTimerNew {
   start: number;
@@ -112,6 +112,7 @@ export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
     dispatchTimerR({
       type: "START_TIMER",
     });
+
     setSTimer((STimer) => ({ ...STimer, start: now, time: timeRunning }));
 
     await createTimer({ variables: { start: now, title: STitle } }).then(
@@ -129,9 +130,11 @@ export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
   const onStopTimer = async () => {
     const now = Date.now(); //timestamp in milliseconds
     const timeRunning = milliSecToString(0);
+
     dispatchTimerR({
       type: "STOP_TIMER",
     });
+
     setSTimer((STimer) => ({
       ...STimer,
       isRunning: false,
@@ -141,6 +144,7 @@ export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
     }));
 
     if (timerR.isRunningId !== null) {
+      setSTitle("");
       await stopTimer({ variables: { id: timerR.isRunningId, end: now } });
     }
   };
@@ -150,6 +154,10 @@ export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
   };
 
   const onTimerDetails = (id: string) => {
+    console.log("onTimerDetails -> id", id);
+    dispatchTimerR({
+      type: "CLOSE_TIMER_DETAILS",
+    });
     dispatchTimerR({
       type: "OPEN_TIMER_DETAILS",
       payload: id,
@@ -163,7 +171,7 @@ export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
           className="timer_log__desc"
           onClick={() => onTimerDetails(timer.id)}
         >
-          <div>{STitle}</div>
+          <div>{STitle ? STitle : "Add the title"}</div>
           <div className="timer_log__project">{timer.project?.title}</div>
         </div>
         <div className="timer_log__tick">{STimer.time}</div>

@@ -1,31 +1,40 @@
-import { Collection, ObjectId } from 'mongodb';
+import { Collection, ObjectId } from "mongodb";
 
 //describes the  mongodb schema
 export enum ListingType {
   Study = "STUDY",
   Work = "WORK",
   Hobbie = "HOBBIE",
-  ANY = "ANY"
+  PersonalProject = "PERSONAL_PROJECT",
+  Any = "ANY",
+}
+
+export interface Viewer {
+  _id?: string;
+  token?: string;
+  avatar?: string;
+  walletId?: string;
+  didRequest: boolean;
 }
 
 export interface ITimer {
-  _id: ObjectId,
-  start: number,
-  end: number | null,
-  title: string,
-  project_id: ObjectId | null,
-  type: ListingType | string,
-  notes: string,
-  isRunning: boolean,
+  _id: ObjectId;
+  start: number;
+  end: number | null;
+  title: string;
+  project_id: ObjectId | null;
+  type: ListingType | string;
+  notes: string;
+  isRunning: boolean;
 }
 
 export interface IProject {
-  _id: ObjectId,
-  title: string,
-  description: string
+  _id: ObjectId;
+  title: string;
+  description: string;
 }
 
 export interface IDatabase {
   timers: Collection<ITimer>;
-  projects: Collection<IProject>
+  projects: Collection<IProject>;
 }

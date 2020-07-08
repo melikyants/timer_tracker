@@ -19,10 +19,12 @@ export interface EndTimerArgs {
 
 export interface UpdateTimerArgs {
   id: string;
-  title: string;
-  project_id: string;
-  project_description: string;
-  notes: string;
+  title?: string;
+  start?: number;
+  end?: number;
+  project_id?: string;
+  project_description?: string;
+  notes?: string;
   type: string;
 }
 

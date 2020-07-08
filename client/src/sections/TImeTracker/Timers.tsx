@@ -8,11 +8,11 @@ import { TimersList, TimerLog, TimerDetails } from "./components";
 import {
   Timers as ITimers,
   Timers_timers,
-} from "../../lib/graphql/query/Timers/__generated__/Timers";
+} from "../../lib/graphql/queries/Timers/__generated__/Timers";
 import "./styles/index.scss";
 
 import { TimerContext } from "../../lib/context/TimerContext";
-import { TIMERS } from "../../lib/graphql/query";
+import { TIMERS } from "../../lib/graphql/queries";
 
 export const Timers = () => {
   const { data: timersData } = useQuery<ITimers>(TIMERS);

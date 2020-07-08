@@ -118,18 +118,25 @@ export const timerResolvers: IResolvers = {
         id,
         title,
         project_id,
+        start,
+        end,
         project_description,
         notes,
         type,
       }: UpdateTimerArgs,
       { db }: { db: IDatabase }
-    ): Promise<ITimer> => {
+    ): Promise<any> => {
+      console.log("start", start);
+      console.log("end", end);
+
       const updateTimer = await db.timers.findOneAndUpdate(
         { _id: new ObjectId(id) },
         {
           $set: {
             title,
-            project_id: new ObjectId(project_id),
+            start,
+            end,
+            project_id: project_id ? new ObjectId(project_id) : null,
             notes,
             type,
           },
@@ -137,19 +144,22 @@ export const timerResolvers: IResolvers = {
         { returnOriginal: false }
       );
 
-      const project = await db.projects.findOneAndUpdate(
-        { _id: new ObjectId(project_id) },
-        {
-          $set: { description: project_description },
-        },
-        { returnOriginal: false }
-      );
+      if (project_id) {
+        const project = await db.projects.findOneAndUpdate(
+          { _id: new ObjectId(project_id) },
+          {
+            $set: { description: project_description },
+          },
+          { returnOriginal: false }
+        );
+
+        if (!project.value) {
+          throw new Error("failed to update project");
+        }
+      }
 
       if (!updateTimer.value) {
         throw new Error("failed to update timer");
-      }
-      if (!project.value) {
-        throw new Error("failed to update project");
       }
 
       return updateTimer.value;

@@ -1,3 +1,5 @@
+import { TimerType } from "./graphql/globalTypes";
+
 export const milliSecToString = (ms: number) => {
   const seconds = Math.floor((ms / 1000) % 60);
   const minutes = Math.floor((ms / 1000 / 60) % 60);
@@ -7,10 +9,10 @@ export const milliSecToString = (ms: number) => {
     pad(hours.toString(), 2),
     pad(minutes.toString(), 2),
     pad(seconds.toString(), 2),
-  ].join(':');
+  ].join(":");
 
   return humanized;
-}
+};
 
 function pad(numberString: string, size: number) {
   let padded = numberString;
@@ -19,17 +21,42 @@ function pad(numberString: string, size: number) {
 }
 
 export const isToday = (someDate: Date) => {
-  const today = new Date()
-  return someDate.getDate() === today.getDate() &&
+  const today = new Date();
+  return (
+    someDate.getDate() === today.getDate() &&
     someDate.getMonth() === today.getMonth() &&
     someDate.getFullYear() === today.getFullYear()
-}
+  );
+};
 
 export const sortByDates = (a: string, b: string) => {
-  let dateA = new Date(a)
-  let dateB = new Date(b)
+  let dateA = new Date(a);
+  let dateB = new Date(b);
   if (dateA > dateB) return -1;
   if (dateA === dateB) return 0;
   if (dateA < dateB) return 1;
-  return 0
-}
+  return 0;
+};
+
+export const typeToHuman = (type: TimerType) => {
+  let typeNormal = "Any";
+
+  switch (type) {
+    case TimerType.ANY:
+      typeNormal = "Any";
+      break;
+    case TimerType.WORK:
+      typeNormal = "Work";
+      break;
+    case TimerType.HOBBIE:
+      typeNormal = "Hobbie";
+      break;
+    case TimerType.STUDY:
+      typeNormal = "Study";
+      break;
+    case TimerType.PERSONAL_PROJECT:
+      typeNormal = "Personal Project";
+      break;
+  }
+  return typeNormal;
+};

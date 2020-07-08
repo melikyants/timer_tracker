@@ -4,17 +4,17 @@ import { CreateProjectPopper } from "./CreateProject";
 
 import { useQuery, useMutation } from "@apollo/react-hooks";
 
-import { Projects as IProjects } from "../../../../../lib/graphql/query/Projects/__generated__/Projects";
+import { Projects as IProjects } from "../../../../../lib/graphql/queries/Projects/__generated__/Projects";
 import {
   deleteProject as IdeleteProject,
   deleteProjectVariables,
-} from "../../../../../lib/graphql/mutation/DeleteProject/__generated__/deleteProject";
-import { Timer_timer } from "../../../../../lib/graphql/query/Timer/__generated__/Timer";
+} from "../../../../../lib/graphql/mutations/DeleteProject/__generated__/deleteProject";
+import { Timer_timer } from "../../../../../lib/graphql/queries/Timer/__generated__/Timer";
 
 import { useInput } from "../../../../../lib";
 
-import { PROJECTS } from "../../../../../lib/graphql/query";
-import { DELETE_PROJECT } from "../../../../../lib/graphql/mutation";
+import { PROJECTS } from "../../../../../lib/graphql/queries";
+import { DELETE_PROJECT } from "../../../../../lib/graphql/mutations";
 import { ReactComponent as DeleteIcon } from "../../../icons/delete.svg";
 
 export const Projects = ({

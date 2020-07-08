@@ -1,7 +1,7 @@
 import React from "react";
 
 import { milliSecToString, isToday, sortByDates } from "../../../../lib";
-import { Timers_timers } from "../../../../lib/graphql/query/Timers/__generated__/Timers";
+import { Timers_timers } from "../../../../lib/graphql/queries/Timers/__generated__/Timers";
 import { Timer } from "./Timer";
 
 interface ITimerWith extends Timers_timers {
