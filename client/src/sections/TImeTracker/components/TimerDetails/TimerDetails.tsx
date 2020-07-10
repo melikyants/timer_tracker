@@ -251,10 +251,20 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
             <div className="TimerDetails-date__duration">
               Duration: {duration}
             </div>
-            <TimePicker onChange={setStartTime} value={startTime} />
+            <TimePicker
+              onChange={setStartTime}
+              value={startTime}
+              disableClock={true}
+            />
 
             <span>-></span>
-            {endTime && <TimePicker onChange={setEndTime} value={endTime} />}
+            {endTime && (
+              <TimePicker
+                onChange={setEndTime}
+                value={endTime}
+                disableClock={true}
+              />
+            )}
           </div>
           <DatePicker
             selected={date}

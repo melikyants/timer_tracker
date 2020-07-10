@@ -27,29 +27,75 @@ export const typeDefs = gql`
     title: String!
     description: String
   }
+  type User {
+    id: ID!
+    name: String!
+    avatar: String!
+    contact: String!
+  }
 
   type Viewer {
     id: ID
-    token: String
     avatar: String
-    hasWallet: Boolean
     didRequest: Boolean!
+    tokenGoogle: String
+    tokenUpwork: String
   }
 
+  type JobClient {
+    country: String
+    feedback: Float
+    reviews_count: Float
+    jobs_posted: Float
+    past_hires: Float
+    payment_verification_status: String
+  }
+  type Job {
+    id: String
+    title: String
+    snippet: String
+    category: String
+    subcategory: String
+    skills: [String]
+    type: String
+    budget: Float
+    duration: String
+    workload: String
+    status: String
+    date_created: String
+    url: String
+    client: JobClient
+  }
+
+  input Params {
+    q: String
+    skills: [String]
+    paging: String
+  }
+
+  input connectUpworkInput {
+    verifier: String!
+  }
   input LogInInput {
     code: String!
   }
 
   type Query {
+    user(id: ID!): User!
     authUrl: String!
+    authUrlUpwork: String!
     timers: [Timer!]!
     timer(id: ID!): Timer!
     projects: [Project!]!
+    searchJobs(params: Params, filterCountries: [String]): [Job!]!
   }
 
   type Mutation {
     logIn(input: LogInInput): Viewer!
     logOut: Viewer!
+
+    connectUpwork(input: connectUpworkInput): Viewer!
+    logOutUpwork: Viewer!
 
     startTimer(start: Float!, id: ID!): Timer!
     createTimer(start: Float!, title: String!): Timer!

@@ -11,10 +11,10 @@ export enum ListingType {
 
 export interface Viewer {
   _id?: string;
-  token?: string;
   avatar?: string;
-  walletId?: string;
+  tokenGoogle?: string;
   didRequest: boolean;
+  tokenUpwork?: string;
 }
 
 export interface ITimer {
@@ -34,7 +34,19 @@ export interface IProject {
   description: string;
 }
 
+export interface User {
+  _id: string;
+  name: string;
+  avatar: string;
+  contact: string;
+  tokenGoogle: string;
+  tokenUpwork: string;
+  tokenUpworkSecret: string;
+  authorized?: boolean;
+}
+
 export interface IDatabase {
   timers: Collection<ITimer>;
   projects: Collection<IProject>;
+  users: Collection<User>;
 }

@@ -6,7 +6,18 @@ import * as serviceWorker from "./serviceWorker";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 
-const client = new ApolloClient({ uri: "/api" });
+const client = new ApolloClient({
+  uri: "/api",
+  request: async (operation) => {
+    const token = sessionStorage.getItem("tokenGoogle");
+    console.log("ApolloClient -token", token);
+    operation.setContext({
+      headers: {
+        "X-CSRF-TOKEN": token || "",
+      },
+    });
+  },
+});
 ReactDOM.render(
   <ApolloProvider client={client}>
     <App />
