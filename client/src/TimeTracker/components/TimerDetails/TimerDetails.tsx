@@ -1,11 +1,13 @@
 import React from "react";
 
 import { Projects } from "./Projects";
-import { useInput, useTextarea } from "../../../lib";
+
+import { useInput, useTextarea } from "../../../lib/Hooks";
+import { Input } from "../../../lib/components";
+import { TimerContext } from "../../../lib/context/TimerContext";
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
 
-import { TimerContext } from "../../../lib/context/TimerContext";
 import { ReactComponent as DeleteIcon } from "../../icons/delete.svg";
 
 import {
@@ -44,6 +46,7 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
     setValue: setTimerTitle,
     bind: bindTitle,
   } = useInput("");
+
   const {
     value: projectDescription,
     setValue: setprojectDescription,
@@ -222,10 +225,12 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
     });
   };
 
-  const TimeInput = ({ value, onClick }: { value: any; onClick: any }) => (
-    <button className="btn-time" onClick={onClick}>
-      {value}
-    </button>
+  const TimeInput = React.forwardRef(
+    ({ value, onClick }: { value: any; onClick: any }, __refs) => (
+      <button className="btn-time" onClick={onClick}>
+        {value}
+      </button>
+    )
   );
 
   return (
@@ -233,7 +238,12 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
       <h3>Details</h3>
       <div className="TimerDetails__body">
         <div>
-          <input placeholder="Title" className="input" {...bindTitle} />
+          <Input
+            type="text"
+            placeholder="Title"
+            bind={bindTitle}
+            name="title"
+          />
         </div>
         <div className="TimerDetails__body__row">
           {timerFetched && (

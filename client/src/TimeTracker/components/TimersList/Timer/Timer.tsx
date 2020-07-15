@@ -13,7 +13,7 @@ import {
   startTimer as IstartTimer,
   startTimerVariables,
 } from "../../../../lib/graphql/mutations/StartTimer/__generated__/startTimer";
-import { typeToHuman } from "../../../../lib";
+import { typeToHuman } from "../../../../lib/helpers";
 
 interface ITimerWith extends Timer_timer {
   time: string;

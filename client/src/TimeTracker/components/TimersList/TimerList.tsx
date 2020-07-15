@@ -1,6 +1,7 @@
 import React from "react";
 
-import { milliSecToString, isToday, sortByDates } from "../../../lib";
+import { milliSecToString, isToday, sortByDates } from "../../../lib/helpers";
+
 import { Timers_timers } from "../../../lib/graphql/queries/Timers/__generated__/Timers";
 import { Timer } from "./Timer";
 

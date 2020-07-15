@@ -1,5 +1,5 @@
 import React from "react";
-import { Popper } from "../../Popper";
+import { PopperInput } from "../../Popper";
 import { CreateProjectPopper } from "./CreateProject";
 
 import { useQuery, useMutation } from "@apollo/react-hooks";
@@ -11,7 +11,7 @@ import {
 } from "../../../../lib/graphql/mutations/DeleteProject/__generated__/deleteProject";
 import { Timer_timer } from "../../../../lib/graphql/queries/Timer/__generated__/Timer";
 
-import { useInput } from "../../../../lib";
+import { useInput } from "../../../../lib/Hooks";
 
 import { PROJECTS } from "../../../../lib/graphql/queries";
 import { DELETE_PROJECT } from "../../../../lib/graphql/mutations";
@@ -25,6 +25,7 @@ export const Projects = ({
   onChangeProjectId: (id: string, description: string | null) => void;
 }) => {
   const { data: projectsData } = useQuery<IProjects>(PROJECTS);
+  const [visible, setVisible] = React.useState(false);
 
   const [deleteProject] = useMutation<IdeleteProject, deleteProjectVariables>(
     DELETE_PROJECT,
@@ -48,26 +49,20 @@ export const Projects = ({
     }
   );
 
-  const inputProjectRef = React.useRef(null);
-  const inputProjectPopperRef = React.useRef(null);
-
-  const [visible, setVisibility] = React.useState(false);
   const defaultValueProject = timer.project?.id
     ? timer.project.title
     : "Project name";
+
   const { setValue: setprojectName, bind: bindProject } = useInput(
     defaultValueProject
   );
 
   const projectsList = projectsData ? projectsData.projects : [];
 
-  const onClickInputProject = () => {
-    setVisibility(!visible);
-  };
-
   const onDeleteProject = async (id: string) => {
     await deleteProject({ variables: { id } });
   };
+
   const onSelectProject = (
     id: string,
     title: string,
@@ -75,25 +70,19 @@ export const Projects = ({
   ) => {
     onChangeProjectId(id, description);
     setprojectName(title);
-    setVisibility(false);
+    setVisible(false);
   };
 
   return (
     <div>
-      <input
-        className="input"
-        name="project"
-        placeholder="select a project"
-        ref={inputProjectRef}
-        onClick={onClickInputProject}
-        {...bindProject}
-      />
-      <Popper
-        refEl={inputProjectRef}
-        popperRef={inputProjectPopperRef}
+      <PopperInput
+        inputName="project"
+        inputPlaceholder="select a project"
+        bindInput={bindProject}
         visible={visible}
+        setVisible={setVisible}
       >
-        <div>
+        <div className="popper__children">
           <ul className="project_list">
             {projectsList.map((project) => (
               <li key={project.id} data-id={project.id}>
@@ -121,7 +110,7 @@ export const Projects = ({
           </ul>
           <CreateProjectPopper />
         </div>
-      </Popper>
+      </PopperInput>
     </div>
   );
 };

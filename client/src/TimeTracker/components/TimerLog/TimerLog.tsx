@@ -1,11 +1,14 @@
 import React from "react";
 import { useMutation } from "@apollo/react-hooks";
-import { useInterval, milliSecToString } from "../../../lib";
+
+import { useInterval, useInput } from "../../../lib/Hooks";
+import { milliSecToString } from "../../../lib/helpers";
+import { Input } from "../../../lib/components";
+import { Timer } from "../../../lib/types";
+import { TimerContext } from "../../../lib/context/TimerContext";
 
 import { ReactComponent as PlayIcon } from "../../icons/arrow.svg";
 import { ReactComponent as StopIcon } from "../../icons/stop.svg";
-
-import { TimerContext } from "../../../lib/context/TimerContext";
 
 import { STOP_TIMER, CREATE_TIMER } from "../../../lib/graphql/mutations";
 import { TIMERS } from "../../../lib/graphql/queries";
@@ -20,21 +23,22 @@ import {
   stopTimerVariables,
 } from "../../../lib/graphql/mutations/StopTimer/__generated__/stopTimer";
 
-interface ISTimerNew {
-  start: number;
-  runningSince: number;
-  time: string; //human readable time
-}
-
 export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
-  const [STitle, setSTitle] = React.useState("");
-  const [STimer, setSTimer] = React.useState<ISTimerNew>({
+  const {
+    value: valueTitle,
+    setValue: setTitle,
+    reset: resetTitle,
+    bind: bindTitle,
+  } = useInput("");
+
+  const [STimer, setSTimer] = React.useState<Timer>({
     start: 0,
     runningSince: 0,
     time: "",
   });
 
   const { timerR, dispatchTimerR } = React.useContext(TimerContext);
+
   const [createTimer] = useMutation<IcreateTimer, createTimerVariables>(
     CREATE_TIMER,
     {
@@ -101,9 +105,9 @@ export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
         time: timeRunning,
         runningSince: Date.now(),
       }));
-      setSTitle(timer.title);
+      setTitle(timer.title);
     }
-  }, [timer, dispatchTimerR]);
+  }, [timer, dispatchTimerR, setTitle]);
 
   const onStartTimer = async () => {
     const now = Date.now(); //timestamp in milliseconds
@@ -115,7 +119,7 @@ export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
 
     setSTimer((STimer) => ({ ...STimer, start: now, time: timeRunning }));
 
-    await createTimer({ variables: { start: now, title: STitle } }).then(
+    await createTimer({ variables: { start: now, title: valueTitle } }).then(
       (result) => {
         dispatchTimerR({
           type: "UPDATE_TIMER_ID",
@@ -144,17 +148,12 @@ export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
     }));
 
     if (timerR.isRunningId !== null) {
-      setSTitle("");
+      resetTitle();
       await stopTimer({ variables: { id: timerR.isRunningId, end: now } });
     }
   };
 
-  const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSTitle(e.currentTarget.value);
-  };
-
   const onTimerDetails = (id: string) => {
-    console.log("onTimerDetails -> id", id);
     dispatchTimerR({
       type: "CLOSE_TIMER_DETAILS",
     });
@@ -171,7 +170,7 @@ export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
           className="timer_log__desc"
           onClick={() => onTimerDetails(timer.id)}
         >
-          <div>{STitle ? STitle : "Add the title"}</div>
+          <div>{valueTitle ? valueTitle : "Add the title"}</div>
           <div className="timer_log__project">{timer.project?.title}</div>
         </div>
         <div className="timer_log__tick">{STimer.time}</div>
@@ -183,10 +182,9 @@ export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
   } else {
     return (
       <div className="timer_log">
-        <input
-          className="input"
+        <Input
           type="text"
-          onChange={onTitleChange}
+          bind={bindTitle}
           placeholder="What are you working on?"
         />
         <button className="btn btn__circle btn__play" onClick={onStartTimer}>

@@ -1,8 +1,11 @@
 import React from "react";
-import { Popper } from "../../Popper";
+import { PopperButton } from "../../Popper";
 
 import { useMutation } from "@apollo/react-hooks";
-import { useInput, useTextarea } from "../../../../lib";
+
+import { useInput, useTextarea } from "../../../../lib/Hooks";
+import { Input } from "../../../../lib/components";
+
 import { PROJECTS } from "../../../../lib/graphql/queries";
 import { CREATE_PROJECT } from "../../../../lib/graphql/mutations";
 import { Projects } from "../../../../lib/graphql/queries/Projects/__generated__/Projects";
@@ -14,7 +17,7 @@ import {
 export const CreateProjectPopper = () => {
   const buttonProjectCreateRef = React.useRef(null);
   const buttonProjectCreatePopperRef = React.useRef(null);
-  const [visibleProject, setVisibilityProject] = React.useState(false);
+  const [visible, setVisible] = React.useState(false);
   const { value: title, bind: bindTitle } = useInput("");
   const { value: description, bind: bindDescription } = useTextarea("");
 
@@ -35,12 +38,8 @@ export const CreateProjectPopper = () => {
     }
   );
 
-  const handleShowPopperForCreateProject = () => {
-    setVisibilityProject(!visibleProject);
-  };
-
   const closeProjectCreation = () => {
-    setVisibilityProject(!visibleProject);
+    setVisible(false);
   };
 
   const onCreateProject = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -51,23 +50,26 @@ export const CreateProjectPopper = () => {
         description,
       },
     });
-    setVisibilityProject(!visibleProject);
+    setVisible(!visible);
   };
 
   return (
     <div>
-      <button
+      {/* <button
         ref={buttonProjectCreateRef}
         onClick={handleShowPopperForCreateProject}
         type="button"
         className="btn "
       >
         Create a project
-      </button>
-      <Popper
-        refEl={buttonProjectCreateRef}
-        popperRef={buttonProjectCreatePopperRef}
-        visible={visibleProject}
+      </button> */}
+      <PopperButton
+        buttonTitle="Create a project"
+        visible={visible}
+        setVisible={setVisible}
+        // refEl={buttonProjectCreateRef}
+        // popperRef={buttonProjectCreatePopperRef}
+        // visible={visibleProject}
       >
         <div className="createProject">
           <div className="createProject__header">
@@ -83,12 +85,11 @@ export const CreateProjectPopper = () => {
             </button>
           </div>
           <div className="createProject__body">
-            <input
+            <Input
               type="text"
-              {...bindTitle}
+              bind={bindTitle}
               name="title"
               placeholder="Name your project"
-              className="input"
             />
             <textarea
               {...bindDescription}
@@ -98,7 +99,7 @@ export const CreateProjectPopper = () => {
             />
           </div>
         </div>
-      </Popper>
+      </PopperButton>
     </div>
   );
 };
