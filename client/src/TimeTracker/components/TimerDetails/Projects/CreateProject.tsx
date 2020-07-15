@@ -4,7 +4,7 @@ import { PopperButton } from "../../Popper";
 import { useMutation } from "@apollo/react-hooks";
 
 import { useInput, useTextarea } from "../../../../lib/Hooks";
-import { Input, Button } from "../../../../lib/components";
+import { Input, Button, Textarea } from "../../../../lib/components";
 
 import { PROJECTS } from "../../../../lib/graphql/queries";
 import { CREATE_PROJECT } from "../../../../lib/graphql/mutations";
@@ -15,8 +15,6 @@ import {
 } from "../../../../lib/graphql/mutations/CreateProject/__generated__/createProject";
 
 export const CreateProjectPopper = () => {
-  const buttonProjectCreateRef = React.useRef(null);
-  const buttonProjectCreatePopperRef = React.useRef(null);
   const [visible, setVisible] = React.useState(false);
   const { value: title, bind: bindTitle } = useInput("");
   const { value: description, bind: bindDescription } = useTextarea("");
@@ -70,11 +68,10 @@ export const CreateProjectPopper = () => {
             name="title"
             placeholder="Name your project"
           />
-          <textarea
-            {...bindDescription}
+          <Textarea
+            bind={bindDescription}
             name="description"
             placeholder="Description"
-            className="textarea"
           />
         </div>
       </div>

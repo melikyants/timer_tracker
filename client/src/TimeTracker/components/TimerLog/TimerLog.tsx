@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/react-hooks";
 
 import { useInterval, useInput } from "../../../lib/Hooks";
 import { milliSecToString } from "../../../lib/helpers";
-import { Input, Button } from "../../../lib/components";
+import { Input, Button, Loading } from "../../../lib/components";
 import { Timer } from "../../../lib/types";
 import { TimerContext } from "../../../lib/context/TimerContext";
 
@@ -20,7 +20,13 @@ import {
   stopTimerVariables,
 } from "../../../lib/graphql/mutations/StopTimer/__generated__/stopTimer";
 
-export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
+export const TimerLog = ({
+  timer,
+  loading,
+}: {
+  timer: ITimer_timer | null;
+  loading: any;
+}) => {
   const {
     value: valueTitle,
     setValue: setTitle,
@@ -159,6 +165,13 @@ export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
       payload: id,
     });
   };
+  if (loading) {
+    return (
+      <div className="timer_log">
+        <Loading />
+      </div>
+    );
+  }
 
   if (timer) {
     return (

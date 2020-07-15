@@ -4,7 +4,7 @@ import styled from "styled-components";
 interface ITextarea {
   name: string;
   placeholder: string;
-  rows: number;
+  rows?: number;
   bind: {
     value: string;
     onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;

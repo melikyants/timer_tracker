@@ -3,7 +3,7 @@ import React from "react";
 import { Projects } from "./Projects";
 
 import { useInput, useTextarea } from "../../../lib/Hooks";
-import { Input, Button, Textarea } from "../../../lib/components";
+import { Input, Button, Textarea, Loading } from "../../../lib/components";
 import { TimerContext } from "../../../lib/context/TimerContext";
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
@@ -184,7 +184,12 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
     }
   );
 
-  if (loading) return <StyledDetailsWrapper>Loading...</StyledDetailsWrapper>;
+  if (loading)
+    return (
+      <StyledDetailsWrapper>
+        <Loading />
+      </StyledDetailsWrapper>
+    );
 
   const timerFetched = data ? data.timer : null;
 
