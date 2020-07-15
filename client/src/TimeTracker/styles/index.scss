@@ -6,7 +6,7 @@ $shaddow: hsl(0, 0%, 95%);
 $fontColorMain: hsl(0, 0%, 12%);
 $fontColorSecondary: hsl(0, 0%, 42%);
 $greenColor: hsl(146, 79, 43);
-$redColor: hsl(0, 78, 43);
+$redColor: #c31818;
 $fontFamily: "Roboto Condensed", sans-serif;
 
 *,
@@ -36,6 +36,7 @@ textarea {
   height: 600px;
   line-height: 22px;
   border-radius: 8px;
+  overflow: hidden;
 }
 
 .timer_log {
@@ -64,7 +65,7 @@ textarea {
 
 .timersList__wrapper {
   overflow: scroll;
-  height: calc(100% - 100px);
+  height: calc(100% - 84px);
 
   // max-height: 600px;
   position: relative;
@@ -186,148 +187,135 @@ textarea {
   opacity: 0;
 }
 
-// .input {
-//   border-radius: 32px;
-//   border: 0;
+//3 types of btns:
+//.btn, .btn-circle, .btn-link
+// .btn {
 //   height: 32px;
-//   background: $mainBg;
-//   width: 100%;
+//   width: 120px;
+//   border-radius: 12px;
+//   border: 0;
 //   color: $fontColorMain;
-//   box-shadow: inset 4px 4px 8px 0px $shaddow, inset -4px -4px 8px 0px $highlight;
+//   font-weight: 600;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   padding: 0;
+//   background-color: $mainBg;
+//   box-shadow: 4px 4px 8px 0px $shaddow, -4px -4px 8px 0px $highlight;
+//   cursor: pointer;
+//   transition: box-shadow 0.3s linear;
 
-//   // flex: 1 1;
-//   padding: 0 12px;
+//   &:active,
+//   &:hover {
+//     box-shadow: inset 4px 4px 8px 0px $shaddow,
+//       inset -4px -4px 8px 0px $highlight;
+//     transition: box-shadow 0.3s linear;
+//   }
 
-//   &::placeholder {
-//     color: $fontColorSecondary;
+//   &__icon {
+//     background: transparent;
+//     box-shadow: none;
+//     width: 16px;
+//     height: 16px;
+
+//     & svg {
+//       width: 16px;
+//       height: 16px;
+
+//       // stroke: $fontColorMain;
+//     }
+//   }
+
+//   &__delete {
+//     &:hover {
+//       fill: $redColor;
+//     }
+//   }
+
+//   &__red {
+//     color: red;
+//   }
+
+//   &__circle {
+//     border-radius: 32px;
+//     width: 32px;
+
+//     & svg {
+//       width: 16px;
+//       height: 16px;
+//     }
+//   }
+
+//   &__stop {
+//     & svg {
+//       fill: $redColor;
+//     }
+//   }
+
+//   &__play {
+//     & svg {
+//       fill: $greenColor;
+//     }
 //   }
 // }
 
-//3 types of btns:
-//.btn, .btn-circle, .btn-link
-.btn {
-  height: 32px;
-  width: 120px;
-  border-radius: 12px;
-  border: 0;
-  color: $fontColorMain;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  background-color: $mainBg;
-  box-shadow: 4px 4px 8px 0px $shaddow, -4px -4px 8px 0px $highlight;
-  cursor: pointer;
-  transition: box-shadow 0.3s linear;
+// .btn-time {
+//   background: transparent;
+//   border: none;
+//   padding: 0;
+//   font-family: $fontFamily;
+//   font-size: 1rem;
+// }
 
-  &:active,
-  &:hover {
-    box-shadow: inset 4px 4px 8px 0px $shaddow,
-      inset -4px -4px 8px 0px $highlight;
-    transition: box-shadow 0.3s linear;
-  }
+// .btn-block {
+//   display: flex;
+//   align-items: center;
+//   justify-content: flex-end;
 
-  &__icon {
-    background: transparent;
-    box-shadow: none;
-    width: 16px;
-    height: 16px;
+//   & > button:not(:first-child) {
+//     margin-left: 16px;
+//   }
+// }
 
-    & svg {
-      width: 16px;
-      height: 16px;
+// .btn-link {
+//   border: 0;
+//   background: transparent;
+//   padding: 0;
+//   color: $fontColorSecondary;
+// }
 
-      // stroke: $fontColorMain;
-    }
-  }
+// .TimerDetails_wrapper {
+//   border-radius: 6px;
+//   padding: 12px;
+//   overflow: scroll;
+//   height: calc(100% - 84px);
+//   position: relative;
+//   border-radius: 12px;
 
-  &__delete {
-    &:hover {
-      fill: $redColor;
-    }
-  }
+//   & h3 {
+//     margin: 0 0 16px;
+//     text-align: left;
+//   }
+// }
 
-  &__red {
-    color: red;
-  }
+// .TimerDetails__body {
+//   display: flex;
+//   flex-flow: column;
+//   min-width: 250px;
 
-  &__circle {
-    border-radius: 32px;
-    width: 32px;
-
-    & svg {
-      width: 16px;
-      height: 16px;
-    }
-  }
-
-  &__stop {
-    & svg {
-      fill: $redColor;
-    }
-  }
-
-  &__play {
-    & svg {
-      fill: $greenColor;
-    }
-  }
-}
-
-.btn-time {
-  background: transparent;
-  border: none;
-  padding: 0;
-  font-family: $fontFamily;
-  font-size: 1rem;
-}
-
-.btn-block {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-
-  & > button:not(:first-child) {
-    margin-left: 16px;
-  }
-}
-
-.btn-link {
-  border: 0;
-  background: transparent;
-  padding: 0;
-  color: $fontColorSecondary;
-}
-
-.TimerDetails_wrapper {
-  border-radius: 6px;
-  padding: 12px;
-
-  & h3 {
-    margin: 0 0 16px;
-    text-align: left;
-  }
-}
-
-.TimerDetails__body {
-  display: flex;
-  flex-flow: column;
-  min-width: 250px;
-
-  & > div {
-    margin-bottom: 16px;
-  }
-}
+//   & > div {
+//     margin-bottom: 16px;
+//   }
+// }
 
 .TimerDetails__body_types {
   display: flex;
   justify-content: space-between;
 }
 
-.TimerDetails__body__row {
-  display: flex;
-}
+// .TimerDetails__body__row {
+//   display: flex;
+// }
 
 .project_list {
   list-style: none;
@@ -362,56 +350,57 @@ textarea {
   border-radius: 12px;
 }
 
-.textarea {
-  width: 100%;
-  resize: none;
-  border-radius: 12px;
-  background: $mainBg;
-  border: 0;
-  box-shadow: inset 4px 4px 8px 0px $shaddow, inset -4px -4px 8px 0px $highlight;
-  padding: 12px;
-  color: $fontColorMain;
-  font-family: $fontFamily;
+// .textarea {
+//   width: 100%;
+//   resize: none;
+//   border-radius: 12px;
+//   background: $mainBg;
+//   border: 0;
+//   box-shadow: inset 4px 4px 8px 0px $shaddow, inset -4px -4px 8px 0px $highlight;
+//   padding: 12px;
+//   color: $fontColorMain;
+//   font-family: $fontFamily;
 
-  &::placeholder {
-    color: $fontColorSecondary;
-  }
-}
+//   &::placeholder {
+//     color: $fontColorSecondary;
+//   }
+// }
 
-.item-enter {
+.itemD-enter {
   opacity: 0;
-  transform: scale(0.9);
+  transform: translateY(100%);
 }
 
-.item-enter-active {
+.itemD-enter-active {
   opacity: 1;
-  transform: translateX(0);
-  transition: opacity 500ms, transform 500ms;
+  transform: translateY(0%) translateZ(0);
+  transition: opacity 400ms, transform 400ms;
 }
 
-.item-exit {
-  opacity: 1;
+.itemD-exit {
+  opacity: 0.9;
+  transform: translateY(-100%) translateZ(0);
 }
 
-.item-exit-active {
+.itemD-exit-active {
   opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 500ms, transform 500ms;
+  transform: translateY(0%) translateZ(0);
+  transition: opacity 400ms, transform 400ms;
 }
 
-.TimerDetails-wrapper {
-  display: flex;
-  flex-flow: column;
-  align-items: flex-start;
-}
+// .TimerDetails-wrapper {
+//   display: flex;
+//   flex-flow: column;
+//   align-items: flex-start;
+// }
 
-.TimerDetails-date {
-  display: flex;
-}
+// .TimerDetails-date {
+//   display: flex;
+// }
 
-.TimerDetails-date__duration {
-  padding-right: 15px;
-}
+// .TimerDetails-date__duration {
+//   padding-right: 15px;
+// }
 
 .upwork-module {
   margin: auto;

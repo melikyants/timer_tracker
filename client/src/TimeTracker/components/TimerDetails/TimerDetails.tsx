@@ -3,12 +3,10 @@ import React from "react";
 import { Projects } from "./Projects";
 
 import { useInput, useTextarea } from "../../../lib/Hooks";
-import { Input } from "../../../lib/components";
+import { Input, Button, Textarea } from "../../../lib/components";
 import { TimerContext } from "../../../lib/context/TimerContext";
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
-
-import { ReactComponent as DeleteIcon } from "../../icons/delete.svg";
 
 import {
   Timer,
@@ -33,12 +31,32 @@ import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";
 
+import styled from "styled-components/macro";
+
 function addZero(i: number | string) {
   if (i < 10) {
     i = "0" + i;
   }
   return i;
 }
+
+const StyledButtonTime = styled.button`
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: $fontFamily;
+  font-size: 1rem;
+`;
+
+const StyledButtonBlock = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  & > button:not(:first-child) {
+    margin-left: 16px;
+  }
+`;
 
 export const TimerDetails = ({ timerId }: { timerId: string }) => {
   const {
@@ -166,7 +184,7 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
     }
   );
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <StyledDetailsWrapper>Loading...</StyledDetailsWrapper>;
 
   const timerFetched = data ? data.timer : null;
 
@@ -227,25 +245,16 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
 
   const TimeInput = React.forwardRef(
     ({ value, onClick }: { value: any; onClick: any }, __refs) => (
-      <button className="btn-time" onClick={onClick}>
-        {value}
-      </button>
+      <StyledButtonTime onClick={onClick}>{value}</StyledButtonTime>
     )
   );
 
   return (
-    <div className="TimerDetails_wrapper">
+    <StyledDetailsWrapper>
       <h3>Details</h3>
-      <div className="TimerDetails__body">
-        <div>
-          <Input
-            type="text"
-            placeholder="Title"
-            bind={bindTitle}
-            name="title"
-          />
-        </div>
-        <div className="TimerDetails__body__row">
+      <StyledDetailsWrapperBody>
+        <Input type="text" placeholder="Title" bind={bindTitle} name="title" />
+        <StyledDetailsWrapperBodyFlexRow>
           {timerFetched && (
             <Projects
               timer={timerFetched}
@@ -255,19 +264,15 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
           {timerFetched && (
             <Types timer={timerFetched} onChangeType={onChangeType} />
           )}
-        </div>
-        <div className="TimerDetails-wrapper">
-          <div className="TimerDetails-date">
-            <div className="TimerDetails-date__duration">
-              Duration: {duration}
-            </div>
+        </StyledDetailsWrapperBodyFlexRow>
+        <StyledDetailsTymerBlock>
+          <StyledDetailsWrapperBodyFlexRow>
+            <div>Duration: {duration}</div>
             <TimePicker
               onChange={setStartTime}
               value={startTime}
               disableClock={true}
             />
-
-            <span>-></span>
             {endTime && (
               <TimePicker
                 onChange={setEndTime}
@@ -275,7 +280,7 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
                 disableClock={true}
               />
             )}
-          </div>
+          </StyledDetailsWrapperBodyFlexRow>
           <DatePicker
             selected={date}
             onChange={handleDateChange}
@@ -296,39 +301,58 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
             customInput={<TimeInput value onClick />}
             // inline={true}
           />
-        </div>
-
-        <div>
-          <textarea
-            name="project_description"
-            placeholder="Description of the Project"
-            rows={4}
-            className="textarea"
-            {...bindProjectDescription}
-            disabled={!projectId}
-          />
-        </div>
-        <div>
-          <textarea
-            name="timer_notes"
-            placeholder="Keep some notes"
-            rows={10}
-            className="textarea"
-            {...bindtimerNotes}
-          />
-        </div>
-        <div className="btn-block">
-          <button className="btn btn__icon" onClick={onDeleteTimer}>
-            <DeleteIcon />
-          </button>
-          <button className="btn" onClick={onCancleDetails}>
-            Cancel
-          </button>
-          <button className="btn" onClick={onSaveTimerDetails}>
-            Save
-          </button>
-        </div>
-      </div>
-    </div>
+        </StyledDetailsTymerBlock>
+        <Textarea
+          name="project_description"
+          placeholder="Description of the Project"
+          rows={4}
+          bind={bindProjectDescription}
+          disabled={!projectId}
+        />
+        <Textarea
+          name="timer_notes"
+          placeholder="Keep some notes"
+          rows={10}
+          bind={bindtimerNotes}
+        />
+        <StyledButtonBlock>
+          <Button icon="delete" simpleIcon onClick={onDeleteTimer} />
+          <Button text="Cancel" onClick={onCancleDetails} />
+          <Button text="Save" onClick={onSaveTimerDetails} />
+        </StyledButtonBlock>
+      </StyledDetailsWrapperBody>
+    </StyledDetailsWrapper>
   );
 };
+
+const StyledDetailsWrapper = styled.div`
+  border-radius: 6px;
+  padding: 12px;
+  overflow: scroll;
+  height: calc(100% - 84px);
+  position: relative;
+  border-radius: 12px;
+
+  & h3 {
+    margin: 0 0 16px;
+    text-align: left;
+  }
+`;
+const StyledDetailsWrapperBody = styled.div`
+  display: flex;
+  flex-flow: column;
+  min-width: 250px;
+
+  & > * {
+    margin-bottom: 16px;
+  }
+`;
+const StyledDetailsWrapperBodyFlexRow = styled.div`
+  display: flex;
+`;
+
+const StyledDetailsTymerBlock = styled.div`
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+`;

@@ -16,7 +16,6 @@ import { TIMERS } from "../lib/graphql/queries";
 
 export const TimeTracker = () => {
   const { data: timersData } = useQuery<ITimers>(TIMERS);
-
   const { timerR } = React.useContext(TimerContext);
 
   const timersList = timersData ? timersData.timers : [];
@@ -28,19 +27,17 @@ export const TimeTracker = () => {
   return (
     <div className="timers">
       <TimerLog timer={timer} />
-      <div className="timersList__wrapper">
-        <TransitionGroup component={null}>
-          {timerR.timerDetailsId ? (
-            <CSSTransition key="001" timeout={300} classNames="item">
-              <TimerDetails timerId={timerR.timerDetailsId} />
-            </CSSTransition>
-          ) : (
-            <CSSTransition key="002" timeout={400} classNames="item">
-              <TimersList timers={timersList} />
-            </CSSTransition>
-          )}
-        </TransitionGroup>
-      </div>
+      <TransitionGroup component={null}>
+        {timerR.timerDetailsId ? (
+          <CSSTransition key="001" timeout={400} classNames="itemD">
+            <TimerDetails timerId={timerR.timerDetailsId} />
+          </CSSTransition>
+        ) : (
+          <CSSTransition key="002" timeout={400} classNames="itemD">
+            <TimersList timers={timersList} />
+          </CSSTransition>
+        )}
+      </TransitionGroup>
     </div>
   );
 };

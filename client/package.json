@@ -62,6 +62,7 @@
   },
   "proxy": "http://localhost:9776",
   "devDependencies": {
-    "@types/lodash": "^4.14.156"
+    "@types/lodash": "^4.14.156",
+    "styled-components.macro": "^1.0.0"
   }
 }

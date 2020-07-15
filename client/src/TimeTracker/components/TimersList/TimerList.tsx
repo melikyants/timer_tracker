@@ -86,7 +86,11 @@ export const TimersList = ({ timers }: { timers: Timers_timers[] }) => {
       );
     });
 
-    return <div className="timers_list">{timersRenderList}</div>;
+    return (
+      <div className="timersList__wrapper">
+        <div className="timers_list">{timersRenderList}</div>
+      </div>
+    );
   }
   return <div className="timers_list">There is no time log yet!</div>;
 };

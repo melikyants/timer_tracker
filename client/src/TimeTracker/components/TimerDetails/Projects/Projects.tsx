@@ -12,10 +12,10 @@ import {
 import { Timer_timer } from "../../../../lib/graphql/queries/Timer/__generated__/Timer";
 
 import { useInput } from "../../../../lib/Hooks";
+import { Button } from "../../../../lib/components";
 
 import { PROJECTS } from "../../../../lib/graphql/queries";
 import { DELETE_PROJECT } from "../../../../lib/graphql/mutations";
-import { ReactComponent as DeleteIcon } from "../../../icons/delete.svg";
 
 export const Projects = ({
   timer,
@@ -60,6 +60,7 @@ export const Projects = ({
   const projectsList = projectsData ? projectsData.projects : [];
 
   const onDeleteProject = async (id: string) => {
+    console.log("onDeleteProject -> id", id);
     await deleteProject({ variables: { id } });
   };
 
@@ -97,14 +98,11 @@ export const Projects = ({
                 >
                   {project.title}
                 </div>
-                <div>
-                  <button
-                    className="btn btn__icon"
-                    onClick={() => onDeleteProject(project.id)}
-                  >
-                    <DeleteIcon />
-                  </button>
-                </div>
+                <Button
+                  icon="delete"
+                  simpleIcon
+                  onClick={() => onDeleteProject(project.id)}
+                />
               </li>
             ))}
           </ul>

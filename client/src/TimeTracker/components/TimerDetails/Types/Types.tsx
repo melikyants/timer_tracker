@@ -1,13 +1,11 @@
 import React from "react";
 import { PopperInput } from "../../Popper";
 
-import { InputSelect } from "../../../../lib/components";
 import { typeToHuman } from "../../../../lib/helpers";
 import { useInput } from "../../../../lib/Hooks";
 
 import { Timer_timer } from "../../../../lib/graphql/queries/Timer/__generated__/Timer";
 import { TimerType } from "../../../../lib/graphql/globalTypes";
-import { render } from "@testing-library/react";
 
 export const Types = ({
   timer,
@@ -21,6 +19,7 @@ export const Types = ({
     defaultValueType
   );
   const [visible, setVisible] = React.useState(false);
+
   React.useEffect(() => {
     if (timer) {
       const typeNormal = timer.type ? typeToHuman(timer.type) : "Select Type";

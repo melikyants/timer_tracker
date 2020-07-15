@@ -2,8 +2,6 @@ import React from "react";
 
 import { useMutation } from "@apollo/react-hooks";
 
-import { ReactComponent as StartIcon } from "../../../icons/arrow.svg";
-
 import { TimerContext } from "../../../../lib/context/TimerContext";
 import { START_TIMER } from "../../../../lib/graphql/mutations";
 import { TIMERS } from "../../../../lib/graphql/queries";
@@ -14,6 +12,7 @@ import {
   startTimerVariables,
 } from "../../../../lib/graphql/mutations/StartTimer/__generated__/startTimer";
 import { typeToHuman } from "../../../../lib/helpers";
+import { Button } from "../../../../lib/components";
 
 interface ITimerWith extends Timer_timer {
   time: string;
@@ -82,9 +81,7 @@ export const Timer = ({ timer }: { timer: ITimerWith }) => {
           {timer.project ? (
             <div className="timer_desc__title">{timer.project.title}</div>
           ) : (
-            <div>
-              <button className="btn-link"> + add project</button>
-            </div>
+            <div>+ add project</div>
           )}
           {timer.type && (
             <div className="timer_desc__title">{typeToHuman(timer.type)}</div>
@@ -100,12 +97,7 @@ export const Timer = ({ timer }: { timer: ITimerWith }) => {
         </div>
 
         <div className="startIcon">
-          <button
-            onClick={() => onStartTimer(timer.id)}
-            className="btn btn__icon btn__play"
-          >
-            <StartIcon />
-          </button>
+          <Button onClick={() => onStartTimer(timer.id)} icon="arrow" />
         </div>
       </div>
     </div>

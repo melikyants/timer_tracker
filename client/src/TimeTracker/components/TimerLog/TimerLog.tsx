@@ -3,12 +3,9 @@ import { useMutation } from "@apollo/react-hooks";
 
 import { useInterval, useInput } from "../../../lib/Hooks";
 import { milliSecToString } from "../../../lib/helpers";
-import { Input } from "../../../lib/components";
+import { Input, Button } from "../../../lib/components";
 import { Timer } from "../../../lib/types";
 import { TimerContext } from "../../../lib/context/TimerContext";
-
-import { ReactComponent as PlayIcon } from "../../icons/arrow.svg";
-import { ReactComponent as StopIcon } from "../../icons/stop.svg";
 
 import { STOP_TIMER, CREATE_TIMER } from "../../../lib/graphql/mutations";
 import { TIMERS } from "../../../lib/graphql/queries";
@@ -174,9 +171,7 @@ export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
           <div className="timer_log__project">{timer.project?.title}</div>
         </div>
         <div className="timer_log__tick">{STimer.time}</div>
-        <button className="btn btn__circle btn__stop" onClick={onStopTimer}>
-          <StopIcon />
-        </button>
+        <Button icon="stop" onClick={onStopTimer} />
       </div>
     );
   } else {
@@ -187,9 +182,7 @@ export const TimerLog = ({ timer }: { timer: ITimer_timer | null }) => {
           bind={bindTitle}
           placeholder="What are you working on?"
         />
-        <button className="btn btn__circle btn__play" onClick={onStartTimer}>
-          <PlayIcon />
-        </button>
+        <Button icon="arrow" onClick={onStartTimer} />
       </div>
     );
   }

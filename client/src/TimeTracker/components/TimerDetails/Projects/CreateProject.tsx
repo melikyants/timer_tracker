@@ -4,7 +4,7 @@ import { PopperButton } from "../../Popper";
 import { useMutation } from "@apollo/react-hooks";
 
 import { useInput, useTextarea } from "../../../../lib/Hooks";
-import { Input } from "../../../../lib/components";
+import { Input, Button } from "../../../../lib/components";
 
 import { PROJECTS } from "../../../../lib/graphql/queries";
 import { CREATE_PROJECT } from "../../../../lib/graphql/mutations";
@@ -42,8 +42,7 @@ export const CreateProjectPopper = () => {
     setVisible(false);
   };
 
-  const onCreateProject = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const onCreateProject = () => {
     createProject({
       variables: {
         title,
@@ -54,52 +53,31 @@ export const CreateProjectPopper = () => {
   };
 
   return (
-    <div>
-      {/* <button
-        ref={buttonProjectCreateRef}
-        onClick={handleShowPopperForCreateProject}
-        type="button"
-        className="btn "
-      >
-        Create a project
-      </button> */}
-      <PopperButton
-        buttonTitle="Create a project"
-        visible={visible}
-        setVisible={setVisible}
-        // refEl={buttonProjectCreateRef}
-        // popperRef={buttonProjectCreatePopperRef}
-        // visible={visibleProject}
-      >
-        <div className="createProject">
-          <div className="createProject__header">
-            <button
-              onClick={closeProjectCreation}
-              type="button"
-              className="btn "
-            >
-              Cancel
-            </button>
-            <button onClick={onCreateProject} type="button" className="btn ">
-              Save
-            </button>
-          </div>
-          <div className="createProject__body">
-            <Input
-              type="text"
-              bind={bindTitle}
-              name="title"
-              placeholder="Name your project"
-            />
-            <textarea
-              {...bindDescription}
-              name="description"
-              placeholder="Description"
-              className="textarea"
-            />
-          </div>
+    <PopperButton
+      buttonTitle="Create a project"
+      visible={visible}
+      setVisible={setVisible}
+    >
+      <div className="createProject">
+        <div className="createProject__header">
+          <Button text="cancel" type="button" onClick={closeProjectCreation} />
+          <Button text="save" type="button" onClick={onCreateProject} />
         </div>
-      </PopperButton>
-    </div>
+        <div className="createProject__body">
+          <Input
+            type="text"
+            bind={bindTitle}
+            name="title"
+            placeholder="Name your project"
+          />
+          <textarea
+            {...bindDescription}
+            name="description"
+            placeholder="Description"
+            className="textarea"
+          />
+        </div>
+      </div>
+    </PopperButton>
   );
 };

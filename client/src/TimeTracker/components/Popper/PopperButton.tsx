@@ -1,5 +1,6 @@
 import React from "react";
 import { usePopper } from "react-popper";
+import { Button } from "../../../lib/components";
 
 import "./styles/index.scss";
 
@@ -53,16 +54,18 @@ export const PopperButton = ({
   }, [visible, setVisible]);
   // console.log("Popper -> arrowElRef", arrowElRef)
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log("onClickInputProject -> e", e.target);
-    console.log("onClickInputProject -> visible", visible);
+  const handleClick = () => {
     setVisible(!visible);
   };
+
   return (
     <>
-      <button ref={elRef} onClick={handleClick} type="button" className="btn ">
-        {buttonTitle}
-      </button>
+      <Button
+        text={buttonTitle}
+        ref={elRef}
+        onClick={handleClick}
+        type="button"
+      />
       <div
         ref={popperRef}
         style={styles.popper}
