@@ -12,7 +12,7 @@ import {
 import { Timer_timer } from "../../../../lib/graphql/queries/Timer/__generated__/Timer";
 
 import { useInput } from "../../../../lib/Hooks";
-import { Button } from "../../../../lib/components";
+import { Button, Loading } from "../../../../lib/components";
 
 import { PROJECTS } from "../../../../lib/graphql/queries";
 import { DELETE_PROJECT } from "../../../../lib/graphql/mutations";
@@ -24,7 +24,7 @@ export const Projects = ({
   timer: Timer_timer;
   onChangeProjectId: (id: string, description: string | null) => void;
 }) => {
-  const { data: projectsData } = useQuery<IProjects>(PROJECTS);
+  const { data: projectsData, loading, error } = useQuery<IProjects>(PROJECTS);
   const [visible, setVisible] = React.useState(false);
 
   const [deleteProject] = useMutation<IdeleteProject, deleteProjectVariables>(
@@ -74,6 +74,20 @@ export const Projects = ({
     setVisible(false);
   };
 
+  if (loading) {
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
+  }
+
+  const projectError = error ? (
+    <div>
+      <h4>Uh oh! Something went wrong - please try again later :(</h4>
+    </div>
+  ) : null;
+
   return (
     <div>
       <PopperInput
@@ -83,6 +97,7 @@ export const Projects = ({
         visible={visible}
         setVisible={setVisible}
       >
+        {projectError}
         <div className="popper__children">
           <ul className="project_list">
             {projectsList.map((project) => (

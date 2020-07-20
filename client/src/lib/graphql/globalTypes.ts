@@ -15,20 +15,6 @@ export enum TimerType {
   WORK = "WORK",
 }
 
-export interface LogInInput {
-  code: string;
-}
-
-export interface Params {
-  q?: string | null;
-  skills?: (string | null)[] | null;
-  paging?: string | null;
-}
-
-export interface connectUpworkInput {
-  verifier: string;
-}
-
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

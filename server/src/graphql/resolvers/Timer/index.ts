@@ -11,20 +11,45 @@ import {
   DeleteTimerArgs,
 } from "./types";
 
+import { paginateResults } from "../../../lib/utils";
+
+interface TimersPagination {
+  timers: ITimer[];
+  cursor: number;
+  hasMore: boolean;
+}
 export const timerResolvers: IResolvers = {
   Query: {
     timers: async (
       _root: undefined,
-      _args: {},
+      { pageSize = 7, after },
       { db }: { db: IDatabase }
-    ): Promise<ITimer[]> => {
+    ): Promise<TimersPagination> => {
       const timersList = await db.timers.find({}).toArray();
 
       if (!timersList) {
         throw new Error("there are no timers");
       }
+      timersList.reverse();
 
-      return timersList;
+      const timers = paginateResults({
+        after,
+        pageSize,
+        results: timersList,
+      });
+
+      return {
+        timers,
+        cursor: timers.length
+          ? timers[timers.length - 1]._id.toHexString()
+          : null,
+        // if the cursor of the end of the paginated results is the same as the
+        // last item in _all_ results, then there are no more results after this
+        hasMore: timers.length
+          ? timers[timers.length - 1]._id.toHexString() !==
+            timersList[timersList.length - 1]._id.toHexString()
+          : false,
+      };
     },
     timer: async (
       _root: undefined,

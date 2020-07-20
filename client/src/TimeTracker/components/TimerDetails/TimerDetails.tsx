@@ -151,11 +151,11 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
       update(cache, { data }) {
         const timersData = cache.readQuery<Timers>({ query: TIMERS });
         if (timersData) {
-          const index = timersData.timers.findIndex(
-            (timer) => timer.id === data!.deleteTimer.id
+          const index = timersData.timers.timers.findIndex(
+            (timer) => timer && timer.id === data!.deleteTimer.id
           );
           if (index > -1) {
-            timersData.timers.splice(index, 1);
+            timersData.timers.timers.splice(index, 1);
           }
           cache.writeQuery({
             query: TIMERS,

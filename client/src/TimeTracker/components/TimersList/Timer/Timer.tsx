@@ -39,7 +39,7 @@ export const Timer = ({ timer }: { timer: ITimerWith }) => {
         if (data && timerData) {
           cache.writeQuery({
             query: TIMERS,
-            data: { timers: timerData.timers.concat([data.startTimer]) },
+            data: { timers: timerData.timers.timers.concat([data.startTimer]) },
           });
         }
       },

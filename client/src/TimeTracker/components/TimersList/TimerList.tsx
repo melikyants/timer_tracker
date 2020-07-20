@@ -2,20 +2,27 @@ import React from "react";
 
 import { milliSecToString, isToday, sortByDates } from "../../../lib/helpers";
 
-import { Timers_timers } from "../../../lib/graphql/queries/Timers/__generated__/Timers";
+import { Button } from "../../../lib/components";
+import { Timers_timers_timers } from "../../../lib/graphql/queries/Timers/__generated__/Timers";
 import { Timer } from "./Timer";
 
-interface ITimerWith extends Timers_timers {
+interface ITimerWith extends Timers_timers_timers {
   time: string;
   date: string;
 }
 
-export const TimersList = ({ timers }: { timers: Timers_timers[] }) => {
+export const TimersList = ({
+  timers,
+  fetchMore,
+}: {
+  timers: (Timers_timers_timers | null)[];
+  fetchMore: () => void;
+}) => {
   const timersList = timers.length ? timers : null;
 
   if (timersList) {
     const parsedTimerinTimers: ITimerWith[] = timersList
-      .map<ITimerWith>((timer) => {
+      .map<ITimerWith>((timer: any) => {
         const totalTime = timer.end! - timer.start;
         const time = milliSecToString(totalTime);
         const date = new Date(timer.end!).toString();
@@ -88,7 +95,10 @@ export const TimersList = ({ timers }: { timers: Timers_timers[] }) => {
 
     return (
       <div className="timersList__wrapper">
-        <div className="timers_list">{timersRenderList}</div>
+        <div className="timers_list">
+          {timersRenderList}
+          <Button text="Load More" onClick={fetchMore} type="button" />
+        </div>
       </div>
     );
   }

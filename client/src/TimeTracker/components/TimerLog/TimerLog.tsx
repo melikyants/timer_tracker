@@ -19,6 +19,7 @@ import {
   stopTimer as IstopTimer,
   stopTimerVariables,
 } from "../../../lib/graphql/mutations/StopTimer/__generated__/stopTimer";
+import styled from "styled-components";
 
 export const TimerLog = ({
   timer,
@@ -51,7 +52,9 @@ export const TimerLog = ({
         if (dataTimers) {
           cache.writeQuery({
             query: TIMERS,
-            data: { timers: dataTimers.timers.concat([data!.createTimer]) },
+            data: {
+              timers: dataTimers.timers.timers.concat([data!.createTimer]),
+            },
           });
         }
       },
@@ -63,11 +66,11 @@ export const TimerLog = ({
       const dataTimers = cache.readQuery<ITimers>({ query: TIMERS });
 
       if (dataTimers && data) {
-        const index = dataTimers.timers.findIndex(
-          (timer) => timer.id === data.stopTimer.id
+        const index = dataTimers.timers.timers.findIndex(
+          (timer) => timer && timer.id === data.stopTimer.id
         );
         if (index > -1) {
-          dataTimers.timers[index] = data.stopTimer;
+          dataTimers.timers.timers[index] = data.stopTimer;
         }
 
         cache.writeQuery({
@@ -175,28 +178,47 @@ export const TimerLog = ({
 
   if (timer) {
     return (
-      <div className="timer_log">
-        <div
-          className="timer_log__desc"
-          onClick={() => onTimerDetails(timer.id)}
-        >
+      <StyledTimerHeader>
+        <StyledTimerInput onClick={() => onTimerDetails(timer.id)}>
           <div>{valueTitle ? valueTitle : "Add the title"}</div>
           <div className="timer_log__project">{timer.project?.title}</div>
-        </div>
+        </StyledTimerInput>
         <div className="timer_log__tick">{STimer.time}</div>
         <Button icon="stop" onClick={onStopTimer} />
-      </div>
+      </StyledTimerHeader>
     );
   } else {
     return (
-      <div className="timer_log">
+      <StyledTimerHeader>
         <Input
           type="text"
           bind={bindTitle}
           placeholder="What are you working on?"
         />
         <Button icon="arrow" onClick={onStartTimer} />
-      </div>
+      </StyledTimerHeader>
     );
   }
 };
+
+const StyledTimerHeader = styled.div`
+  height: 84px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  flex: 1 auto;
+  padding: 0 12px;
+  position: relative;
+  & button {
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+`;
+
+const StyledTimerInput = styled.div`
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+  text-align: left;
+`;

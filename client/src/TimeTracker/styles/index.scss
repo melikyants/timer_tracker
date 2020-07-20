@@ -40,24 +40,24 @@ textarea {
   position: relative;
 }
 
-.timer_log {
-  height: 84px;
-  background: $mainBg;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  justify-content: space-between;
-  flex: 1 auto;
-  padding: 0 12px;
-  position: relative;
-}
+// .timer_log {
+//   height: 84px;
+//   background: $mainBg;
+//   display: flex;
+//   align-items: center;
+//   gap: 12px;
+//   justify-content: space-between;
+//   flex: 1 auto;
+//   padding: 0 12px;
+//   position: relative;
+// }
 
-.timer_log__desc {
-  display: flex;
-  flex-flow: column;
-  align-items: flex-start;
-  text-align: left;
-}
+// .timer_log__desc {
+//   display: flex;
+//   flex-flow: column;
+//   align-items: flex-start;
+//   text-align: left;
+// }
 
 .timer_log__project {
   font-size: 0.9rem;

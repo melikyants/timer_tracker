@@ -6,23 +6,23 @@ import { useQuery } from "@apollo/react-hooks";
 import { TimersList, TimerLog, TimerDetails } from "./components";
 import { Loading } from "../lib/components";
 
-import {
-  Timers as ITimers,
-  Timers_timers,
-} from "../lib/graphql/queries/Timers/__generated__/Timers";
+import { Timers as ITimers } from "../lib/graphql/queries/Timers/__generated__/Timers";
 import "./styles/index.scss";
 
 import { TimerContext } from "../lib/context/TimerContext";
 import { TIMERS } from "../lib/graphql/queries";
 
 export const TimeTracker = () => {
-  const { data: timersData, loading, error } = useQuery<ITimers>(TIMERS);
+  const { data: timersData, loading, error, fetchMore } = useQuery<ITimers>(
+    TIMERS
+  );
   const { timerR } = React.useContext(TimerContext);
 
-  const timersList = timersData ? timersData.timers : [];
+  console.log("TimeTracker -> timersData", timersData);
+  const timersList = timersData ? timersData.timers.timers : [];
 
   const timer = timersList?.length
-    ? timersList.filter((timer: Timers_timers) => timer.isRunning)[0]
+    ? timersList.filter((timer) => timer && timer.isRunning)[0]
     : null;
 
   if (loading && !timerR.timerDetailsId) {
@@ -36,6 +36,30 @@ export const TimeTracker = () => {
     <h2>Uh oh! Something went wrong - please try again later :(</h2>
   ) : null;
 
+  const onFetchMore = () => {
+    if (timersData && timersData.timers && timersData?.timers.hasMore) {
+      console.log(
+        "onFetchMore -> timersData.timers.cursor",
+        timersData.timers.cursor
+      );
+      fetchMore({
+        variables: {
+          pageSize: 7,
+          after: timersData.timers.cursor,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+          return {
+            ...fetchMoreResult,
+            timers: {
+              ...fetchMoreResult.timers,
+              timers: [...prev.timers.timers, ...fetchMoreResult.timers.timers],
+            },
+          };
+        },
+      });
+    }
+  };
   return (
     <div className="timers">
       <TimerLog timer={timer} loading={loading} />
@@ -46,7 +70,7 @@ export const TimeTracker = () => {
           </CSSTransition>
         ) : (
           <CSSTransition key="002" timeout={400} classNames="itemD">
-            <TimersList timers={timersList} />
+            <TimersList timers={timersList} fetchMore={onFetchMore} />
           </CSSTransition>
         )}
       </TransitionGroup>

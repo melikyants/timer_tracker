@@ -84,10 +84,16 @@ export const typeDefs = gql`
     user(id: ID!): User!
     authUrl: String!
     authUrlUpwork: String!
-    timers: [Timer!]!
+    timers(pageSize: Int, after: String): TimerConnection!
     timer(id: ID!): Timer!
     projects: [Project!]!
     searchJobs(params: Params, filterCountries: [String]): [Job!]!
+  }
+
+  type TimerConnection { # add this below the Query type as an additional type.
+    cursor: String!
+    hasMore: Boolean!
+    timers: [Timer]!
   }
 
   type Mutation {
