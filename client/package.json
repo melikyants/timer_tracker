@@ -1,7 +1,7 @@
 {
   "name": "time-tracker-client",
   "version": "0.1.0",
-  "description": "Time Tracker Module with notes taking and search",
+  "description": "Time Tracker Module with notes and search",
   "author": "Natalia Melikyants <melikyants@gmail.com>",
   "private": true,
   "license": "ISC",
