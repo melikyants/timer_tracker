@@ -1,5 +1,5 @@
 import React from "react";
-import { PopperButton } from "../../Popper";
+import { PopperButton } from "../../../../lib/components/Popper";
 
 import { useMutation } from "@apollo/client";
 

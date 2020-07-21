@@ -1,23 +1,27 @@
 import React from "react";
 import { usePopper } from "react-popper";
-import { Button } from "../../../lib/components";
 
 import "./styles/index.scss";
+import { InputSelect } from "..";
 
-interface PopperButtonI {
+interface PopperInputI {
+  inputName: string;
   children: any;
-  buttonTitle: string;
+  bindInput: any;
+  inputPlaceholder: string;
   visible: boolean;
   setVisible: any;
 }
 
-export const PopperButton = ({
+export const PopperInput = ({
   children,
-  buttonTitle,
+  bindInput,
+  inputName,
+  inputPlaceholder,
   visible,
   setVisible,
-}: PopperButtonI) => {
-  const elRef = React.useRef<HTMLButtonElement | null>(null);
+}: PopperInputI) => {
+  const elRef = React.useRef<HTMLDivElement | null>(null);
   const popperRef = React.useRef<HTMLDivElement | null>(null);
   const arrowElRef = React.useRef(null);
 
@@ -38,7 +42,7 @@ export const PopperButton = ({
         if (
           (popperRef.current !== null &&
             popperRef.current.contains(evt.target)) ||
-          elRef.current?.contains(evt.target)
+          elRef.current?.parentNode?.contains(evt.target)
         ) {
           return;
         }
@@ -52,19 +56,21 @@ export const PopperButton = ({
       };
     }
   }, [visible, setVisible]);
-  // console.log("Popper -> arrowElRef", arrowElRef)
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    console.log("handleClick -> e", e.target);
+    console.log("handleClick -> visible", visible);
     setVisible(!visible);
   };
-
   return (
     <>
-      <Button
-        text={buttonTitle}
+      <InputSelect
+        type="text"
+        name={inputName}
+        placeholder={inputPlaceholder}
         ref={elRef}
         onClick={handleClick}
-        type="button"
+        bind={bindInput}
       />
       <div
         ref={popperRef}
@@ -72,7 +78,6 @@ export const PopperButton = ({
         {...attributes.popper}
         className={`${visible && "popper_wrapper"}`}
       >
-        {/* Popper element */}
         {visible && <div className="popper__children">{children}</div>}
         <div
           ref={arrowElRef}

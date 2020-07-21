@@ -1,5 +1,5 @@
 import React from "react";
-import { PopperInput } from "../../Popper";
+import { PopperInput } from "../../../../lib/components/Popper";
 import { CreateProjectPopper } from "./CreateProject";
 
 import { useQuery, useMutation } from "@apollo/client";

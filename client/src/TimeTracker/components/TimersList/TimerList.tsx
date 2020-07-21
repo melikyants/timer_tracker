@@ -6,7 +6,7 @@ import { Button, Input } from "../../../lib/components";
 import { useInput } from "../../../lib/Hooks";
 
 import { Timers_timers_timers } from "../../../lib/graphql/queries/Timers/__generated__/Timers";
-import { Timer } from "./Timer";
+import { Timer } from "./TimerItem";
 import { SEARCH_NOTES } from "../../../lib/graphql/queries";
 import { useLazyQuery } from "@apollo/client";
 
@@ -25,10 +25,7 @@ export const TimersList = ({
   const timersList = timers.length ? timers : null;
   const { value: searchValue, bind: bindSearch } = useInput("");
   const [search, setSearch] = React.useState([]);
-  const [
-    searchNotes,
-    { loading: loadingSearch, data: searchData },
-  ] = useLazyQuery(SEARCH_NOTES);
+  const [searchNotes, { data: searchData }] = useLazyQuery(SEARCH_NOTES);
 
   React.useEffect(() => {
     if (searchData && searchData.searchNotes) {
@@ -43,7 +40,7 @@ export const TimersList = ({
       // const searchWords = ev.currentTarget.value
       const searchAny = searchValue;
       const searchPhrase = '"' + searchValue + '"'; //search the whole phrase
-      const searchAllQuery = '"' + searchValue.split(" ").join('" "') + '"'; //this will match if all words a within the context search eg note
+      // const searchAllQuery = '"' + searchValue.split(" ").join('" "') + '"'; //this will match if all words a within the context search eg note
       console.log("onSearch -> searchAllQuery", searchPhrase);
       await searchNotes({ variables: { query: searchAny } });
     }

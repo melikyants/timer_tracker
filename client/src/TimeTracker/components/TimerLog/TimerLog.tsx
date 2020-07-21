@@ -20,7 +20,6 @@ import {
   stopTimerVariables,
 } from "../../../lib/graphql/mutations/StopTimer/__generated__/stopTimer";
 import styled from "styled-components";
-import { create } from "domain";
 
 export const TimerLog = ({
   timer,
