@@ -6,7 +6,7 @@ import { useInput, useTextarea } from "../../../lib/Hooks";
 import { Input, Button, Textarea, Loading } from "../../../lib/components";
 import { TimerContext } from "../../../lib/context/TimerContext";
 
-import { useMutation, useQuery } from "@apollo/react-hooks";
+import { useMutation, useQuery } from "@apollo/client";
 
 import {
   Timer,
@@ -32,6 +32,7 @@ import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";
 
 import styled from "styled-components/macro";
+import _ from "lodash";
 
 function addZero(i: number | string) {
   if (i < 10) {
@@ -150,16 +151,20 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
     {
       update(cache, { data }) {
         const timersData = cache.readQuery<Timers>({ query: TIMERS });
-        if (timersData) {
-          const index = timersData.timers.timers.findIndex(
-            (timer) => timer && timer.id === data!.deleteTimer.id
+        if (timersData && data) {
+          const clonedTimers = _.clone(timersData.timers.timers);
+
+          const index = clonedTimers.findIndex(
+            (timer: any) => timer && timer.id === data.deleteTimer.id
           );
+
           if (index > -1) {
-            timersData.timers.timers.splice(index, 1);
+            clonedTimers.splice(index, 1);
           }
+
           cache.writeQuery({
             query: TIMERS,
-            data: { timers: timersData.timers },
+            data: { timers: clonedTimers },
           });
         }
       },
@@ -167,21 +172,7 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
   );
 
   const [updateTimer] = useMutation<IupdateTimer, updateTimerVariables>(
-    UPDATE_TIMER,
-    {
-      update(cache, { data }) {
-        const dataTimer = cache.readQuery<Timer>({
-          query: TIMER,
-          variables: { id: timerId },
-        });
-        if (dataTimer) {
-          cache.writeQuery({
-            query: TIMER,
-            data: { timer: Object.assign(dataTimer.timer, data!.updateTimer) },
-          });
-        }
-      },
-    }
+    UPDATE_TIMER
   );
 
   if (loading)

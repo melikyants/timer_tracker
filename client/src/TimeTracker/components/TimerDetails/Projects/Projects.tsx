@@ -2,7 +2,7 @@ import React from "react";
 import { PopperInput } from "../../Popper";
 import { CreateProjectPopper } from "./CreateProject";
 
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/client";
 
 import { Projects as IProjects } from "../../../../lib/graphql/queries/Projects/__generated__/Projects";
 import {

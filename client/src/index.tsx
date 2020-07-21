@@ -3,21 +3,13 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import ApolloClient from "apollo-boost";
-import { ApolloProvider } from "@apollo/react-hooks";
+import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 
 const client = new ApolloClient({
+  cache: new InMemoryCache(),
   uri: "/api",
-  request: async (operation) => {
-    const token = sessionStorage.getItem("tokenGoogle");
-    console.log("ApolloClient -token", token);
-    operation.setContext({
-      headers: {
-        "X-CSRF-TOKEN": token || "",
-      },
-    });
-  },
 });
+
 ReactDOM.render(
   <ApolloProvider client={client}>
     <App />

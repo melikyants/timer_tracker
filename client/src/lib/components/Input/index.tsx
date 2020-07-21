@@ -12,6 +12,7 @@ interface IInput {
   name?: string;
   disabled?: boolean;
   required?: boolean;
+  onKeyDown?: (ev: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export const Input = (props: IInput) => {
@@ -23,6 +24,7 @@ export const Input = (props: IInput) => {
     name,
     disabled,
     required,
+    onKeyDown,
   }: IInput = props;
   return (
     <InputText
@@ -33,6 +35,7 @@ export const Input = (props: IInput) => {
       disabled={disabled}
       required={required}
       {...bind}
+      onKeyDown={onKeyDown}
     />
   );
 };

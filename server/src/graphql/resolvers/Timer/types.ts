@@ -31,3 +31,7 @@ export interface UpdateTimerArgs {
 export interface DeleteTimerArgs {
   id: string;
 }
+
+export interface SearchNotesArgs {
+  query: string;
+}

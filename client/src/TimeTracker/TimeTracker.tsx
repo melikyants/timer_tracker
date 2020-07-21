@@ -1,7 +1,7 @@
 import React from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 
 import { TimersList, TimerLog, TimerDetails } from "./components";
 import { Loading } from "../lib/components";
@@ -16,9 +16,9 @@ export const TimeTracker = () => {
   const { data: timersData, loading, error, fetchMore } = useQuery<ITimers>(
     TIMERS
   );
+
   const { timerR } = React.useContext(TimerContext);
 
-  console.log("TimeTracker -> timersData", timersData);
   const timersList = timersData ? timersData.timers.timers : [];
 
   const timer = timersList?.length
@@ -32,16 +32,13 @@ export const TimeTracker = () => {
       </div>
     );
   }
+
   const timersError = error ? (
     <h2>Uh oh! Something went wrong - please try again later :(</h2>
   ) : null;
 
   const onFetchMore = () => {
     if (timersData && timersData.timers && timersData?.timers.hasMore) {
-      console.log(
-        "onFetchMore -> timersData.timers.cursor",
-        timersData.timers.cursor
-      );
       fetchMore({
         variables: {
           pageSize: 7,

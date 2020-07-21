@@ -1,7 +1,7 @@
 import React from "react";
 import { PopperButton } from "../../Popper";
 
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/client";
 
 import { useInput, useTextarea } from "../../../../lib/Hooks";
 import { Input, Button, Textarea } from "../../../../lib/components";

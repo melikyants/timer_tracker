@@ -6,40 +6,33 @@
 import { TimerType } from "./../../../globalTypes";
 
 // ====================================================
-// GraphQL query operation: Timers
+// GraphQL mutation operation: startTimer
 // ====================================================
 
-export interface Timers_timers_timers_project {
+export interface startTimer_startTimer_project {
   __typename: "Project";
   id: string;
   title: string;
   description: string | null;
 }
 
-export interface Timers_timers_timers {
+export interface startTimer_startTimer {
   __typename: "Timer";
   id: string;
   title: string;
+  project: startTimer_startTimer_project | null;
   type: TimerType | null;
   notes: string | null;
   start: number;
   end: number | null;
-  project: Timers_timers_timers_project | null;
   isRunning: boolean;
 }
 
-export interface Timers_timers {
-  __typename: "TimerConnection";
-  cursor: string;
-  hasMore: boolean;
-  timers: (Timers_timers_timers | null)[];
+export interface startTimer {
+  startTimer: startTimer_startTimer;
 }
 
-export interface Timers {
-  timers: Timers_timers;
-}
-
-export interface TimersVariables {
-  pageSize?: number | null;
-  after?: string | null;
+export interface startTimerVariables {
+  start: number;
+  id: string;
 }

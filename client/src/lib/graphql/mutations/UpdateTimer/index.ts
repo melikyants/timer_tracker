@@ -1,4 +1,4 @@
-import { gql } from "apollo-boost";
+import { gql } from "@apollo/client";
 
 export const UPDATE_TIMER = gql`
   mutation updateTimer(

@@ -1,19 +1,19 @@
 {
   "name": "time-tracker-client",
   "version": "0.1.0",
-  "description": "Time Tracker Module",
+  "description": "Time Tracker Module with notes taking and search",
   "author": "Natalia Melikyants <melikyants@gmail.com>",
   "private": true,
   "license": "ISC",
   "dependencies": {
-    "@ant-design/icons": "^4.2.1",
-    "@apollo/react-hooks": "^3.1.5",
+    "@apollo/client": "^3.0.2",
     "@popperjs/core": "^2.4.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/graphql": "^14.5.0",
     "@types/jest": "^24.0.0",
+    "@types/lodash": "^4.14.157",
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-datepicker": "^3.0.2",
@@ -21,10 +21,9 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/react-transition-group": "^4.4.0",
     "@types/styled-components": "^5.1.0",
-    "antd": "^4.4.1",
-    "apollo-boost": "^0.4.9",
     "graphql": "^15.1.0",
     "graphql-hooks": "^4.5.0",
+    "lodash": "^4.17.19",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-datepicker": "^3.0.0",
@@ -62,7 +61,6 @@
   },
   "proxy": "http://localhost:9776",
   "devDependencies": {
-    "@types/lodash": "^4.14.156",
     "styled-components.macro": "^1.0.0"
   }
 }

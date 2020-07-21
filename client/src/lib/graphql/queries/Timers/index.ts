@@ -1,4 +1,4 @@
-import { gql } from "apollo-boost";
+import { gql } from "@apollo/client";
 
 export const TIMERS = gql`
   query Timers($pageSize: Int, $after: String) {

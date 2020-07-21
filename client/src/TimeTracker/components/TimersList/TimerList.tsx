@@ -2,9 +2,13 @@ import React from "react";
 
 import { milliSecToString, isToday, sortByDates } from "../../../lib/helpers";
 
-import { Button } from "../../../lib/components";
+import { Button, Input } from "../../../lib/components";
+import { useInput } from "../../../lib/Hooks";
+
 import { Timers_timers_timers } from "../../../lib/graphql/queries/Timers/__generated__/Timers";
 import { Timer } from "./Timer";
+import { SEARCH_NOTES } from "../../../lib/graphql/queries";
+import { useLazyQuery } from "@apollo/client";
 
 interface ITimerWith extends Timers_timers_timers {
   time: string;
@@ -19,6 +23,31 @@ export const TimersList = ({
   fetchMore: () => void;
 }) => {
   const timersList = timers.length ? timers : null;
+  const { value: searchValue, bind: bindSearch } = useInput("");
+  const [search, setSearch] = React.useState([]);
+  const [
+    searchNotes,
+    { loading: loadingSearch, data: searchData },
+  ] = useLazyQuery(SEARCH_NOTES);
+
+  React.useEffect(() => {
+    if (searchData && searchData.searchNotes) {
+      console.log("searchData", searchData);
+      setSearch(searchData.searchNotes);
+    }
+  }, [searchData]);
+
+  const onSearch = async (ev: React.KeyboardEvent<HTMLInputElement>) => {
+    if (ev.key === "Enter") {
+      console.log(searchValue); // will match any of the word
+      // const searchWords = ev.currentTarget.value
+      const searchAny = searchValue;
+      const searchPhrase = '"' + searchValue + '"'; //search the whole phrase
+      const searchAllQuery = '"' + searchValue.split(" ").join('" "') + '"'; //this will match if all words a within the context search eg note
+      console.log("onSearch -> searchAllQuery", searchPhrase);
+      await searchNotes({ variables: { query: searchAny } });
+    }
+  };
 
   if (timersList) {
     const parsedTimerinTimers: ITimerWith[] = timersList
@@ -96,6 +125,28 @@ export const TimersList = ({
     return (
       <div className="timersList__wrapper">
         <div className="timers_list">
+          <Input
+            placeholder="Search in Notes"
+            type="search"
+            name="query"
+            bind={bindSearch}
+            onKeyDown={onSearch}
+          />
+          {/* <Input type="checkbox" name="searchType" value="any"> */}
+          {/* <input type="radio" name="searchType" value="all"/> */}
+          <ul style={{ listStyle: "none", padding: 16 }}>
+            {search.map((s: any) => {
+              return (
+                <li key={s.id}>
+                  <h3>{s.title}</h3>
+                  <p style={{ whiteSpace: "pre-line" }}>{s.notes}</p>
+                  {/* {s.notes.split("/n").map((p: string) => {
+                    return <p style={"whiteSpace: pre-line;"}>{p}</p>;
+                  })} */}
+                </li>
+              );
+            })}
+          </ul>
           {timersRenderList}
           <Button text="Load More" onClick={fetchMore} type="button" />
         </div>

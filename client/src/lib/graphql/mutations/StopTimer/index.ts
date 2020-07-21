@@ -1,19 +1,10 @@
-import { gql } from "apollo-boost";
+import { gql } from "@apollo/client";
 
 export const STOP_TIMER = gql`
   mutation stopTimer($id: ID!, $end: Float!) {
     stopTimer(id: $id, end: $end) {
       id
-      title
-      type
-      notes
-      start
       end
-      project {
-        id
-        title
-        description
-      }
       isRunning
     }
   }

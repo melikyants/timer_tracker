@@ -9,9 +9,11 @@ import {
   EndTimerArgs,
   UpdateTimerArgs,
   DeleteTimerArgs,
+  SearchNotesArgs,
 } from "./types";
 
 import { paginateResults } from "../../../lib/utils";
+import { time } from "console";
 
 interface TimersPagination {
   timers: ITimer[];
@@ -62,6 +64,25 @@ export const timerResolvers: IResolvers = {
       }
 
       return timerFetch;
+    },
+    searchNotes: async (
+      _root: undefined,
+      { query }: SearchNotesArgs,
+      { db }: { db: IDatabase }
+    ): Promise<ITimer[]> => {
+      console.log("query", query);
+      const wholeQuery = '"summer welcome night"';
+      await db.timers.createIndex({ notes: "text" });
+      const getTimers = await db.timers
+        .find({ $text: { $search: query } })
+        .toArray();
+      console.log("getTimers", getTimers);
+
+      if (!getTimers) {
+        throw new Error();
+      }
+
+      return getTimers;
     },
   },
   Mutation: {
@@ -118,7 +139,6 @@ export const timerResolvers: IResolvers = {
 
       return insertedTimer;
     },
-
     stopTimer: async (
       _root: undefined,
       { id, end }: EndTimerArgs,

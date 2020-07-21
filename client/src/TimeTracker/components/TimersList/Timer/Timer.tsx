@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/client";
 
 import { TimerContext } from "../../../../lib/context/TimerContext";
 import { START_TIMER } from "../../../../lib/graphql/mutations";

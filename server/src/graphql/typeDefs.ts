@@ -88,6 +88,7 @@ export const typeDefs = gql`
     timer(id: ID!): Timer!
     projects: [Project!]!
     searchJobs(params: Params, filterCountries: [String]): [Job!]!
+    searchNotes(query: String!): [Timer]!
   }
 
   type TimerConnection { # add this below the Query type as an additional type.

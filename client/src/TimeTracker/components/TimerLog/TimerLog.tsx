@@ -1,5 +1,5 @@
 import React from "react";
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/client";
 
 import { useInterval, useInput } from "../../../lib/Hooks";
 import { milliSecToString } from "../../../lib/helpers";
@@ -20,6 +20,7 @@ import {
   stopTimerVariables,
 } from "../../../lib/graphql/mutations/StopTimer/__generated__/stopTimer";
 import styled from "styled-components";
+import { create } from "domain";
 
 export const TimerLog = ({
   timer,
@@ -47,13 +48,19 @@ export const TimerLog = ({
     CREATE_TIMER,
     {
       update(cache, { data }) {
-        const dataTimers = cache.readQuery<ITimers>({ query: TIMERS });
+        const readCachedTimers = cache.readQuery<ITimers>({
+          query: TIMERS,
+        });
 
-        if (dataTimers) {
+        if (readCachedTimers && data) {
           cache.writeQuery({
             query: TIMERS,
             data: {
-              timers: dataTimers.timers.timers.concat([data!.createTimer]),
+              timers: {
+                timers: readCachedTimers.timers.timers.concat([
+                  data.createTimer,
+                ]),
+              },
             },
           });
         }
@@ -61,25 +68,7 @@ export const TimerLog = ({
     }
   );
 
-  const [stopTimer] = useMutation<IstopTimer, stopTimerVariables>(STOP_TIMER, {
-    update(cache, { data }) {
-      const dataTimers = cache.readQuery<ITimers>({ query: TIMERS });
-
-      if (dataTimers && data) {
-        const index = dataTimers.timers.timers.findIndex(
-          (timer) => timer && timer.id === data.stopTimer.id
-        );
-        if (index > -1) {
-          dataTimers.timers.timers[index] = data.stopTimer;
-        }
-
-        cache.writeQuery({
-          query: TIMERS,
-          data: { timers: dataTimers.timers },
-        });
-      }
-    },
-  });
+  const [stopTimer] = useMutation<IstopTimer, stopTimerVariables>(STOP_TIMER);
 
   useInterval(
     () => {
