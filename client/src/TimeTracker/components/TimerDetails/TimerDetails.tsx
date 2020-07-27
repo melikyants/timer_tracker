@@ -45,7 +45,7 @@ const StyledButtonTime = styled.button`
   background: transparent;
   border: none;
   padding: 0;
-  font-family: $fontFamily;
+  font-family: $font-family;
   font-size: 1rem;
 `;
 

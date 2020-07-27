@@ -1,0 +1,26 @@
+$font-family: "Roboto Condensed", sans-serif;
+
+/* colors */
+$primary: hsl(195, 100%, 50%);
+$primary-light: hsl(195, 100%, 90%);
+
+$secondary: hsl(332, 100%, 50%);
+$secondary-light: hsl(332, 100%, 96%);
+
+$grayscale-light1: hsl(195, 40%, 99%);
+$grayscale-light2: hsl(195, 20%, 90%);
+$grayscale-light3: hsl(195, 20%, 65%);
+
+$grayscale-dark1: hsl(195, 10%, 20%);
+$grayscale-dark2: hsl(195, 10%, 35%);
+
+/* some elements */
+$main-bg: $grayscale-light1;
+$font-color-main: $grayscale-dark1;
+$font-color-secondary: hsl(0, 0%, 42%);
+$shaddow: $grayscale-light3;
+
+//To review
+$highlight: hsl(0, 0%, 100%);
+$greenColor: hsl(146, 79, 43);
+$redColor: #c31818;

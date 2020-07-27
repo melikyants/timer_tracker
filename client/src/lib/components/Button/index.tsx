@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
+import "./button.scss";
 
 import { ReactComponent as DeleteIcon } from "./assets/delete.svg";
-import { ReactComponent as ArrowIcon } from "./assets/arrow.svg";
+import { ReactComponent as PlayIcon } from "./assets/play.svg";
 import { ReactComponent as StopIcon } from "./assets/stop.svg";
 
 // enum Icons {
@@ -10,7 +11,7 @@ import { ReactComponent as StopIcon } from "./assets/stop.svg";
 //   arrow = "arrow",
 // }
 //icon: keyof typeof Icons
-type Icons = "delete" | "arrow" | "stop";
+type Icons = "delete" | "play" | "stop";
 
 interface IButton {
   text?: string;
@@ -24,35 +25,22 @@ const iconName = (icon: Icons) => {
   switch (icon) {
     case "delete":
       return <DeleteIcon />;
-    case "arrow":
-      return <ArrowIcon />;
+    case "play":
+      return <PlayIcon />;
     case "stop":
       return <StopIcon />;
   }
 };
-const iconColor = (icon: Icons) => {
-  switch (icon) {
-    case "delete":
-      return "#c31818";
-    case "arrow":
-      return "black";
-    case "stop":
-      return "#c31818";
-  }
-};
+
 export const Button = React.forwardRef<HTMLButtonElement, IButton>(
   ({ text, icon, onClick, simpleIcon, type }, ref) => {
-    const isSimpleIcon = simpleIcon ? true : false;
+    // const isSimpleIcon = simpleIcon ? true : false;
     return (
       <>
         {icon ? (
-          <ButtonStyledIcon
-            onClick={onClick}
-            iconColor={icon}
-            simpleIcon={isSimpleIcon}
-          >
+          <button className={`btn-icon btn-icon--${icon}`} onClick={onClick}>
             {iconName(icon)}
-          </ButtonStyledIcon>
+          </button>
         ) : (
           <ButtonStyled ref={ref} type={type} onClick={onClick}>
             {text && text}
@@ -76,7 +64,7 @@ const ButtonStyled = styled.button`
   align-items: center;
   justify-content: center;
   padding: 0;
-  background-color: $mainBg;
+  background-color: $main-bg;
   box-shadow: 4px 4px 8px 0px $shaddow, -4px -4px 8px 0px $highlight;
   cursor: pointer;
   transition: box-shadow 0.3s linear;
@@ -86,30 +74,6 @@ const ButtonStyled = styled.button`
     box-shadow: inset 4px 4px 8px 0px $shaddow,
       inset -4px -4px 8px 0px $highlight;
     transition: box-shadow 0.3s linear;
-  }
-`;
-
-const ButtonStyledIcon = styled(ButtonStyled)<{
-  iconColor: Icons;
-  simpleIcon: boolean;
-}>`
-  background: transparent;
-  box-shadow: none;
-  border-radius: 32px;
-  width: ${(props) => (props.simpleIcon ? "16px" : "32px")};
-  height: ${(props) => (props.simpleIcon ? "16px" : "32px")};
-  box-shadow: ${(props) =>
-    !props.simpleIcon
-      ? "4px 4px 8px 0px hsl(0, 0%, 95%),-4px -4px 8px 0px hsl(0, 0%, 100%)"
-      : "none"};
-  cursor: pointer;
-  transition: box-shadow 0.3s linear;
-
-  & svg {
-    width: 16px;
-    height: 16px;
-    fill: ${(props) => iconColor(props.iconColor)};
-    // stroke: $fontColorMain;
   }
 `;
 

@@ -19,7 +19,8 @@ import {
   stopTimer as IstopTimer,
   stopTimerVariables,
 } from "../../../lib/graphql/mutations/StopTimer/__generated__/stopTimer";
-import styled from "styled-components";
+
+import "./TimerLog.scss";
 
 export const TimerLog = ({
   timer,
@@ -156,9 +157,10 @@ export const TimerLog = ({
       payload: id,
     });
   };
+
   if (loading) {
     return (
-      <div className="timer_log">
+      <div className="timer-log">
         <Loading />
       </div>
     );
@@ -166,47 +168,39 @@ export const TimerLog = ({
 
   if (timer) {
     return (
-      <StyledTimerHeader>
-        <StyledTimerInput onClick={() => onTimerDetails(timer.id)}>
-          <div>{valueTitle ? valueTitle : "Add the title"}</div>
-          <div className="timer_log__project">{timer.project?.title}</div>
-        </StyledTimerInput>
-        <div className="timer_log__tick">{STimer.time}</div>
-        <Button icon="stop" onClick={onStopTimer} />
-      </StyledTimerHeader>
+      <div className="timer-log">
+        <div className="timer-log__left">
+          <Button icon="stop" onClick={onStopTimer} />
+          <div
+            className="timer-description"
+            onClick={() => onTimerDetails(timer.id)}
+          >
+            <div className="timer-description__project">
+              {timer.project?.title ? timer.project?.title : "+ add project"}
+            </div>
+            <div>{valueTitle ? valueTitle : "+ add title"}</div>
+          </div>
+        </div>
+        <div className="timer-log__tick timer-log__tick--active">
+          {STimer.time}
+        </div>
+      </div>
     );
   } else {
     return (
-      <StyledTimerHeader>
-        <Input
-          type="text"
-          bind={bindTitle}
-          placeholder="What are you working on?"
-        />
-        <Button icon="arrow" onClick={onStartTimer} />
-      </StyledTimerHeader>
+      <div className="timer-log">
+        <div className="timer-log__left">
+          <Button icon="play" onClick={onStartTimer} />
+          <div className="timer-description">
+            <Input
+              type="text"
+              bind={bindTitle}
+              placeholder="What are you working on?"
+            />
+          </div>
+        </div>
+        <div className="timer-log__tick">00:00</div>
+      </div>
     );
   }
 };
-
-const StyledTimerHeader = styled.div`
-  height: 84px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  justify-content: space-between;
-  flex: 1 auto;
-  padding: 0 12px;
-  position: relative;
-  & button {
-    flex-shrink: 0;
-    margin-left: 12px;
-  }
-`;
-
-const StyledTimerInput = styled.div`
-  display: flex;
-  flex-flow: column;
-  align-items: flex-start;
-  text-align: left;
-`;

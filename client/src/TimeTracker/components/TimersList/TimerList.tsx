@@ -122,13 +122,6 @@ export const TimersList = ({
     return (
       <div className="timersList__wrapper">
         <div className="timers_list">
-          <Input
-            placeholder="Search in Notes"
-            type="search"
-            name="query"
-            bind={bindSearch}
-            onKeyDown={onSearch}
-          />
           {/* <Input type="checkbox" name="searchType" value="any"> */}
           {/* <input type="radio" name="searchType" value="all"/> */}
           <ul style={{ listStyle: "none", padding: 16 }}>
@@ -146,6 +139,13 @@ export const TimersList = ({
           </ul>
           {timersRenderList}
           <Button text="Load More" onClick={fetchMore} type="button" />
+          <Input
+            placeholder="Search in Notes"
+            type="search"
+            name="query"
+            bind={bindSearch}
+            onKeyDown={onSearch}
+          />
         </div>
       </div>
     );

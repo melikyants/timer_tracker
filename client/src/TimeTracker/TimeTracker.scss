@@ -1,0 +1,50 @@
+@import "../styles/variables";
+
+.time-tracker {
+  width: 400px;
+  background: $main-bg;
+  margin: 20px auto;
+  font-size: 100%;
+  font-family: $font-family;
+  font-weight: 400;
+  color: $font-color-main;
+  height: 600px;
+  line-height: 22px;
+  border-radius: 4px;
+  overflow: hidden;
+
+  position: relative;
+  box-shadow: 0 4px 8px $shaddow;
+  &__header {
+    height: 80px;
+    padding: 0 32px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    &--active {
+      box-shadow: 0 2px 8px adjust-color($primary, $alpha: -0.7);
+    }
+  }
+  &__body {
+    overflow: scroll;
+    overflow-x: hidden;
+    height: calc(100% - 80px);
+    position: relative;
+  }
+}
+.time-tracker ::-webkit-scrollbar {
+  width: 8px;
+}
+// .time-tracker ::-webkit-scrollbar-track {
+//   background: transparent;
+// }
+
+.time-tracker ::-webkit-scrollbar-track {
+  background: transparent;
+}
+.time-tracker ::-webkit-scrollbar-thumb {
+  background-color: adjust-color($primary, $alpha: -0.7);
+  border-radius: 4px;
+  width: 4px;
+  // border-right: 2px solid $main-bg;
+}

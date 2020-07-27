@@ -33,7 +33,7 @@ const StyledTextarea = styled.textarea`
   width: 100%;
   resize: none;
   border-radius: 12px;
-  background: $mainBg;
+  background: $main-bg;
   border: 0;
   border: 1px solid ${(props) => props.theme.borderColor};
   padding: 12px;

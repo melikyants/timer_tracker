@@ -97,7 +97,7 @@ export const Timer = ({ timer }: { timer: ITimerWith }) => {
         </div>
 
         <div className="startIcon">
-          <Button onClick={() => onStartTimer(timer.id)} icon="arrow" />
+          <Button onClick={() => onStartTimer(timer.id)} icon="play" />
         </div>
       </div>
     </div>

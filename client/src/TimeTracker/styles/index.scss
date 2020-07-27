@@ -1,75 +1,11 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto+Condensed:wght@300;400;700");
-
-$mainBg: hsl(206, 78%, 100%);
-$highlight: hsl(0, 0%, 100%);
-$shaddow: hsl(0, 0%, 95%);
-$fontColorMain: hsl(0, 0%, 12%);
-$fontColorSecondary: hsl(0, 0%, 42%);
-$greenColor: hsl(146, 79, 43);
-$redColor: #c31818;
-$fontFamily: "Roboto Condensed", sans-serif;
-
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-}
-
-body {
-  background-color: #f6f6f6;
-}
-
-button,
-input,
-textarea {
-  outline: none;
-}
-
-.timers {
-  width: 400px;
-  background: $mainBg;
-  margin: 20px auto;
-  font-size: 100%;
-  font-family: $fontFamily;
-  font-weight: 400;
-  color: $fontColorMain;
-  height: 600px;
-  line-height: 22px;
-  border-radius: 8px;
-  overflow: hidden;
-  position: relative;
-}
-
-// .timer_log {
-//   height: 84px;
-//   background: $mainBg;
-//   display: flex;
-//   align-items: center;
-//   gap: 12px;
-//   justify-content: space-between;
-//   flex: 1 auto;
-//   padding: 0 12px;
-//   position: relative;
-// }
-
-// .timer_log__desc {
-//   display: flex;
-//   flex-flow: column;
-//   align-items: flex-start;
-//   text-align: left;
-// }
-
-.timer_log__project {
-  font-size: 0.9rem;
-  color: $fontColorMain;
-}
+@import "../../styles/variables";
 
 .timersList__wrapper {
-  overflow: scroll;
-  height: calc(100% - 84px);
+  // overflow: scroll;
+  // height: calc(100% - 84px);
 
-  // max-height: 600px;
-  position: relative;
+  // // max-height: 600px;
+  // position: relative;
 
   // box-shadow: inset 4px 4px 12px $shaddow, inset -4px -4px 12px $highlight;
   border-radius: 12px;
@@ -99,7 +35,7 @@ textarea {
   &:after {
     content: "";
     position: absolute;
-    background: $mainBg;
+    background: $main-bg;
     box-shadow: inset 1px 1px 1px $shaddow, inset -1px -1px 1px $highlight;
     border-radius: 100%;
     width: 80%;
@@ -122,10 +58,6 @@ textarea {
   font-weight: 600;
 }
 
-.timer_log__tick {
-  margin-right: 12px;
-}
-
 .timer_desc {
   display: flex;
   flex-flow: column;
@@ -144,11 +76,11 @@ textarea {
 
 .timer_desc__title {
   font-size: 0.9rem;
-  color: $fontColorSecondary;
+  color: $font-color-secondary;
 }
 
 .timer__times_fromTo {
-  color: $fontColorSecondary;
+  color: $font-color-secondary;
 }
 
 .timer__times {
@@ -189,101 +121,102 @@ textarea {
 }
 
 //3 types of btns:
-//.btn, .btn-circle, .btn-link
-// .btn {
-//   height: 32px;
-//   width: 120px;
-//   border-radius: 12px;
-//   border: 0;
-//   color: $fontColorMain;
-//   font-weight: 600;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   padding: 0;
-//   background-color: $mainBg;
-//   box-shadow: 4px 4px 8px 0px $shaddow, -4px -4px 8px 0px $highlight;
-//   cursor: pointer;
-//   transition: box-shadow 0.3s linear;
+.btn,
+.btn-circle,
+.btn-link .btn {
+  height: 32px;
+  width: 120px;
+  border-radius: 12px;
+  border: 0;
+  color: $font-color-main;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background-color: $main-bg;
+  box-shadow: 4px 4px 8px 0px $shaddow, -4px -4px 8px 0px $highlight;
+  cursor: pointer;
+  transition: box-shadow 0.3s linear;
 
-//   &:active,
-//   &:hover {
-//     box-shadow: inset 4px 4px 8px 0px $shaddow,
-//       inset -4px -4px 8px 0px $highlight;
-//     transition: box-shadow 0.3s linear;
-//   }
+  &:active,
+  &:hover {
+    box-shadow: inset 4px 4px 8px 0px $shaddow,
+      inset -4px -4px 8px 0px $highlight;
+    transition: box-shadow 0.3s linear;
+  }
 
-//   &__icon {
-//     background: transparent;
-//     box-shadow: none;
-//     width: 16px;
-//     height: 16px;
+  &__icon {
+    background: transparent;
+    box-shadow: none;
+    width: 16px;
+    height: 16px;
 
-//     & svg {
-//       width: 16px;
-//       height: 16px;
+    & svg {
+      width: 16px;
+      height: 16px;
 
-//       // stroke: $fontColorMain;
-//     }
-//   }
+      // stroke: $font-color-main;
+    }
+  }
 
-//   &__delete {
-//     &:hover {
-//       fill: $redColor;
-//     }
-//   }
+  &__delete {
+    &:hover {
+      fill: $redColor;
+    }
+  }
 
-//   &__red {
-//     color: red;
-//   }
+  &__red {
+    color: red;
+  }
 
-//   &__circle {
-//     border-radius: 32px;
-//     width: 32px;
+  &__circle {
+    border-radius: 32px;
+    width: 32px;
 
-//     & svg {
-//       width: 16px;
-//       height: 16px;
-//     }
-//   }
+    & svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
 
-//   &__stop {
-//     & svg {
-//       fill: $redColor;
-//     }
-//   }
+  &__stop {
+    & svg {
+      fill: $redColor;
+    }
+  }
 
-//   &__play {
-//     & svg {
-//       fill: $greenColor;
-//     }
-//   }
-// }
+  &__play {
+    & svg {
+      fill: $greenColor;
+    }
+  }
+}
 
-// .btn-time {
-//   background: transparent;
-//   border: none;
-//   padding: 0;
-//   font-family: $fontFamily;
-//   font-size: 1rem;
-// }
+.btn-time {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: $font-family;
+  font-size: 1rem;
+}
 
-// .btn-block {
-//   display: flex;
-//   align-items: center;
-//   justify-content: flex-end;
+.btn-block {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 
-//   & > button:not(:first-child) {
-//     margin-left: 16px;
-//   }
-// }
+  & > button:not(:first-child) {
+    margin-left: 16px;
+  }
+}
 
-// .btn-link {
-//   border: 0;
-//   background: transparent;
-//   padding: 0;
-//   color: $fontColorSecondary;
-// }
+.btn-link {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: $font-color-secondary;
+}
 
 // .TimerDetails_wrapper {
 //   border-radius: 6px;
@@ -341,9 +274,9 @@ textarea {
 }
 
 .select {
-  background: $mainBg;
+  background: $main-bg;
   border: 0;
-  color: $fontColorMain;
+  color: $font-color-main;
   box-shadow: 4px 4px 8px 0px $shaddow, -4px -4px 8px 0px $highlight;
   height: 32px;
   width: 120px;
@@ -355,15 +288,15 @@ textarea {
 //   width: 100%;
 //   resize: none;
 //   border-radius: 12px;
-//   background: $mainBg;
+//   background: $main-bg;
 //   border: 0;
 //   box-shadow: inset 4px 4px 8px 0px $shaddow, inset -4px -4px 8px 0px $highlight;
 //   padding: 12px;
-//   color: $fontColorMain;
-//   font-family: $fontFamily;
+//   color: $font-color-main;
+//   font-family: $font-family;
 
 //   &::placeholder {
-//     color: $fontColorSecondary;
+//     color: $font-color-secondary;
 //   }
 // }
 

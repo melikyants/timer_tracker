@@ -1,0 +1,48 @@
+@import "../../../styles/variables";
+
+$btn-icon-size: 32px;
+
+.btn {
+}
+
+.btn-icon {
+  cursor: pointer;
+  width: $btn-icon-size;
+  height: $btn-icon-size;
+  border-radius: $btn-icon-size;
+  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s linear;
+  & svg {
+    width: 12px;
+    height: 12px;
+    transition: all 0.25s linear;
+  }
+
+  &--play {
+    background: $primary-light;
+    & svg {
+      fill: $primary;
+    }
+    &:hover {
+      background: $primary;
+      & svg {
+        fill: $primary-light;
+      }
+    }
+  }
+  &--stop {
+    background: $secondary-light;
+    & svg {
+      fill: $secondary;
+    }
+    &:hover {
+      background: $secondary;
+      & svg {
+        fill: $secondary-light;
+      }
+    }
+  }
+}
