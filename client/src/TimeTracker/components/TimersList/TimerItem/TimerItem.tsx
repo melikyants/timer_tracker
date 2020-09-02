@@ -9,7 +9,13 @@ interface ITimerWith extends Timer_timer {
   date: string;
 }
 
-export const Timer = ({ timer }: { timer: ITimerWith }) => {
+export const Timer = ({
+  timer,
+  search,
+}: {
+  timer: ITimerWith;
+  search?: boolean;
+}) => {
   const timeStart = new Date(timer.start).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -18,9 +24,11 @@ export const Timer = ({ timer }: { timer: ITimerWith }) => {
     hour: "2-digit",
     minute: "2-digit",
   });
-
+  const timerClassname = search
+    ? "timer-item timer-item--search"
+    : "timer-item";
   return (
-    <div key={timer.id} className="timer-item">
+    <div key={timer.id} className={timerClassname}>
       <div className="timer-description">
         <div className="timer-description__project">
           {timer.project ? (
@@ -38,11 +46,11 @@ export const Timer = ({ timer }: { timer: ITimerWith }) => {
           </div>
           <div>{timer.time}</div>
         </div>
-
         <div className="timer-time__actions">
           <TimerActions timerId={timer.id} />
         </div>
       </div>
+      {search && <div className="timer-notes">{timer.notes}</div>}
     </div>
   );
 };

@@ -5,14 +5,21 @@ import { ReactComponent as DeleteIcon } from "./assets/delete.svg";
 import { ReactComponent as PlayIcon } from "./assets/play.svg";
 import { ReactComponent as StopIcon } from "./assets/stop.svg";
 import { ReactComponent as EditIcon } from "./assets/edit.svg";
-import { ReactComponent as MoreIcon } from "./assets/arrowDown.svg";
+import { ReactComponent as ArrowDown } from "./assets/arrowDown.svg";
 
 // enum Icons {
 //   delete = "delete",
 //   arrow = "arrow",
 // }
 //icon: keyof typeof Icons
-type Icons = "delete" | "play" | "stop" | "edit" | "more" | "loading";
+type Icons =
+  | "delete"
+  | "play"
+  | "stop"
+  | "edit"
+  | "arrowDown"
+  | "arrowLeft"
+  | "loading";
 
 interface IButton {
   text?: string;
@@ -34,8 +41,10 @@ const iconName = (icon: Icons) => {
       return <StopIcon />;
     case "edit":
       return <EditIcon />;
-    case "more":
-      return <MoreIcon />;
+    case "arrowDown":
+      return <ArrowDown />;
+    case "arrowLeft":
+      return <ArrowDown style={{ transform: "rotate(90deg)" }} />;
     case "loading":
       return (
         <div className="btn-icon-loader">

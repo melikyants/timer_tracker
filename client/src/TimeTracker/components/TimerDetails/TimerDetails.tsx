@@ -312,9 +312,9 @@ export const TimerDetails = ({ timerId }: { timerId: string }) => {
           bind={bindtimerNotes}
         />
         <StyledButtonBlock>
+          <Button icon="arrowLeft" simpleIcon onClick={onCancleDetails} />
+          <Button icon="play" onClick={onSaveTimerDetails} />
           <Button icon="delete" simpleIcon onClick={onDeleteTimer} />
-          <Button text="Cancel" onClick={onCancleDetails} />
-          <Button text="Save" onClick={onSaveTimerDetails} />
         </StyledButtonBlock>
       </StyledDetailsWrapperBody>
     </StyledDetailsWrapper>

@@ -5,7 +5,16 @@ export const SEARCH_NOTES = gql`
     searchNotes(query: $query) {
       id
       title
+      type
       notes
+      start
+      end
+      project {
+        id
+        title
+        description
+      }
+      isRunning
     }
   }
 `;

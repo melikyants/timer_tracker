@@ -61,6 +61,17 @@
             transform: translateX(36px);
         }
     }
+
+    &--search {
+        height: auto;
+    }
+}
+
+.timers-searched-list {
+    padding: 0;
+    margin-bottom: 24px;
+    padding-bottom: 1px;
+    position: relative;
 }
 
 .timer-description {
@@ -68,6 +79,10 @@
         font-size: 13px;
         color: $font-color-secondary;
     }
+}
+
+.timer-notes {
+    height: 200px;
 }
 
 .timer-time {

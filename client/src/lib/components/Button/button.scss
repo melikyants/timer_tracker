@@ -63,6 +63,19 @@ $btn-icon-size: 32px;
 
     & svg {
         fill: $main-bg;
+        transition: fill .15s linear;
+    }
+
+    &--delete {
+        & svg {
+            fill: $grayscale-dark1;
+        }
+
+        &:hover {
+            & svg {
+                fill: $secondary;
+            }
+        }
     }
 }
 
