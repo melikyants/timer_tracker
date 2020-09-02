@@ -24,7 +24,7 @@ export const timerResolvers: IResolvers = {
   Query: {
     timers: async (
       _root: undefined,
-      { pageSize = 7, after },
+      { pageSize = 12, after },
       { db }: { db: IDatabase }
     ): Promise<TimersPagination> => {
       const timersList = await db.timers.find({}).toArray();

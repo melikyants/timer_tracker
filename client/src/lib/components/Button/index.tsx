@@ -1,23 +1,26 @@
 import React from "react";
-import styled from "styled-components";
 import "./button.scss";
 
 import { ReactComponent as DeleteIcon } from "./assets/delete.svg";
 import { ReactComponent as PlayIcon } from "./assets/play.svg";
 import { ReactComponent as StopIcon } from "./assets/stop.svg";
+import { ReactComponent as EditIcon } from "./assets/edit.svg";
+import { ReactComponent as MoreIcon } from "./assets/arrowDown.svg";
 
 // enum Icons {
 //   delete = "delete",
 //   arrow = "arrow",
 // }
 //icon: keyof typeof Icons
-type Icons = "delete" | "play" | "stop";
+type Icons = "delete" | "play" | "stop" | "edit" | "more" | "loading";
 
 interface IButton {
   text?: string;
   icon?: Icons;
-  onClick: () => void;
+  onClick?: () => void;
   simpleIcon?: boolean;
+  timerActions?: boolean;
+  disabled?: boolean;
   type?: "submit" | "reset" | "button";
 }
 
@@ -29,59 +32,43 @@ const iconName = (icon: Icons) => {
       return <PlayIcon />;
     case "stop":
       return <StopIcon />;
+    case "edit":
+      return <EditIcon />;
+    case "more":
+      return <MoreIcon />;
+    case "loading":
+      return (
+        <div className="btn-icon-loader">
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+      );
   }
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, IButton>(
-  ({ text, icon, onClick, simpleIcon, type }, ref) => {
-    // const isSimpleIcon = simpleIcon ? true : false;
+  ({ text, icon, onClick, simpleIcon, timerActions, type, disabled }, ref) => {
+    let btnClassNames = simpleIcon
+      ? `btn-icon-simple btn-icon-simple--${icon}`
+      : `btn-icon btn-icon--${icon}`;
+    btnClassNames = timerActions
+      ? `btn-actions btn-actions--${icon}`
+      : btnClassNames;
+
     return (
       <>
-        {icon ? (
-          <button className={`btn-icon btn-icon--${icon}`} onClick={onClick}>
+        {icon && (
+          <button
+            className={`${btnClassNames}`}
+            onClick={onClick}
+            disabled={disabled}
+          >
             {iconName(icon)}
           </button>
-        ) : (
-          <ButtonStyled ref={ref} type={type} onClick={onClick}>
-            {text && text}
-          </ButtonStyled>
         )}
       </>
     );
   }
 );
-
-const ButtonStyled = styled.button`
-  font-family: ${(props) => props.theme.fontFamily};
-  border-radius: ${(props) => props.theme.borderRadius};
-  color: ${(props) => props.theme.color};
-
-  height: 32px;
-  width: 120px;
-  border: 0;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  background-color: $main-bg;
-  box-shadow: 4px 4px 8px 0px $shaddow, -4px -4px 8px 0px $highlight;
-  cursor: pointer;
-  transition: box-shadow 0.3s linear;
-
-  &:active,
-  &:hover {
-    box-shadow: inset 4px 4px 8px 0px $shaddow,
-      inset -4px -4px 8px 0px $highlight;
-    transition: box-shadow 0.3s linear;
-  }
-`;
-
-ButtonStyled.defaultProps = {
-  theme: {
-    fontFamily: "Roboto Condensed, sans serif",
-    borderColor: "#e6e6e6",
-    borderRadius: "12px",
-    color: "hsl(0, 0%, 12%)",
-  },
-};

@@ -2,13 +2,15 @@ import React from "react";
 
 import { milliSecToString, isToday, sortByDates } from "../../../lib/helpers";
 
-import { Button, Input } from "../../../lib/components";
+import { Input, Button, Loading } from "../../../lib/components";
 import { useInput } from "../../../lib/Hooks";
 
 import { Timers_timers_timers } from "../../../lib/graphql/queries/Timers/__generated__/Timers";
 import { Timer } from "./TimerItem";
 import { SEARCH_NOTES } from "../../../lib/graphql/queries";
 import { useLazyQuery } from "@apollo/client";
+
+import "./TimerList.scss";
 
 interface ITimerWith extends Timers_timers_timers {
   time: string;
@@ -18,14 +20,48 @@ interface ITimerWith extends Timers_timers_timers {
 export const TimersList = ({
   timers,
   fetchMore,
+  setheaderActive,
 }: {
   timers: (Timers_timers_timers | null)[];
-  fetchMore: () => void;
+  fetchMore: () => Promise<unknown>;
+  setheaderActive: (header: boolean) => void;
 }) => {
   const timersList = timers.length ? timers : null;
   const { value: searchValue, bind: bindSearch } = useInput("");
   const [search, setSearch] = React.useState([]);
+  const [isLoadingMore, setLoadingMore] = React.useState(false);
   const [searchNotes, { data: searchData }] = useLazyQuery(SEARCH_NOTES);
+
+  const prevScrollY = React.useRef(0);
+  const timersListRef = React.useRef<HTMLDivElement | null>(null);
+
+  const handleSceroll = React.useCallback(() => {
+    const updateHeader = () => {
+      let timerBody = timersListRef.current;
+
+      if (timerBody) {
+        const currentScrollY = timerBody.scrollTop;
+
+        if (currentScrollY > 2) {
+          setheaderActive(true);
+        } else {
+          setheaderActive(false);
+        }
+
+        prevScrollY.current = currentScrollY;
+      }
+    };
+    updateHeader();
+  }, [setheaderActive]);
+
+  React.useEffect(() => {
+    let timerBody = timersListRef.current;
+    timerBody?.addEventListener("scroll", handleSceroll);
+
+    return () => {
+      timerBody?.removeEventListener("scroll", handleSceroll);
+    };
+  }, [handleSceroll]);
 
   React.useEffect(() => {
     if (searchData && searchData.searchNotes) {
@@ -44,6 +80,13 @@ export const TimersList = ({
       console.log("onSearch -> searchAllQuery", searchPhrase);
       await searchNotes({ variables: { query: searchAny } });
     }
+  };
+
+  const doMoreFetch = () => {
+    setLoadingMore(true);
+    fetchMore().then(function () {
+      setLoadingMore(false);
+    });
   };
 
   if (timersList) {
@@ -104,28 +147,30 @@ export const TimersList = ({
       const today = isToday(now) ? "Today" : timersByDays.date;
 
       return (
-        <div className="timer__block" key={timersByDays.date}>
-          <div className="timer__block_header">
-            <div>{today}</div>
-            <div>{timersByDays.total}</div>
+        <div className="timers-by-date" key={timersByDays.date}>
+          <div className="timers-by-date__header">
+            <div className="timers-by-date__header__title">{today}</div>
+            <div className="timers-by-date__header__time">
+              {timersByDays.total}
+            </div>
           </div>
-          <div className="timer__block_body">
-            {timersByDays.items &&
-              timersByDays.items.map((timer) => (
-                <Timer timer={timer} key={timer.id} />
-              ))}
-          </div>
+          {timersByDays.items &&
+            timersByDays.items.map((timer) => (
+              <Timer timer={timer} key={timer.id} />
+            ))}
         </div>
       );
     });
 
     return (
-      <div className="timersList__wrapper">
-        <div className="timers_list">
-          {/* <Input type="checkbox" name="searchType" value="any"> */}
-          {/* <input type="radio" name="searchType" value="all"/> */}
-          <ul style={{ listStyle: "none", padding: 16 }}>
-            {search.map((s: any) => {
+      <>
+        <div
+          className="timers-list"
+          ref={timersListRef}
+          onScroll={handleSceroll}
+        >
+          {/* <ul> */}
+          {/*search.map((s: any) => {
               return (
                 <li key={s.id}>
                   <h3>{s.title}</h3>
@@ -133,12 +178,26 @@ export const TimersList = ({
                   {/* {s.notes.split("/n").map((p: string) => {
                     return <p style={"whiteSpace: pre-line;"}>{p}</p>;
                   })} */}
-                </li>
-              );
-            })}
-          </ul>
+          {/* </li> */}
+          {/* );
+            })} */}
+          {/* </ul> */}
           {timersRenderList}
-          <Button text="Load More" onClick={fetchMore} type="button" />
+          {!isLoadingMore ? (
+            <Button
+              text="Load More"
+              onClick={doMoreFetch}
+              type="button"
+              icon="more"
+              simpleIcon
+            />
+          ) : (
+            <Button text="Load More" type="button" icon="loading" simpleIcon />
+          )}
+        </div>
+        <div className="timers-search">
+          {/* <Input type="checkbox" name="searchType" value="any"> */}
+          {/* <input type="radio" name="searchType" value="all"/> */}
           <Input
             placeholder="Search in Notes"
             type="search"
@@ -147,7 +206,7 @@ export const TimersList = ({
             onKeyDown={onSearch}
           />
         </div>
-      </div>
+      </>
     );
   }
   return <div className="timers_list">There is no time log yet!</div>;

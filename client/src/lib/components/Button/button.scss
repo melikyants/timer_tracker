@@ -2,47 +2,203 @@
 
 $btn-icon-size: 32px;
 
-.btn {
-}
+.btn {}
 
 .btn-icon {
-  cursor: pointer;
-  width: $btn-icon-size;
-  height: $btn-icon-size;
-  border-radius: $btn-icon-size;
-  border: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.25s linear;
-  & svg {
+    cursor: pointer;
+    width: $btn-icon-size;
+    height: $btn-icon-size;
+    border-radius: $btn-icon-size;
+    border: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s linear;
+
+    & svg {
+        width: 12px;
+        height: 12px;
+        transition: all 0.25s linear;
+    }
+
+    &--play {
+        background: $primary-light;
+
+        & svg {
+            fill: $primary;
+        }
+
+        &:hover {
+            background: $primary;
+
+            & svg {
+                fill: $primary-light;
+            }
+        }
+    }
+
+    &--stop {
+        background: $secondary-light;
+
+        & svg {
+            fill: $secondary;
+        }
+
+        &:hover {
+            background: $secondary;
+
+            & svg {
+                fill: $secondary-light;
+            }
+        }
+    }
+}
+
+.btn-icon-simple {
+    cursor: pointer;
+    width: $btn-icon-size;
+    height: $btn-icon-size;
+    border: 0;
+    background-color: transparent;
+
+    & svg {
+        fill: $main-bg;
+    }
+}
+
+%blur-effect {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 11px;
     width: 12px;
     height: 12px;
-    transition: all 0.25s linear;
-  }
+    filter: blur(5px);
+    z-index: 0;
+    opacity: 0;
+    transition: all .15s linear;
+}
 
-  &--play {
-    background: $primary-light;
+/* Buttons used in timer actions menu */
+.btn-actions {
+    cursor: pointer;
+    width: 36px;
+    border: 0;
+    background-color: transparent;
+    padding: 0;
+    position: relative;
+
     & svg {
-      fill: $primary;
+        fill: $main-bg;
+        width: 16px;
+        z-index: 2;
+        position: relative;
+        transition: fill .15s linear;
     }
+
     &:hover {
-      background: $primary;
-      & svg {
-        fill: $primary-light;
-      }
+        background-color: #1B1E1F;
     }
-  }
-  &--stop {
-    background: $secondary-light;
-    & svg {
-      fill: $secondary;
+
+    &:disabled {
+        cursor: default;
+
+        & svg {
+            fill: $shaddow;
+        }
+
+        &:hover {
+            background-color: transparent;
+
+            & svg {
+                fill: $shaddow;
+            }
+
+            &:after {
+                opacity: 0;
+            }
+        }
     }
-    &:hover {
-      background: $secondary;
-      & svg {
-        fill: $secondary-light;
-      }
+
+    &--play,
+    &--edit {
+        &:hover {
+            & svg {
+                fill: $primary;
+            }
+
+            &:after {
+                opacity: 0.75;
+            }
+        }
+
+        &:after {
+            @extend %blur-effect;
+
+            background-color: $primary;
+        }
     }
-  }
+
+    &--delete {
+        &:hover {
+            & svg {
+                fill: $secondary;
+            }
+
+            &:after {
+                opacity: 0.75;
+            }
+        }
+
+        &:after {
+            @extend %blur-effect;
+
+            background-color: $secondary;
+        }
+    }
+}
+
+//Loading Button
+.btn-icon-loader {
+    width: 18px;
+    height: 18px;
+    position: relative;
+    animation: 1.2s spin linear infinite;
+    z-index: 1;
+
+    & > span {
+        width: 6px;
+        height: 6px;
+        border-radius: 6px;
+        background: $primary;
+        display: block;
+        position: absolute;
+        opacity: 0.3;
+        animation: 1s spinOpacity linear infinite alternate;
+        transform-origin: 50% 50%;
+        opacity: 0.3;
+
+        &:nth-child(1) {
+            left: 0;
+            top: 0;
+        }
+
+        &:nth-child(2) {
+            right: 0;
+            top: 0;
+            animation-delay: 0.4s;
+        }
+
+        &:nth-child(3) {
+            right: 0;
+            bottom: 0;
+            animation-delay: 0.8s;
+        }
+
+        &:nth-child(4) {
+            left: 0;
+            bottom: 0;
+            animation-delay: 1.2s;
+        }
+    }
 }
