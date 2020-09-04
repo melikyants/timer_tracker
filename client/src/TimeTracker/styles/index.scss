@@ -1,221 +1,221 @@
 @import "../../styles/variables";
 
 .timersList__wrapper {
-  // overflow: scroll;
-  // height: calc(100% - 84px);
+    // overflow: scroll;
+    // height: calc(100% - 84px);
 
-  // // max-height: 600px;
-  // position: relative;
+    // // max-height: 600px;
+    // position: relative;
 
-  // box-shadow: inset 4px 4px 12px $shaddow, inset -4px -4px 12px $highlight;
-  border-radius: 12px;
+    // box-shadow: inset 4px 4px 12px $shaddow, inset -4px -4px 12px $highlight;
+    border-radius: 12px;
 
-  // &:after {
-  //     content: '';
-  //     width: 100%;
-  //     height: 1px;
-  //     box-shadow: 0 0 2px grey;
-  //     position: absolute;
-  //     bottom: 0;
-  //     left: 0;
-  // }
+    // &:after {
+    //     content: '';
+    //     width: 100%;
+    //     height: 1px;
+    //     box-shadow: 0 0 2px grey;
+    //     position: absolute;
+    //     bottom: 0;
+    //     left: 0;
+    // }
 }
 
 .timers_list {
-  // height: 500px;
-  position: relative;
+    // height: 500px;
+    position: relative;
 }
 
 .timer__block {
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 12px;
-  position: relative;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    position: relative;
 
-  &:after {
-    content: "";
-    position: absolute;
-    background: $main-bg;
-    box-shadow: inset 1px 1px 1px $shaddow, inset -1px -1px 1px $highlight;
-    border-radius: 100%;
-    width: 80%;
-    height: 2px;
-    left: 5%;
-    bottom: 0;
-  }
+    &:after {
+        content: "";
+        position: absolute;
+        background: $main-bg;
+        box-shadow: inset 1px 1px 1px $shaddow, inset -1px -1px 1px $highlight;
+        border-radius: 100%;
+        width: 80%;
+        height: 2px;
+        left: 5%;
+        bottom: 0;
+    }
 }
 
 .timer__block_body {
-  padding-right: 40px;
+    padding-right: 40px;
 }
 
 .timer__block_header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 1.1rem;
-  padding-right: 40px;
-  font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    padding-right: 40px;
+    font-weight: 600;
 }
 
 .timer_desc {
-  display: flex;
-  flex-flow: column;
-  align-items: flex-start;
-  text-align: left;
-  width: 220px;
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+    text-align: left;
+    width: 220px;
 }
 
 .timer_desc_row {
-  display: flex;
+    display: flex;
 
-  & > div {
-    margin-right: 8px;
-  }
+    & > div {
+        margin-right: 8px;
+    }
 }
 
 .timer_desc__title {
-  font-size: 0.9rem;
-  color: $font-color-secondary;
+    font-size: 0.9rem;
+    color: $font-color-secondary;
 }
 
 .timer__times_fromTo {
-  color: $font-color-secondary;
+    color: $font-color-secondary;
 }
 
 .timer__times {
-  display: flex;
-  flex-flow: column;
-  align-items: flex-end;
+    display: flex;
+    flex-flow: column;
+    align-items: flex-end;
 }
 
 .timer__block_body {
-  // position: relative;
+    // position: relative;
 }
 
 .timer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 12px 0;
-
-  & > div:not(:first-child) {
     display: flex;
     align-items: center;
-    text-align: left;
-  }
+    justify-content: space-between;
+    margin: 12px 0;
 
-  &:hover {
-    .startIcon {
-      opacity: 1;
+    & > div:not(:first-child) {
+        display: flex;
+        align-items: center;
+        text-align: left;
     }
-  }
+
+    &:hover {
+        .startIcon {
+            opacity: 1;
+        }
+    }
 }
 
 .startIcon {
-  position: absolute;
-  right: 0;
-  width: 32px;
-  text-align: center;
-  opacity: 0;
+    position: absolute;
+    right: 0;
+    width: 32px;
+    text-align: center;
+    opacity: 0;
 }
 
 //3 types of btns:
 .btn,
 .btn-circle,
 .btn-link .btn {
-  height: 32px;
-  width: 120px;
-  border-radius: 12px;
-  border: 0;
-  color: $font-color-main;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  background-color: $main-bg;
-  box-shadow: 4px 4px 8px 0px $shaddow, -4px -4px 8px 0px $highlight;
-  cursor: pointer;
-  transition: box-shadow 0.3s linear;
-
-  &:active,
-  &:hover {
-    box-shadow: inset 4px 4px 8px 0px $shaddow,
-      inset -4px -4px 8px 0px $highlight;
+    height: 32px;
+    width: 120px;
+    border-radius: 12px;
+    border: 0;
+    color: $font-color-main;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background-color: $main-bg;
+    box-shadow: 4px 4px 8px 0px $shaddow, -4px -4px 8px 0px $highlight;
+    cursor: pointer;
     transition: box-shadow 0.3s linear;
-  }
 
-  &__icon {
-    background: transparent;
-    box-shadow: none;
-    width: 16px;
-    height: 16px;
-
-    & svg {
-      width: 16px;
-      height: 16px;
-
-      // stroke: $font-color-main;
-    }
-  }
-
-  &__delete {
+    &:active,
     &:hover {
-      fill: $redColor;
+        box-shadow: inset 4px 4px 8px 0px $shaddow, inset -4px -4px 8px 0px $highlight;
+        transition: box-shadow 0.3s linear;
     }
-  }
 
-  &__red {
-    color: red;
-  }
+    &__icon {
+        background: transparent;
+        box-shadow: none;
+        width: 16px;
+        height: 16px;
 
-  &__circle {
-    border-radius: 32px;
-    width: 32px;
+        & svg {
+            width: 16px;
+            height: 16px;
 
-    & svg {
-      width: 16px;
-      height: 16px;
+            // stroke: $font-color-main;
+       
+        }
     }
-  }
 
-  &__stop {
-    & svg {
-      fill: $redColor;
+    &__delete {
+        &:hover {
+            fill: $redColor;
+        }
     }
-  }
 
-  &__play {
-    & svg {
-      fill: $greenColor;
+    &__red {
+        color: red;
     }
-  }
+
+    &__circle {
+        border-radius: 32px;
+        width: 32px;
+
+        & svg {
+            width: 16px;
+            height: 16px;
+        }
+    }
+
+    &__stop {
+        & svg {
+            fill: $redColor;
+        }
+    }
+
+    &__play {
+        & svg {
+            fill: $greenColor;
+        }
+    }
 }
 
 .btn-time {
-  background: transparent;
-  border: none;
-  padding: 0;
-  font-family: $font-family;
-  font-size: 1rem;
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-family: $font-family;
+    font-size: 1rem;
 }
 
 .btn-block {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 
-  & > button:not(:first-child) {
-    margin-left: 16px;
-  }
+    & > button:not(:first-child) {
+        margin-left: 16px;
+    }
 }
 
 .btn-link {
-  border: 0;
-  background: transparent;
-  padding: 0;
-  color: $font-color-secondary;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    color: $font-color-secondary;
 }
 
 // .TimerDetails_wrapper {
@@ -243,45 +243,23 @@
 // }
 
 .TimerDetails__body_types {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 }
 
 // .TimerDetails__body__row {
 //   display: flex;
 // }
 
-.project_list {
-  list-style: none;
-  margin: 0;
-  padding: 12px;
-
-  li {
-    height: 20px;
-    margin-bottom: 5px;
-    text-align: left;
-    cursor: pointer;
-    display: flex;
-
-    & .btn {
-      margin-left: 10px;
-    }
-
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.1);
-    }
-  }
-}
-
 .select {
-  background: $main-bg;
-  border: 0;
-  color: $font-color-main;
-  box-shadow: 4px 4px 8px 0px $shaddow, -4px -4px 8px 0px $highlight;
-  height: 32px;
-  width: 120px;
-  padding: 0 12px;
-  border-radius: 12px;
+    background: $main-bg;
+    border: 0;
+    color: $font-color-main;
+    box-shadow: 4px 4px 8px 0px $shaddow, -4px -4px 8px 0px $highlight;
+    height: 32px;
+    width: 120px;
+    padding: 0 12px;
+    border-radius: 12px;
 }
 
 // .textarea {
@@ -301,25 +279,25 @@
 // }
 
 .itemD-enter {
-  opacity: 0;
-  transform: translateY(100%);
+    opacity: 0;
+    transform: translateY(100%);
 }
 
 .itemD-enter-active {
-  opacity: 1;
-  transform: translateY(0%) translateZ(0);
-  transition: opacity 400ms, transform 400ms;
+    opacity: 1;
+    transform: translateY(0%) translateZ(0);
+    transition: opacity 400ms, transform 400ms;
 }
 
 .itemD-exit {
-  opacity: 0.9;
-  transform: translateY(-100%) translateZ(0);
+    opacity: 0.9;
+    transform: translateY(-100%) translateZ(0);
 }
 
 .itemD-exit-active {
-  opacity: 0;
-  transform: translateY(0%) translateZ(0);
-  transition: opacity 400ms, transform 400ms;
+    opacity: 0;
+    transform: translateY(0%) translateZ(0);
+    transition: opacity 400ms, transform 400ms;
 }
 
 // .TimerDetails-wrapper {
@@ -337,31 +315,31 @@
 // }
 
 .upwork-module {
-  margin: auto;
+    margin: auto;
 
-  .btn-block {
-    display: flex;
-    margin-bottom: 15px;
-  }
+    .btn-block {
+        display: flex;
+        margin-bottom: 15px;
+    }
 }
 
 .upwork-jobs {
-  background: white;
-  width: 600px;
-  margin: auto;
-  padding: 16px;
-  border-radius: 8px;
+    background: white;
+    width: 600px;
+    margin: auto;
+    padding: 16px;
+    border-radius: 8px;
 
-  & .job {
-    margin-bottom: 10px;
-  }
+    & .job {
+        margin-bottom: 10px;
+    }
 }
 
 .job {
-  text-align: left;
+    text-align: left;
 }
 
 .job-title {
-  margin-bottom: 8px;
-  display: flex;
+    margin-bottom: 8px;
+    display: flex;
 }

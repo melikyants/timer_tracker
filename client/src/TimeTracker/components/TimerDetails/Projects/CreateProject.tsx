@@ -58,8 +58,12 @@ export const CreateProjectPopper = () => {
     >
       <div className="createProject">
         <div className="createProject__header">
-          <Button text="cancel" type="button" onClick={closeProjectCreation} />
-          <Button text="save" type="button" onClick={onCreateProject} />
+          <button type="button" onClick={closeProjectCreation}>
+            cancel
+          </button>
+          <button type="button" onClick={onCreateProject}>
+            save
+          </button>
         </div>
         <div className="createProject__body">
           <Input

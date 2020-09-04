@@ -1,0 +1,21 @@
+.project_list {
+    // list-style: none;
+    // margin: 0;
+    // padding: 12px;
+
+    li {
+        height: 20px;
+        margin-bottom: 5px;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+
+        & .btn {
+            margin-left: 10px;
+        }
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+}

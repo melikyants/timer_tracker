@@ -1,12 +1,13 @@
 import React from "react";
 import { usePopper } from "react-popper";
-import { Button } from "..";
+import { Button } from "../Button";
 
 import "./styles/index.scss";
 
 interface PopperButtonI {
   children: any;
   buttonTitle: string;
+
   visible: boolean;
   setVisible: any;
 }
@@ -20,7 +21,7 @@ export const PopperButton = ({
   const elRef = React.useRef<HTMLButtonElement | null>(null);
   const popperRef = React.useRef<HTMLDivElement | null>(null);
   const arrowElRef = React.useRef(null);
-
+  console.log("buttonTitle", buttonTitle, visible);
   const { styles, attributes } = usePopper(elRef.current, popperRef.current, {
     placement: "left-end",
     strategy: "fixed", //keeps the dropdown above the overflow
@@ -60,12 +61,9 @@ export const PopperButton = ({
 
   return (
     <>
-      <Button
-        text={buttonTitle}
-        ref={elRef}
-        onClick={handleClick}
-        type="button"
-      />
+      <button ref={elRef} onClick={handleClick} type="button">
+        {buttonTitle}
+      </button>
       <div
         ref={popperRef}
         style={styles.popper}

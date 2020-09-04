@@ -17,6 +17,8 @@ import { Button, Loading } from "../../../../lib/components";
 import { PROJECTS } from "../../../../lib/graphql/queries";
 import { DELETE_PROJECT } from "../../../../lib/graphql/mutations";
 
+import "./Projects.scss";
+
 export const Projects = ({
   timer,
   onChangeProjectId,
